@@ -8,8 +8,7 @@ import random
 import math
 
 
-
-#==========PREPROCESSING load data ================
+# ==========PREPROCESSING load data ================
 
 
 def LoadData(folder_path):
@@ -22,20 +21,20 @@ def LoadData(folder_path):
         a, b = CreatePositiveCouples(folder_path + '/' + i)
         c, d = CreateNegativeCouples(folder_path + '/' + i)
 
-        for i in range(len(a)):
-            img_data_list.append(a[i])
-            img_label_list.append(b[i])
+        for j in range(len(a)):
+            img_data_list.append(a[j])
+            img_label_list.append(b[j])
 
-        for i in range(len(c)):
-            img_data_list.append(c[i])
-            img_label_list.append(d[i])
+        for j in range(len(c)):
+            img_data_list.append(c[j])
+            img_label_list.append(d[j])
 
     return img_data_list, img_label_list
 
 
 
 
-#creates the couples for which the correspondence of the face is true (same person)
+# creates the couples for which the correspondence of the face is true (same person)
 def CreatePositiveCouples(folder_path):
     img_data_list = []  # elements list, an element is a couple of image (i1,i2)
     img_label_list = []  # labels list, can be 1 if the faces are the same or 0 if not
@@ -48,7 +47,7 @@ def CreatePositiveCouples(folder_path):
     return img_data_list, img_label_list
 
 
-#creates the couples for which the correspondence of the face is false(different person)
+# creates the couples for which the correspondence of the face is false(different person)
 def CreateNegativeCouples(folder_path):
     img_data_list = []  # elements list, an element is a couple of image (i1,i2)
     img_label_list = []  # labels list, can be 1 if the faces are the same or 0 if not
@@ -77,7 +76,7 @@ def CreateNegativeCouples(folder_path):
     return img_data_list, img_label_list
 
 
-#return the concatenation of the two images after the preprocessing
+# return the concatenation of the two images after the preprocessing
 def CreateCouple(img1_path, img2_path):
 
     # read images
