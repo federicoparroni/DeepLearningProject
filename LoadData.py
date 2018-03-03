@@ -115,15 +115,17 @@ def GetData(path):
     return np.expand_dims(np.array(vec), 3), np.array(label_vec)
 
 
-
+#print for a vector of extimation if they are correct
 def ResultPrediction(extimation, real_label):
+    str_extimation = np.array2string(extimation, None, 4)
+    str_real_label = np.array2string(real_label, None, 4)
     if real_label[0] == 1:
         if extimation[0] > 0.5:
-            return 'CORRECT' + str(extimation[0])
+            return 'CORRECT  \n' + 'extimated ' + str_extimation + ' \n real_label ' + str_real_label
         else:
-            return 'ERROR' + str(extimation[0])
+            return 'ERROR  \n' + 'extimated ' + str_extimation + ' \n real_label ' + str_real_label
     else:
         if extimation[1] > 0.5:
-            return 'CORRECT' + str(extimation[1])
+            return 'CORRECT  \n' + 'extimated ' + str_extimation + ' \n real_label ' + str_real_label
         else:
-            return 'ERROR' + str(extimation[1])
+            return 'ERROR  \n' + 'extimated ' + str_extimation + ' \n real_label ' + str_real_label
