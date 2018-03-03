@@ -61,4 +61,4 @@ def TryThePipeline(dataset_root_path):
             plt.show()
 
 
-TryThePipeline('/home/giovanni/Immagini/Webcam')
+#TryThePipeline('/home/giovanni/Immagini/Webcam')
