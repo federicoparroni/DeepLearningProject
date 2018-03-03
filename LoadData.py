@@ -120,11 +120,11 @@ def ResultPrediction(extimation, real_label):
     str_real_label = np.array2string(real_label, None, 4)
     if real_label[0] == 1:
         if extimation[0] > 0.5:
-            return 'C ' + 'ex ' + str_extimation + ' \n r_l ' + str_real_label
+            return 'OK' + ': ' + str_extimation #+ ' \n r_l ' + str_real_label
         else:
-            return 'E ' + 'ex ' + str_extimation + ' \n r_l ' + str_real_label
+            return 'E' + ': ' + str_extimation #+ ' \n r_l ' + str_real_label
     else:
         if extimation[1] > 0.5:
-            return 'C ' + 'ex ' + str_extimation + ' \n r_l ' + str_real_label
+            return 'OK' + ': ' + str_extimation #+ ' \n r_l ' + str_real_label
         else:
-            return 'E ' + 'ex ' + str_extimation + ' \n r_l ' + str_real_label
+            return 'E' + ': ' + str_extimation #+ ' \n r_l ' + str_real_label

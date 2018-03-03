@@ -13,7 +13,8 @@ bp = 'trained_model/'
 
 NUM_CLASSES = 2
 TEST_DATASET_FOLDER_NAME = '2_dataset test'
-MAX_IMAGES_TO_PLOT = 49
+MAX_IMAGES_TO_PLOT = 36
+NUM_PRINTED_PAGES = 3
 
 model = load_model(bp + 'my_model.h5')
 
@@ -22,6 +23,7 @@ Y_test = np_utils.to_categorical(y_test, NUM_CLASSES)
 
 predicted_label = model.predict(X_test)
 
+# creates titles to plot the predicted classes
 titles = []
 for i in range(len(X_test)):
     result = (predicted_label[i])
@@ -29,4 +31,8 @@ for i in range(len(X_test)):
     # plt.imshow(np.squeeze(X_test[i], axis=2), 'gray')
     titles.append(ResultPrediction(result, real_value))
 
-plot(X_test, titles, MAX_IMAGES_TO_PLOT)
+# show the images in plots
+for k in range(NUM_PRINTED_PAGES):
+    _from = k*MAX_IMAGES_TO_PLOT
+    _to = (k+1)*MAX_IMAGES_TO_PLOT
+    plot(X_test[_from:_to], titles[_from:_to], MAX_IMAGES_TO_PLOT)
