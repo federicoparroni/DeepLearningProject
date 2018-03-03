@@ -1,22 +1,28 @@
 from keras.models import Model
 from keras.layers import Input, Convolution2D, MaxPooling2D, Dense, Dropout, Flatten
 from keras.utils import np_utils
-from LoadData import GetData
-from LoadData import ResultPrediction
-from keras.models import load_model
-from time import time
 from keras.callbacks import TensorBoard
-import numpy as np
-import os
 import keras
+
+from LoadData import GetData
+
+import numpy as np
+
+import os
+
 import matplotlib.pyplot as plt
+
 import math
+
 import time
 import datetime
+
 from tensorflow.python.client import device_lib
 
 import tensorflow as tf
-#============================================================================
+
+#====================CONFIGURING GPU ========================================
+
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
 
@@ -95,21 +101,6 @@ loss = model.evaluate(X_test, Y_test, verbose=1)  # Evaluate the trained model o
 
 print(model.metrics_names)
 print(loss)
-predicted_label = model.predict(X_test)
-
-for i in range(1,2):
-    #print(np.squeeze(X_test[i], axis=0).shape)
-    #plt.figure(1)
-    result = (predicted_label[i])
-    real_value = (Y_test[i])
-    #plt.subplot(math.ceil(len(X_test/8)), 1, 1)
-    plt.imshow(np.squeeze(X_test[i], axis=2), 'gray')
-    plt.title(ResultPrediction(result, real_value))
-    plt.show()
-
-    #print(result)
-    #print(real_value)
-
 
 #====== save model ======
 
