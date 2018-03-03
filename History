@@ -1,0 +1,4 @@
+1 DAY ==========
+trained for a night the network with all the dataset and reached the accuracy on training of 0.96 and on test 0.88
+something wrong: on the training set there are so many couples for which the correct output is NO and few couples for which the output is YES so trying to train for 1 epoch the network and putting on the test set only 2 folders (in this way there are equal probability to obtain a couple with yes or with no) the accuracy on the test has result to be 0.5
+the first idea is to try to train the network with a dataset that has half couples with 'yes' and 'half' couples with no.

@@ -1,0 +1,10 @@
+include
+__pycache__
+bin
+lib
+share
+include
+.idea
+.idea/*
+pip-selfcheck.json
+.Python

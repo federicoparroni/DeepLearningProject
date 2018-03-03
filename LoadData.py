@@ -4,68 +4,127 @@ from skimage.transform import resize
 import skimage
 import numpy as np
 import os
-
-#==========PREPROCESSING load data ================
-
-img_data_list = [] #elements list, an element is a couple of image (i1,i2)
-img_label_list = [] #labels list, can be 1 if the faces are the same or 0 if not
+import random
+import math
 
 
-def LoadData():
-    folders = os.listdir('dataset')
+# ==========PREPROCESSING load data ================
 
-    for i in folders: #folders for
-        for img1 in os.listdir('dataset/'+i):
-            for j in folders:  # folders for
-                for img2 in os.listdir('dataset/'+j):
 
-                    #read images
-                    input_img1 = skimage.io.imread('dataset/'+i+'/'+img1)
-                    input_img2 = skimage.io.imread('dataset/'+j+'/'+img2)
+def LoadData(folder_path):
+    img_data_list = []  # elements list, an element is a couple of image (i1,i2)
+    img_label_list = []  # labels list, can be 1 if the faces are the same or 0 if not
 
-                    #bring images in grayscale
-                    input_img1 = skimage.color.rgb2gray(input_img1)
-                    input_img2 = skimage.color.rgb2gray(input_img2)
+    folders = os.listdir(folder_path)
 
-                    #create a np array and flatten it
-                    #f_i_img1 = np.array(input_img1).flatten()
-                    #f_i_img2 = np.array(input_img2).flatten()
+    for i in folders:
+        a, b = CreatePositiveCouples(folder_path + '/' + i)
+        c, d = CreateNegativeCouples(folder_path + '/' + i)
 
-                    #resize of the image
-                    r_input_img1 = resize(input_img1, (input_img1.shape[0]//2, input_img1.shape[1]//2))
-                    r_input_img2 = resize(input_img2, (input_img2.shape[0]// 2, input_img2.shape[1]//2))
+        for j in range(len(a)):
+            img_data_list.append(a[j])
+            img_label_list.append(b[j])
 
-                    #concatenate the two arrays
-                    inp = np.concatenate((r_input_img1, r_input_img2))
+        for j in range(len(c)):
+            img_data_list.append(c[j])
+            img_label_list.append(d[j])
 
-                    img_data_list.append(inp)
-                    if i == j:
-                        img_label_list.append(1)
-                    else:
-                        img_label_list.append(0)
+    return img_data_list, img_label_list
 
 
 
-def GetData():
-    LoadData()
+
+# creates the couples for which the correspondence of the face is true (same person)
+def CreatePositiveCouples(folder_path):
+    img_data_list = []  # elements list, an element is a couple of image (i1,i2)
+    img_label_list = []  # labels list, can be 1 if the faces are the same or 0 if not
+
+    for img1 in os.listdir(folder_path):
+        for img2 in os.listdir(folder_path):
+            img_data_list.append(CreateCouple(folder_path + '/' + img1, folder_path + '/' + img2))
+            img_label_list.append(1)
+
+    return img_data_list, img_label_list
+
+
+# creates the couples for which the correspondence of the face is false(different person)
+def CreateNegativeCouples(folder_path):
+    img_data_list = []  # elements list, an element is a couple of image (i1,i2)
+    img_label_list = []  # labels list, can be 1 if the faces are the same or 0 if not
+
+    couples_to_do = len(os.listdir(folder_path))
+
+    for img1 in os.listdir(folder_path):
+        folders = os.listdir(folder_path + '/..')
+
+        basePath = folder_path.split('/')[0]
+        #remove the name of the current folder
+        folders.remove(folder_path.split('/')[-1:][0])
+
+
+        shuffle(folders)
+
+        for i in folders[:couples_to_do]:
+            i = basePath + '/' + i
+
+            rnd_numb = math.floor(random.random() * len(os.listdir(i)))
+            img2 = i + '/' + os.listdir(i)[rnd_numb]
+
+            img_data_list.append(CreateCouple(folder_path + '/' + img1, img2))
+            img_label_list.append(0)
+
+    return img_data_list, img_label_list
+
+
+# return the concatenation of the two images after the preprocessing
+def CreateCouple(img1_path, img2_path):
+
+    # read images
+    input_img1 = skimage.io.imread(img1_path)
+    input_img2 = skimage.io.imread(img2_path)
+
+    # bring images in grayscale
+    input_img1 = skimage.color.rgb2gray(input_img1)
+    input_img2 = skimage.color.rgb2gray(input_img2)
+
+    # resize of the image
+    r_input_img1 = resize(input_img1, (input_img1.shape[0]//2, input_img1.shape[1]//2))
+    r_input_img2 = resize(input_img2, (input_img2.shape[0]//2, input_img2.shape[1]//2))
+
+    # concatenate the two arrays
+    inp = np.concatenate((r_input_img1, r_input_img2))
+
+    return inp
+
+
+def GetData(path):
+
+    (img_data_list, img_label_list) = LoadData(path)
+
     v = list(range(len(img_label_list)))
     shuffle(v)
 
-    train_v = []
-    label_train_v = []
-
-    test_v = []
-    label_test_v = []
+    vec = []
+    label_vec = []
 
     for i in range((len(v))):
-        if i < len(v)*0.8:
-            train_v.append(img_data_list[v[i]])
-            label_train_v.append(img_label_list[v[i]])
+        vec.append(img_data_list[v[i]])
+        label_vec.append(img_label_list[v[i]])
+
+    return np.expand_dims(np.array(vec), 3), np.array(label_vec)
+
+
+#print for a vector of extimation if they are correct
+def ResultPrediction(extimation, real_label):
+    str_extimation = np.array2string(extimation, None, 4)
+    str_real_label = np.array2string(real_label, None, 4)
+    if real_label[0] == 1:
+        if extimation[0] > 0.5:
+            return 'C ' + 'ex ' + str_extimation + ' \n r_l ' + str_real_label
         else:
-            test_v.append(img_data_list[v[i]])
-            label_test_v.append(img_label_list[v[i]])
-
-    return (np.expand_dims(np.array(train_v), 3), np.array(label_train_v)), (np.expand_dims(np.array(test_v), 3), np.array(label_test_v))
-
-
-
+            return 'E ' + 'ex ' + str_extimation + ' \n r_l ' + str_real_label
+    else:
+        if extimation[1] > 0.5:
+            return 'C ' + 'ex ' + str_extimation + ' \n r_l ' + str_real_label
+        else:
+            return 'E ' + 'ex ' + str_extimation + ' \n r_l ' + str_real_label
