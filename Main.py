@@ -38,8 +38,8 @@ kernel_size = 4 # we will use 3x3 kernels throughout
 pool_size = 2 # we will use 2x2 pooling throughout
 conv_depth_1 = 2 # we will initially have 32 kernels per conv. layer...
 conv_depth_2 = 4 # ...switching to 64 after the first pooling layer
-drop_prob_1 = 0.1 # dropout after pooling with probability 0.25
-drop_prob_2 = 0.2 # dropout in the FC layer with probability 0.5
+drop_prob_conv = 0.1 # dropout after pooling with probability 0.25
+drop_prob_hidden = 0.5 # dropout in the FC layer with probability 0.5
 hidden_size = 50 # the FC layer will have 512 neurons
 
 (X_train, y_train), (X_test, y_test) = (GetData(TRAINING_DATASET_FOLDER_NAME), GetData(TEST_DATASET_FOLDER_NAME)) # fetch data
@@ -63,21 +63,23 @@ inp = Input(shape=(height,width,depth ))
 # Conv [32] -> Conv [32] -> Pool (with dropout on the pooling layer)
 conv_1 = Convolution2D(conv_depth_1, (kernel_size, kernel_size), padding='same', activation='relu')(inp)
 pool_1 = MaxPooling2D(pool_size=(pool_size, pool_size))(conv_1)
-conv_2 = Convolution2D(conv_depth_1, (kernel_size, kernel_size), padding='same', activation='relu')(pool_1)
+drop_1 = Dropout(drop_prob_conv)(pool_1)
+conv_2 = Convolution2D(conv_depth_1, (kernel_size, kernel_size), padding='same', activation='relu')(drop_1)
 pool_2 = MaxPooling2D(pool_size=(pool_size, pool_size))(conv_2)
-
-pool_1 = MaxPooling2D(pool_size=(pool_size, pool_size))(conv_2)
+drop_2 = Dropout(drop_prob_conv)(pool_2)
 #drop_1 = Dropout(drop_prob_1)(pool_1)
 # Conv [64] -> Conv [64] -> Pool (with dropout on the pooling layer)
-conv_3 = Convolution2D(conv_depth_2, (kernel_size, kernel_size), padding='same', activation='relu')(pool_2)
+conv_3 = Convolution2D(conv_depth_2, (kernel_size, kernel_size), padding='same', activation='relu')(drop_2)
 pool_3 = MaxPooling2D(pool_size=(pool_size, pool_size))(conv_3)
-conv_4 = Convolution2D(conv_depth_2, (kernel_size, kernel_size), padding='same', activation='relu')(pool_3)
+drop_3 = Dropout(drop_prob_conv)(pool_3)
+conv_4 = Convolution2D(conv_depth_2, (kernel_size, kernel_size), padding='same', activation='relu')(drop_3)
 pool_4 = MaxPooling2D(pool_size=(pool_size, pool_size))(conv_4)
 #drop_2 = Dropout(drop_prob_1)(pool_2)
 # Now flatten to 1D, apply FC -> ReLU (with dropout) -> softmax
 flat = Flatten()(pool_4)
 hidden = Dense(hidden_size, activation='relu')(flat)
-hidden2 = Dense(hidden_size, activation='relu')(hidden)
+drop_4 = Dropout(drop_prob_hidden)(hidden)
+hidden2 = Dense(hidden_size, activation='relu')(drop_4)
 #drop_3 = Dropout(drop_prob_2)(hidden)
 out = Dense(num_classes, activation='softmax')(hidden2)
 
