@@ -71,18 +71,20 @@ def PreprocessImages(folder):
     if not os.path.isdir(preproc_folder):
         os.mkdir(preproc_folder)
 
-        for f in os.listdir(folder):
+    for f in os.listdir(folder):
+        if not os.path.isdir(preproc_folder + "/" + f):
             os.mkdir(preproc_folder + "/" + f)
-            for img in os.listdir(folder + "/" + f):
-                image = skimage.io.imread(folder + "/" + f + '/' + img)
-                preproc_img = FaceExtractionPipelineImage(image)
+        for img in os.listdir(folder + "/" + f):
+            image = skimage.io.imread(folder + "/" + f + '/' + img)
+            preproc_img = FaceExtractionPipelineImage(image)
 
-                if preproc_img is not None:
-                    skimage.io.imsave(preproc_folder + "/" + f + '/' + img, preproc_img)
-                    print("Created: " + preproc_folder + "/" + f + '/' + img)
-                else:
-                    print("Image null: " + preproc_folder + "/" + f + '/' + img)
+            if preproc_img is not None:
+                skimage.io.imsave(preproc_folder + "/" + f + '/' + img, preproc_img)
+                print("Created: " + preproc_folder + "/" + f + '/' + img)
+            else:
+                print("Image null: " + preproc_folder + "/" + f + '/' + img)
     else:
         print("Folder already created. Delete the old one and retry.")
 
 #PreprocessImages("2_dataset test")
+#PreprocessImages("1_dataset train")

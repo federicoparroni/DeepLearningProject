@@ -12,11 +12,12 @@ from keras.models import load_model
 bp = 'trained_model/'
 
 NUM_CLASSES = 2
-TEST_DATASET_FOLDER_NAME = '2_dataset test'
+TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 MAX_IMAGES_TO_PLOT = 36
 NUM_PRINTED_PAGES = 3
+MODEL_TO_LOAD = '2018-03-04 17:54:14.h5'
 
-model = load_model(bp + 'my_model.h5')
+model = load_model(bp + MODEL_TO_LOAD)
 
 (X_test, y_test) = GetData(TEST_DATASET_FOLDER_NAME)
 Y_test = np_utils.to_categorical(y_test, NUM_CLASSES)

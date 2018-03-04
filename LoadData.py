@@ -91,7 +91,9 @@ def CreateCouple(img1_path, img2_path):
     #r_input_img2 = resize(input_img2, (input_img2.shape[0]//2, input_img2.shape[1]//2))
 
     # concatenate the two arrays
-    inp = np.concatenate((input_img1, input_img2))
+    #inp = np.concatenate((input_img1, input_img2))
+
+    inp = np.stack((input_img1, input_img2), 2)
 
     return inp
 
@@ -110,8 +112,11 @@ def GetData(path):
         vec.append(img_data_list[v[i]])
         label_vec.append(img_label_list[v[i]])
 
-    return np.expand_dims(np.array(vec), 3), np.array(label_vec)
+    #when the images were concatenated one near the other
+    #return np.expand_dims(np.array(vec), 3), np.array(label_vec)
 
+    #the images are stacked one over the other
+    return np.array(vec), np.array(label_vec)
 
 #print for a vector of extimation if they are correct
 def ResultPrediction(extimation, real_label):

@@ -32,15 +32,15 @@ config.gpu_options.allow_growth = True
 TRAINING_DATASET_FOLDER_NAME = '3_preprocessed_1_dataset train'
 TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 
-batch_size = 32 # in each iteration, we consider 32 training examples at once
-num_epochs = 100 # we iterate 200 times over the entire training set
+batch_size = 64 # in each iteration, we consider 32 training examples at once
+num_epochs = 20 # we iterate 200 times over the entire training set
 kernel_size = 4 # we will use 3x3 kernels throughout
 pool_size = 2 # we will use 2x2 pooling throughout
-conv_depth_1 = 2 # we will initially have 32 kernels per conv. layer...
-conv_depth_2 = 4 # ...switching to 64 after the first pooling layer
+conv_depth_1 = 6 # we will initially have 32 kernels per conv. layer...
+conv_depth_2 = 8 # ...switching to 64 after the first pooling layer
 drop_prob_conv = 0.1 # dropout after pooling with probability 0.25
 drop_prob_hidden = 0.5 # dropout in the FC layer with probability 0.5
-hidden_size = 80 # the FC layer will have 512 neurons
+hidden_size = 160 # the FC layer will have 512 neurons
 
 (X_train, y_train), (X_test, y_test) = (GetData(TRAINING_DATASET_FOLDER_NAME), GetData(TEST_DATASET_FOLDER_NAME)) # fetch data
 
@@ -59,7 +59,7 @@ Y_train = np_utils.to_categorical(y_train, num_classes) # One-hot encode the lab
 Y_test = np_utils.to_categorical(y_test, num_classes) # One-hot encode the labels
 
 
-inp = Input(shape=(height,width,depth ))
+inp = Input(shape=(height,width, depth))
 # Conv [32] -> Conv [32] -> Pool (with dropout on the pooling layer)
 conv_1 = Convolution2D(conv_depth_1, (kernel_size, kernel_size), padding='same', activation='relu')(inp)
 pool_1 = MaxPooling2D(pool_size=(pool_size, pool_size))(conv_1)
