@@ -2,18 +2,19 @@ import dlib
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-from skimage import io
-import matplotlib.patches as patches
 from skimage.transform import resize
+import skimage.io
+
+PREPROCESSED_IMAGES_FOLDER_PATH = "3_preprocessed_"   # path of the preprocessed dataset
 
 # appies the face extraction pipeline to a single image
-def FaceExtractionPipelineImage(path):
+def FaceExtractionPipelineImage(image):
 
     # Create a HOG face detector using the built-in dlib class
     face_detector = dlib.get_frontal_face_detector()
 
     # Load the image into an array
-    image = io.imread(path)
+    # image = io.imread(path)
 
     # Run the HOG face detector on the image data. The result will be the bounding boxes of the faces in our image.
     detected_faces = face_detector(image, 1)
@@ -62,3 +63,26 @@ def TryThePipeline(dataset_root_path):
 
 
 #TryThePipeline('/home/giovanni/Immagini/Webcam')
+
+# ==========PREPROCESSING load data ================
+
+def PreprocessImages(folder):
+    preproc_folder = PREPROCESSED_IMAGES_FOLDER_PATH + folder
+    if not os.path.isdir(preproc_folder):
+        os.mkdir(preproc_folder)
+
+        for f in os.listdir(folder):
+            os.mkdir(preproc_folder + "/" + f)
+            for img in os.listdir(folder + "/" + f):
+                image = skimage.io.imread(folder + "/" + f + '/' + img)
+                preproc_img = FaceExtractionPipelineImage(image)
+
+                if preproc_img is not None:
+                    skimage.io.imsave(preproc_folder + "/" + f + '/' + img, preproc_img)
+                    print("Created: " + preproc_folder + "/" + f + '/' + img)
+                else:
+                    print("Image null: " + preproc_folder + "/" + f + '/' + img)
+    else:
+        print("Folder already created. Delete the old one and retry.")
+
+#PreprocessImages("2_dataset test")

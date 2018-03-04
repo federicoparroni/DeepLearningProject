@@ -9,13 +9,11 @@ import math
 import FaceExtractionPipeline
 
 
-# ==========PREPROCESSING load data ================
-
-
 def LoadData(folder_path):
     img_data_list = []  # elements list, an element is a couple of image (i1,i2)
     img_label_list = []  # labels list, can be 1 if the faces are the same or 0 if not
 
+    # load images from the preprocessed folder
     folders = os.listdir(folder_path)
 
     for i in folders:
@@ -33,8 +31,6 @@ def LoadData(folder_path):
     return img_data_list, img_label_list
 
 
-
-
 # creates the couples for which the correspondence of the face is true (same person)
 def CreatePositiveCouples(folder_path):
     img_data_list = []  # elements list, an element is a couple of image (i1,i2)
@@ -44,7 +40,7 @@ def CreatePositiveCouples(folder_path):
         for img2 in os.listdir(folder_path):
             couple = CreateCouple(folder_path + '/' + img1, folder_path + '/' + img2)
             if couple is not None:
-                img_data_list.append()
+                img_data_list.append(couple)
                 img_label_list.append(1)
 
     return img_data_list, img_label_list
@@ -61,9 +57,8 @@ def CreateNegativeCouples(folder_path):
         folders = os.listdir(folder_path + '/..')
 
         basePath = folder_path.split('/')[0]
-        #remove the name of the current folder
+        # remove the name of the current folder
         folders.remove(folder_path.split('/')[-1:][0])
-
 
         shuffle(folders)
 
@@ -84,25 +79,21 @@ def CreateNegativeCouples(folder_path):
 # return the concatenation of the two images after the preprocessing
 def CreateCouple(img1_path, img2_path):
     # read preprocessed images
-    im1 = FaceExtractionPipeline.FaceExtractionPipelineImage(img1_path)
-    im2 = FaceExtractionPipeline.FaceExtractionPipelineImage(img2_path)
+    input_img1 = skimage.io.imread(img1_path)
+    input_img2 = skimage.io.imread(img2_path)
 
-    if im1 is not None and im2 is not None:
-        input_img1 = FaceExtractionPipeline.FaceExtractionPipelineImage(img1_path)
-        input_img2 = FaceExtractionPipeline.FaceExtractionPipelineImage(img2_path)
+    # bring images in grayscale
+    input_img1 = skimage.color.rgb2gray(input_img1)
+    input_img2 = skimage.color.rgb2gray(input_img2)
 
-        # bring images in grayscale
-        input_img1 = skimage.color.rgb2gray(input_img1)
-        input_img2 = skimage.color.rgb2gray(input_img2)
+    # resize of the image
+    #r_input_img1 = resize(input_img1, (input_img1.shape[0]//2, input_img1.shape[1]//2))
+    #r_input_img2 = resize(input_img2, (input_img2.shape[0]//2, input_img2.shape[1]//2))
 
-        # resize of the image
-        r_input_img1 = resize(input_img1, (input_img1.shape[0]//2, input_img1.shape[1]//2))
-        r_input_img2 = resize(input_img2, (input_img2.shape[0]//2, input_img2.shape[1]//2))
+    # concatenate the two arrays
+    inp = np.concatenate((input_img1, input_img2))
 
-        # concatenate the two arrays
-        inp = np.concatenate((r_input_img1, r_input_img2))
-
-        return inp
+    return inp
 
 
 def GetData(path):

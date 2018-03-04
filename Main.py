@@ -29,18 +29,18 @@ config.gpu_options.allow_growth = True
 #============================================================================
 
 #defining the folders path train and test
-TRAINING_DATASET_FOLDER_NAME = '1_dataset train'
-TEST_DATASET_FOLDER_NAME = '2_dataset test'
+TRAINING_DATASET_FOLDER_NAME = '3_preprocessed_1_dataset train'
+TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 
 batch_size = 32 # in each iteration, we consider 32 training examples at once
-num_epochs = 1 # we iterate 200 times over the entire training set
+num_epochs = 100 # we iterate 200 times over the entire training set
 kernel_size = 4 # we will use 3x3 kernels throughout
 pool_size = 2 # we will use 2x2 pooling throughout
 conv_depth_1 = 2 # we will initially have 32 kernels per conv. layer...
 conv_depth_2 = 4 # ...switching to 64 after the first pooling layer
 drop_prob_conv = 0.1 # dropout after pooling with probability 0.25
 drop_prob_hidden = 0.5 # dropout in the FC layer with probability 0.5
-hidden_size = 50 # the FC layer will have 512 neurons
+hidden_size = 80 # the FC layer will have 512 neurons
 
 (X_train, y_train), (X_test, y_test) = (GetData(TRAINING_DATASET_FOLDER_NAME), GetData(TEST_DATASET_FOLDER_NAME)) # fetch data
 
@@ -63,16 +63,14 @@ inp = Input(shape=(height,width,depth ))
 # Conv [32] -> Conv [32] -> Pool (with dropout on the pooling layer)
 conv_1 = Convolution2D(conv_depth_1, (kernel_size, kernel_size), padding='same', activation='relu')(inp)
 pool_1 = MaxPooling2D(pool_size=(pool_size, pool_size))(conv_1)
-drop_1 = Dropout(drop_prob_conv)(pool_1)
-conv_2 = Convolution2D(conv_depth_1, (kernel_size, kernel_size), padding='same', activation='relu')(drop_1)
+#drop_1 = Dropout(drop_prob_conv)(pool_1)
+conv_2 = Convolution2D(conv_depth_1, (kernel_size, kernel_size), padding='same', activation='relu')(pool_1)
 pool_2 = MaxPooling2D(pool_size=(pool_size, pool_size))(conv_2)
-drop_2 = Dropout(drop_prob_conv)(pool_2)
-#drop_1 = Dropout(drop_prob_1)(pool_1)
-# Conv [64] -> Conv [64] -> Pool (with dropout on the pooling layer)
-conv_3 = Convolution2D(conv_depth_2, (kernel_size, kernel_size), padding='same', activation='relu')(drop_2)
+#drop_2 = Dropout(drop_prob_conv)(pool_2)
+conv_3 = Convolution2D(conv_depth_2, (kernel_size, kernel_size), padding='same', activation='relu')(pool_2)
 pool_3 = MaxPooling2D(pool_size=(pool_size, pool_size))(conv_3)
-drop_3 = Dropout(drop_prob_conv)(pool_3)
-conv_4 = Convolution2D(conv_depth_2, (kernel_size, kernel_size), padding='same', activation='relu')(drop_3)
+#drop_3 = Dropout(drop_prob_conv)(pool_3)
+conv_4 = Convolution2D(conv_depth_2, (kernel_size, kernel_size), padding='same', activation='relu')(pool_3)
 pool_4 = MaxPooling2D(pool_size=(pool_size, pool_size))(conv_4)
 #drop_2 = Dropout(drop_prob_1)(pool_2)
 # Now flatten to 1D, apply FC -> ReLU (with dropout) -> softmax
