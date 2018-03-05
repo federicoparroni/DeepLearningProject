@@ -1,5 +1,5 @@
 from keras.models import Model
-from keras.layers import Input, Convolution2D, MaxPooling2D, Dense, Dropout, Flatten
+from keras.layers import Input, Convolution2D, MaxPooling2D, Dense, Dropout, Flatten, Convolution3D, MaxPooling3D
 from keras.utils import np_utils
 from keras.callbacks import TensorBoard
 import keras
@@ -32,10 +32,10 @@ config.gpu_options.allow_growth = True
 TRAINING_DATASET_FOLDER_NAME = '3_preprocessed_1_dataset train'
 TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 
-batch_size = 64 # in each iteration, we consider 32 training examples at once
-num_epochs = 20 # we iterate 200 times over the entire training set
+batch_size = 32 # in each iteration, we consider 32 training examples at once
+num_epochs = 200# we iterate 200 times over the entire training set
 kernel_size = 4 # we will use 3x3 kernels throughout
-pool_size = 2 # we will use 2x2 pooling throughout
+pool_size = 4 # we will use 2x2 pooling throughout
 conv_depth_1 = 6 # we will initially have 32 kernels per conv. layer...
 conv_depth_2 = 8 # ...switching to 64 after the first pooling layer
 drop_prob_conv = 0.1 # dropout after pooling with probability 0.25
@@ -71,15 +71,15 @@ conv_3 = Convolution2D(conv_depth_2, (kernel_size, kernel_size), padding='same',
 pool_3 = MaxPooling2D(pool_size=(pool_size, pool_size))(conv_3)
 #drop_3 = Dropout(drop_prob_conv)(pool_3)
 conv_4 = Convolution2D(conv_depth_2, (kernel_size, kernel_size), padding='same', activation='relu')(pool_3)
-pool_4 = MaxPooling2D(pool_size=(pool_size, pool_size))(conv_4)
+#pool_4 = MaxPooling2D(pool_size=(pool_size, pool_size))(conv_4)
 #drop_2 = Dropout(drop_prob_1)(pool_2)
 # Now flatten to 1D, apply FC -> ReLU (with dropout) -> softmax
-flat = Flatten()(pool_4)
+flat = Flatten()(conv_4)
 hidden = Dense(hidden_size, activation='relu')(flat)
 drop_4 = Dropout(drop_prob_hidden)(hidden)
 hidden2 = Dense(hidden_size, activation='relu')(drop_4)
-#drop_3 = Dropout(drop_prob_2)(hidden)
-out = Dense(num_classes, activation='softmax')(hidden2)
+drop_5 = Dropout(drop_prob_hidden)(hidden2)
+out = Dense(num_classes, activation='softmax')(drop_5)
 
 model = Model(inputs=inp, outputs=out) # To define a model, just specify its input and output layers
 

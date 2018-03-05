@@ -113,7 +113,7 @@ def GetData(path):
         label_vec.append(img_label_list[v[i]])
 
     #when the images were concatenated one near the other
-    #return np.expand_dims(np.array(vec), 3), np.array(label_vec)
+    #return np.expand_dims(np.array(vec), 4), np.array(label_vec)
 
     #the images are stacked one over the other
     return np.array(vec), np.array(label_vec)
