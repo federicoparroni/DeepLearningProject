@@ -4,11 +4,15 @@ import matplotlib.pyplot as plt
 import os
 from skimage.transform import resize
 import skimage.io
+import matplotlib.patches as patches
 
 PREPROCESSED_IMAGES_FOLDER_PATH = "3_preprocessed_"   # path of the preprocessed dataset
 
 # appies the face extraction pipeline to a single image
 def FaceExtractionPipelineImage(image):
+
+    plt.imshow(image)
+    plt.show()
 
     # Create a HOG face detector using the built-in dlib class
     face_detector = dlib.get_frontal_face_detector()
@@ -33,11 +37,11 @@ def FaceExtractionPipelineImage(image):
             face_rect_top = 0 if face_rect.top() < 0 else face_rect.top()
 
             # show the bounding box of the face
-            # fig, ax = plt.subplots(1)
-            # ax.imshow(im)
-            # rect = patches.Rectangle((face_rect_left, face_rect_top), face_rect_bottom - face_rect_top, (face_rect_right - face_rect_left), edgecolor='r', linewidth=1, facecolor='none')
-            # ax.add_patch(rect)
-            # plt.show()
+            fig, ax = plt.subplots(1)
+            ax.imshow(im)
+            rect = patches.Rectangle((face_rect_left, face_rect_top), face_rect_bottom - face_rect_top, (face_rect_right - face_rect_left), edgecolor='r', linewidth=1, facecolor='none')
+            ax.add_patch(rect)
+            plt.show()
 
             # Crop
             cropped_im = im[face_rect_top:face_rect_bottom, face_rect_left:face_rect_right]
@@ -56,13 +60,16 @@ def TryThePipeline(dataset_root_path):
     folders = os.listdir(dataset_root_path)
 
     for i in folders: # scan all the images of that folder
-        img = FaceExtractionPipelineImage(dataset_root_path + '/' + i)
+        im = skimage.io.imread(dataset_root_path + '/' + i)
+        img = FaceExtractionPipelineImage(im)
         if img is not None:
             plt.imshow(img, 'gray')
             plt.show()
+        else:
+            print('error in: ' + dataset_root_path + '/' + i)
 
-
-#TryThePipeline('/home/giovanni/Immagini/Webcam')
+FaceExtractionPipelineImage(skimage.io.imread('/home/giovanni/Scrivania/Figure_1.png'))
+#TryThePipeline('2_dataset test/s1')
 
 # ==========PREPROCESSING load data ================
 
@@ -88,3 +95,4 @@ def PreprocessImages(folder):
 
 #PreprocessImages("2_dataset test")
 #PreprocessImages("1_dataset train")
+
