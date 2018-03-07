@@ -93,9 +93,12 @@ def CreateCouple(img1_path, img2_path):
     # concatenate the two arrays
     #inp = np.concatenate((input_img1, input_img2))
 
-    inp = np.stack((input_img1, input_img2), 2)
+    return MergeImages(input_img1, input_img2)
 
-    return inp
+
+def MergeImages(img1, img2):
+    #return np.concatenate((img1, img2))
+    return np.stack((img1, img2), 2)
 
 
 def GetData(path):
