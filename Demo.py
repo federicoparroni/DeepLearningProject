@@ -5,61 +5,73 @@ import numpy as np
 import matplotlib.pyplot as plt
 import skimage.transform
 import cv2
+import tensorflow as tf
 import LoadData
+import threading
 
+class Demo:
 
-def StartDemo(ref, model):
-    # load the pretrained model
-    bp = 'trained_model/'
-    model = load_model(bp + model)
+    cap=None
+    graph=None
+    model=None
+    ref_img=None
 
-    # pass the reference image through the pipeline
-    ref_img = FaceExtractionPipeline.FaceExtractionPipelineImage(skimage.io.imread(ref))
-    ref_img = skimage.color.rgb2gray(ref_img)
-
-    # acquire the video stream
-    cap = cv2.VideoCapture(0)
-
-    # set resolution of the acquired image
-    cap.set(3, 640);
-    cap.set(4, 480);
-
-    while (True):
-        # Capture frame-by-frame
-        ret, frame = cap.read()
-
-        # Our operations on the frame come here
-        # TO Move in the pipeline
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-        img_data_pipelined = FaceExtractionPipeline.FaceExtractionPipelineImage(gray)
-
-
+    def ElaborateImagesAndMakePredition(self, inp_img):
+        img_data_pipelined = FaceExtractionPipeline.FaceExtractionPipelineImage(inp_img)
 
         if img_data_pipelined is not None:
-
             # plt.imshow(ref_img, 'gray')
             # plt.show()
             # plt.imshow(img_data_pipelined, 'gray')
             # plt.show()
 
-            inp = LoadData.MergeImages(ref_img, img_data_pipelined)
+            inp = LoadData.MergeImages(self.ref_img, img_data_pipelined)
             inp = np.expand_dims(inp, axis=0)
-            #inp = np.expand_dims(inp, axis=3)
+            # inp = np.expand_dims(inp, axis=3)
 
-            predicted_label = model.predict(inp)
-            #print(predicted_label)
+            with self.graph.as_default():
+                predicted_label = self.model.predict(inp)
+
             print('same' if predicted_label[0, 1] > 0.5 else 'wrong')
 
 
+    def OneFrameComputation(self):
+        threading.Timer(0.5, self.OneFrameComputation).start()
+
+        # read frame
+        ret, frame = self.cap.read()
+
+        # Our operations on the frame come here
+        # TO Move in the pipeline
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        # do the prediction in a different thread
+        t = threading.Thread(target=self.ElaborateImagesAndMakePredition, args=(gray,))
+        t.setDaemon(True)
+        t.start()
+
         # Display the resulting frame
         cv2.imshow('frame', gray)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-    # When everything done, release the capture
-    cap.release()
-    cv2.destroyAllWindows()
 
 
-StartDemo('/home/giovanni/Immagini/Webcam/parro.jpg', '2018-03-06 02:18:46.h5')
+    def StartDemo(self, ref, model):
+        ref = '/home/giovanni/Immagini/Webcam/parro.jpg'
+        model = '2018-03-06 02:18:46.h5'
+
+        # initialization of class variables
+        self.cap = cv2.VideoCapture(0)
+        self.cap.set(3, 640);
+        self.cap.set(4, 480);
+
+        self.graph = tf.get_default_graph()
+
+        bp = 'trained_model/'
+        self.model = load_model(bp + model)
+
+        self.ref_img = FaceExtractionPipeline.FaceExtractionPipelineImage(skimage.io.imread(ref))
+        self.ref_img = skimage.color.rgb2gray(self.ref_img)
+
+        self.OneFrameComputation()
+
+demo=Demo()
+demo.StartDemo('/home/giovanni/Immagini/Webcam/parro.jpg', '2018-03-06 02:18:46.h5')
