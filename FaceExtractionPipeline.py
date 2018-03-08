@@ -10,6 +10,7 @@ PREPROCESSED_IMAGES_FOLDER_PATH = "3_preprocessed_"   # path of the preprocessed
 
 # appies the face extraction pipeline to a single image
 def FaceExtractionPipelineImage(image):
+
     # Create a HOG face detector using the built-in dlib class
     face_detector = dlib.get_frontal_face_detector()
 
@@ -45,6 +46,15 @@ def FaceExtractionPipelineImage(image):
             # Resize
             resized_im = resize(cropped_im, (80, 80))
 
+            # bring in gray scale the images
+            if len(im.shape) == 3:
+                resized_im = skimage.color.rgb2gray(resized_im)
+                resized_im = resized_im*255
+                resized_im = resized_im.astype('int')
+            else:
+                resized_im = resized_im
+
+
             # TO-DO :
             # rotate the image in order to put eyes and mouth at center
 
@@ -64,8 +74,6 @@ def TryThePipeline(dataset_root_path):
         else:
             print('error in: ' + dataset_root_path + '/' + i)
 
-# FaceExtractionPipelineImage(skimage.io.imread('/home/giovanni/Scrivania/Figure_1.png'))
-#TryThePipeline('2_dataset test/s1')
 
 # ==========PREPROCESSING load data ================
 
@@ -77,15 +85,15 @@ def PreprocessImages(folder):
     for f in os.listdir(folder):
         if not os.path.isdir(preproc_folder + "/" + f):
             os.mkdir(preproc_folder + "/" + f)
-        for img in os.listdir(folder + "/" + f):
-            image = skimage.io.imread(folder + "/" + f + '/' + img)
-            preproc_img = FaceExtractionPipelineImage(image)
+            for img in os.listdir(folder + "/" + f):
+                image = skimage.io.imread(folder + "/" + f + '/' + img)
+                preproc_img = FaceExtractionPipelineImage(image)
 
-            if preproc_img is not None:
-                skimage.io.imsave(preproc_folder + "/" + f + '/' + img, preproc_img)
-                print("Created: " + preproc_folder + "/" + f + '/' + img)
-            else:
-                print("Image null: " + preproc_folder + "/" + f + '/' + img)
+                if preproc_img is not None:
+                    skimage.io.imsave(preproc_folder + "/" + f + '/' + img, preproc_img)
+                    print("Created: " + preproc_folder + "/" + f + '/' + img)
+                else:
+                    print("Image null: " + preproc_folder + "/" + f + '/' + img)
     else:
         print("Folder already created. Delete the old one and retry.")
 

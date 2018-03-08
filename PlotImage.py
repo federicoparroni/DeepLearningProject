@@ -8,7 +8,7 @@ def plot(images, labels, count):
 
     for i in range(count):
         a = fig.add_subplot(math.ceil(count ** .5), math.ceil(count ** .5), i+1)
-        plt.imshow(np.squeeze(images[i], axis=2), 'gray')
+        plt.imshow(images[i], 'gray')
         a.set_title(labels[i])
         a.axis('off')
 

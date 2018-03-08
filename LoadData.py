@@ -83,8 +83,8 @@ def CreateCouple(img1_path, img2_path):
     input_img2 = skimage.io.imread(img2_path)
 
     # bring images in grayscale
-    input_img1 = skimage.color.rgb2gray(input_img1)
-    input_img2 = skimage.color.rgb2gray(input_img2)
+    #input_img1 = skimage.color.rgb2gray(input_img1)
+    #input_img2 = skimage.color.rgb2gray(input_img2)
 
     # resize of the image
     #r_input_img1 = resize(input_img1, (input_img1.shape[0]//2, input_img1.shape[1]//2))
@@ -135,3 +135,5 @@ def ResultPrediction(extimation, real_label):
             return 'OK' + ': ' + str_extimation #+ ' \n r_l ' + str_real_label
         else:
             return 'E' + ': ' + str_extimation #+ ' \n r_l ' + str_real_label
+
+
