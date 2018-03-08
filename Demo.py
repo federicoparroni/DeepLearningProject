@@ -1,59 +1,65 @@
 from keras.models import load_model
-import pygame.camera
-import pygame
-from pygame.locals import *
-import numpy as np
 import FaceExtractionPipeline
 import skimage.io
+import numpy as np
 import matplotlib.pyplot as plt
 import skimage.transform
+import cv2
+import LoadData
 
 
 def StartDemo(ref, model):
+    # load the pretrained model
     bp = 'trained_model/'
     model = load_model(bp + model)
 
-    # ref_img = FaceExtractionPipeline.FaceExtractionPipelineImage(skimage.io.imread(ref))
+    # pass the reference image through the pipeline
+    ref_img = FaceExtractionPipeline.FaceExtractionPipelineImage(skimage.io.imread(ref))
+    ref_img = skimage.color.rgb2gray(ref_img)
 
-    DEVICE = '/dev/video0'
-    SIZE = (480, 480)
+    # acquire the video stream
+    cap = cv2.VideoCapture(0)
 
-    pygame.init()
-    pygame.camera.init()
-    display = pygame.display.set_mode(SIZE, 0)
-    camera = pygame.camera.Camera(DEVICE, SIZE)
-    camera.start()
-    screen = pygame.surface.Surface(SIZE, 0, display)
-    capture = True
-    #while capture:
+    # set resolution of the acquired image
+    cap.set(3, 640);
+    cap.set(4, 480);
 
-    img_data = pygame.surfarray.array3d(camera.get_image())
+    while (True):
+        # Capture frame-by-frame
+        ret, frame = cap.read()
 
-    # plt.imshow(img_data)
-    # plt.show()
+        # Our operations on the frame come here
+        # TO Move in the pipeline
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    img_data = skimage.transform.rotate(img_data, 270)
-
-    img_data_pipelined = FaceExtractionPipeline.FaceExtractionPipelineImage(img_data)
+        img_data_pipelined = FaceExtractionPipeline.FaceExtractionPipelineImage(gray)
 
 
-        # if img_data_pipelined is not None:
-        #
-        #     print(img_data_pipelined.shape)
-        #
-        #     inp = np.concatenate((ref_img, img_data_pipelined))
-        #     predicted_label = model.predict(inp)
-        #     print(predicted_label)
-        #
-        # display.blit(screen, (0, 0))
-        # pygame.display.flip()
-        # for event in pygame.event.get():
-        #     print(event.type)
-        #     # if event.type == "QUIT":
-        #     #     capture = False
-        #     # elif event.type == KEYDOWN and event.key == K_s:
-        #     #     pygame.image.save(screen, FILENAME)
-    camera.stop()
-    pygame.quit()
 
-# StartDemo('/home/giovanni/Immagini/Webcam/sample.jpg', 'my_model.h5')
+        if img_data_pipelined is not None:
+
+            # plt.imshow(ref_img, 'gray')
+            # plt.show()
+            # plt.imshow(img_data_pipelined, 'gray')
+            # plt.show()
+
+            inp = LoadData.MergeImages(ref_img, img_data_pipelined)
+            inp = np.expand_dims(inp, axis=0)
+            #inp = np.expand_dims(inp, axis=3)
+
+            predicted_label = model.predict(inp)
+            #print(predicted_label)
+            print('same' if predicted_label[0, 1] > 0.5 else 'wrong')
+
+
+        # Display the resulting frame
+        cv2.imshow('frame', gray)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    # When everything done, release the capture
+    cap.release()
+    cv2.destroyAllWindows()
+
+
+StartDemo('/home/giovanni/Immagini/Webcam/parro.jpg', '2018-03-06 02:18:46.h5')
