@@ -20,7 +20,7 @@ class Demo:
         img_data_pipelined = FaceExtractionPipeline.FaceExtractionPipelineImage(inp_img)
 
         if img_data_pipelined is not None:
-            # plt.imshow(ref_img, 'gray')
+            # plt.imshow(self.ref_img, 'gray')
             # plt.show()
             # plt.imshow(img_data_pipelined, 'gray')
             # plt.show()
@@ -32,7 +32,7 @@ class Demo:
             with self.graph.as_default():
                 predicted_label = self.model.predict(inp)
 
-            print('same' if predicted_label[0, 1] > 0.5 else 'wrong')
+            print(('same' if predicted_label[0, 1] > 0.5 else 'wrong') + str(predicted_label))
 
 
     def OneFrameComputation(self):
@@ -41,24 +41,15 @@ class Demo:
         # read frame
         ret, frame = self.cap.read()
 
-        # Our operations on the frame come here
-        # TO Move in the pipeline
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
         # do the prediction in a different thread
-        t = threading.Thread(target=self.ElaborateImagesAndMakePredition, args=(gray,))
+        t = threading.Thread(target=self.ElaborateImagesAndMakePredition, args=(frame,))
         t.setDaemon(True)
         t.start()
 
-        # Display the resulting frame
-        cv2.imshow('frame', gray)
-
 
     def StartDemo(self, ref, model):
-        ref = '/home/giovanni/Immagini/Webcam/parro.jpg'
-        model = '2018-03-06 02:18:46.h5'
-
         # initialization of class variables
+
         self.cap = cv2.VideoCapture(0)
         self.cap.set(3, 640);
         self.cap.set(4, 480);
@@ -69,9 +60,8 @@ class Demo:
         self.model = load_model(bp + model)
 
         self.ref_img = FaceExtractionPipeline.FaceExtractionPipelineImage(skimage.io.imread(ref))
-        self.ref_img = skimage.color.rgb2gray(self.ref_img)
 
         self.OneFrameComputation()
 
 demo=Demo()
-demo.StartDemo('/home/giovanni/Immagini/Webcam/parro.jpg', '2018-03-06 02:18:46.h5')
+demo.StartDemo('/home/giovanni/Immagini/Webcam/samplecucina.jpg', '2018-03-08 01:33:11.h5')
