@@ -33,7 +33,7 @@ def FaceExtractionPipelineImage(image):
         for i, face_rect in enumerate(detected_faces):
 
 
-            faceAligned = fa.align(image, image, face_rect)
+            face_aligned = fa.align(image, image, face_rect)
 
             # im = np.array(image)
             #
@@ -57,18 +57,15 @@ def FaceExtractionPipelineImage(image):
             # resized_im = resize(cropped_im, (80, 80))
             #
             # # bring in gray scale the images
-            # if len(im.shape) == 3:
-            #     resized_im = skimage.color.rgb2gray(resized_im)
-            #     resized_im = resized_im*255
-            #     resized_im = resized_im.astype('int')
-            # else:
-            #     resized_im = resized_im
-
+            if len(face_aligned.shape) == 3:
+                face_aligned = skimage.color.rgb2gray(face_aligned)
+                face_aligned = face_aligned*255
+                face_aligned = face_aligned.astype('int')
 
             # TO-DO :
             # rotate the image in order to put eyes and mouth at center
 
-            return faceAligned
+            return face_aligned
 
 
 # outputs the results of the pipeline to all the images starting from the dataset_root_path

@@ -65,4 +65,4 @@ class Demo:
         self.OneFrameComputation()
 
 demo=Demo()
-#demo.StartDemo('/home/giovanni/Immagini/Webcam/samplecucina.jpg', '2018-03-08 01:33:11.h5')
+demo.StartDemo('/home/giovanni/Immagini/Webcam/samplecucina.jpg', '2018-03-08 01:33:11.h5')
