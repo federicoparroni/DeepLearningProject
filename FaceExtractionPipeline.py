@@ -2,8 +2,10 @@ import dlib
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+from face_utils import FaceAligner
 from skimage.transform import resize
 import skimage.io
+import argparse
 import matplotlib.patches as patches
 
 PREPROCESSED_IMAGES_FOLDER_PATH = "3_preprocessed_"   # path of the preprocessed dataset
@@ -13,6 +15,10 @@ def FaceExtractionPipelineImage(image):
 
     # Create a HOG face detector using the built-in dlib class
     face_detector = dlib.get_frontal_face_detector()
+
+
+    predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
+    fa = FaceAligner(predictor, desiredFaceWidth=80)
 
     # Load the image into an array
     # image = io.imread(path)
@@ -25,40 +31,44 @@ def FaceExtractionPipelineImage(image):
 
         # Loop through each face we found in the image
         for i, face_rect in enumerate(detected_faces):
-            im = np.array(image)
 
-            # Bounding box regularization
-            face_rect_bottom = 0 if face_rect.bottom() < 0 else face_rect.bottom()
-            face_rect_left = 0 if face_rect.left() < 0 else face_rect.left()
-            face_rect_right = 0 if face_rect.right() < 0 else face_rect.right()
-            face_rect_top = 0 if face_rect.top() < 0 else face_rect.top()
 
-            # show the bounding box of the face
-            # fig, ax = plt.subplots(1)
-            # ax.imshow(im)
-            # rect = patches.Rectangle((face_rect_left, face_rect_top), face_rect_bottom - face_rect_top, (face_rect_right - face_rect_left), edgecolor='r', linewidth=1, facecolor='none')
-            # ax.add_patch(rect)
-            # plt.show()
+            faceAligned = fa.align(image, image, face_rect)
 
-            # Crop
-            cropped_im = im[face_rect_top:face_rect_bottom, face_rect_left:face_rect_right]
-
-            # Resize
-            resized_im = resize(cropped_im, (80, 80))
-
-            # bring in gray scale the images
-            if len(im.shape) == 3:
-                resized_im = skimage.color.rgb2gray(resized_im)
-                resized_im = resized_im*255
-                resized_im = resized_im.astype('int')
-            else:
-                resized_im = resized_im
+            # im = np.array(image)
+            #
+            # # Bounding box regularization
+            # face_rect_bottom = 0 if face_rect.bottom() < 0 else face_rect.bottom()
+            # face_rect_left = 0 if face_rect.left() < 0 else face_rect.left()
+            # face_rect_right = 0 if face_rect.right() < 0 else face_rect.right()
+            # face_rect_top = 0 if face_rect.top() < 0 else face_rect.top()
+            #
+            # # show the bounding box of the face
+            # # fig, ax = plt.subplots(1)
+            # # ax.imshow(im)
+            # # rect = patches.Rectangle((face_rect_left, face_rect_top), face_rect_bottom - face_rect_top, (face_rect_right - face_rect_left), edgecolor='r', linewidth=1, facecolor='none')
+            # # ax.add_patch(rect)
+            # # plt.show()
+            #
+            # # Crop
+            # cropped_im = im[face_rect_top:face_rect_bottom, face_rect_left:face_rect_right]
+            #
+            # # Resize
+            # resized_im = resize(cropped_im, (80, 80))
+            #
+            # # bring in gray scale the images
+            # if len(im.shape) == 3:
+            #     resized_im = skimage.color.rgb2gray(resized_im)
+            #     resized_im = resized_im*255
+            #     resized_im = resized_im.astype('int')
+            # else:
+            #     resized_im = resized_im
 
 
             # TO-DO :
             # rotate the image in order to put eyes and mouth at center
 
-            return resized_im
+            return faceAligned
 
 
 # outputs the results of the pipeline to all the images starting from the dataset_root_path
@@ -69,12 +79,13 @@ def TryThePipeline(dataset_root_path):
         im = skimage.io.imread(dataset_root_path + '/' + i)
         img = FaceExtractionPipelineImage(im)
         if img is not None:
+            print(dataset_root_path + '/' + i)
             plt.imshow(img, 'gray')
             plt.show()
         else:
             print('error in: ' + dataset_root_path + '/' + i)
 
-
+# TryThePipeline('1_dataset train/s11')
 # ==========PREPROCESSING load data ================
 
 def PreprocessImages(folder):
