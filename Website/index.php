@@ -19,43 +19,74 @@
 
    <section>
 
-      <div class="card">
-         <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Salve a tutti!</br >
-               <p class="my-3">Siamo tre studenti del Politecnico di Milano, stiamo raccogliendo immagini allo scopo di sviluppare un sistema per il face matching basato sul machine learning che potrà essere usato in diverse applicazioni, come lo sblocco di vari dispositivi attraverso il tuo viso.
-               Per raggiungere questo obbiettivo abbiamo bisogno del tuo aiuto!</p>
-
-               <p class="my-3">Abbiamo bisogno qualche immagine del tuo volto (10 immagini) in pose leggermente differenti (come mostrato nella figura sottostante).
-               Puoi indossare occhiali, sorridere farie smorfie e scattare foto con diversi sfondi e condizioni di illuminazione, ma ricordati che i tratti fondamentali del tuo volto (occhi, bocca, naso ...) dovranno essere chiaramente visibili.</p>
-
-               <p class="my-3">Se vuoi, puoi ripetere la compilazione di questa form più volte in modo da aiutarci di più!</p>
-
-               <p class="my-3">Il nome lasciato durante la compilazione verrà citato nel paper finale del progetto.</p>
-            </p>
-            <!-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> -->
-         </div>
-         <div class="row justify-content-center">
-            <img src="https://i.pinimg.com/originals/28/de/ed/28deedab62eee58b13cf815b521e8398.jpg" class="photo-example card-img-bottom col-md-8 col-xs-12" alt="Face poses example"></div>
+      <div class="text-center">
+         <div class="btn-group my-3" role="group" aria-label="Language selection">
+            <button type="button" id="it" class="btn btn-primary">Italiano</button>
+            <button type="button" id="en" class="btn btn-secondary">English</button>
          </div>
       </div>
 
-      <form id="form" action="upload.php">
+      <div class="card tutorial pb-4">
+         <div class="card-body" id="intro-it">
+            <h5 class="card-title">Salve a tutti!</h5>
+
+            <p class="my-3">Siamo tre studenti del Politecnico di Milano, stiamo raccogliendo immagini allo scopo di sviluppare un sistema per il face matching basato sul machine learning che potrà essere usato in diverse applicazioni, come lo sblocco di vari dispositivi attraverso il tuo viso.
+            Per raggiungere questo obbiettivo abbiamo bisogno del tuo aiuto!</p>
+
+            <p class="my-3">Abbiamo bisogno qualche immagine del tuo volto (10 immagini) in pose leggermente differenti (come mostrato nella figura sottostante).
+            Puoi indossare occhiali, sorridere farie smorfie e scattare foto con diversi sfondi e condizioni di illuminazione, ma 
+            ricordati che i tratti fondamentali del tuo volto (occhi, bocca, naso ...) dovranno essere chiaramente visibili.</p>
+
+            <p class="my-3">Se vuoi, puoi ripetere la compilazione di questa form più volte in modo da aiutarci di più!</p>
+
+            <p class="my-3">Il nome lasciato durante la compilazione verrà citato nel paper finale del progetto.</p>
+         
+            <!-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> -->
+
+            <b class="mt-2">Esempio di pose</b>
+         </div>
+
+         <div class="card-body d-none" id="intro-en">
+            <h5 class="card-title">Hi everyone!</h5>
+
+            <p class="my-3">We are three students from Politecnico of Milan, we are collecting images with the aim of developing a face matching system based on machine learning that can be used for several application, like unlocking different kind of devices using your face.
+            To accomplish this goal we need your help!</p>
+
+            <p class="my-3">We need some images of your face (10 images) in slightly different poses (as shown in figures below).
+            You can wear glasses, smile and take pictures with different background and light illumination but remember that your 
+            face details (eyes, mouth, nose...) must be clearly visibile.</p>
+
+            <p class="my-3">If you want, you can repeat this process multiple times and help us even more!</p>
+
+            <p class="my-3">The name given during the uploading of the photos will be cited in the final paper of the project.</p>
+         
+            <!-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> -->
+
+            <b class="mt-2">Face poses example</b>
+         </div>
+
+         <img src="https://i.pinimg.com/originals/28/de/ed/28deedab62eee58b13cf815b521e8398.jpg" class="photo-example card-img-bottom mx-auto px-3" alt="Face poses example"></div>
+         
+      </div>
+
+      <form id="form" action="upload.php" novalidate>
          <div class="form-group">
-            <label for="name" class="py-2">Name (or nickname): </label>
-            <input type="text" name="name" class="form-control" />
+
+         <label for="name" class="py-2">Name (or nickname): </label>
+         <div class="input-group">
+            <input type="text" name="name" class="form-control" required />
+            <div class="invalid-feedback">Please choose a username</div>
+         </div>
 
             <div id="dz" class="dropzone">
                <div class="dz-message">Tap here to upload your photos</div>
             </div>
 
-            <button type="submit" class="btn btn-sm btn-outline-primary d-block mx-auto">Send your images</button>
+            <div id="error-few-files" class="alert alert-danger d-none" role="alert">Too few files!</div>
+
+            <button type="submit" class="btn btn-sm btn-outline-primary d-block mx-auto px-4">Send your images</button>
          </div>
       </form>
-
-      <div class="alert alert-danger d-none" role="alert">
-         Some error occurred!
-      </div>
       
    </section>
 

@@ -5,3 +5,9 @@ form {
 .photo-example {
   width: 400px;
 }
+
+@media (max-width: 720px) {
+  .card.tutorial {
+    /* padding-bottom: 0 !important; */
+  }
+}
