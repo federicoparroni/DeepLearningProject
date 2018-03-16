@@ -12,10 +12,10 @@ import threading
 
 class Demo:
 
-    cap=None
-    graph=None
-    model=None
-    ref_img=None
+    cap = None
+    graph = None
+    model = None
+    ref_img = None
 
     def ElaborateImagesAndMakePredition(self, inp_img):
         img_data_pipelined = FaceExtractionPipeline.SingletonPipeline().FaceExtractionPipelineImage(inp_img)
@@ -37,7 +37,7 @@ class Demo:
 
 
     def OneFrameComputation(self):
-        threading.Timer(0.5, self.OneFrameComputation).start()
+        threading.Timer(5, self.OneFrameComputation).start()
 
         # read frame
         ret, frame = self.cap.read()
@@ -52,8 +52,8 @@ class Demo:
         # initialization of class variables
 
         self.cap = cv2.VideoCapture(0)
-        self.cap.set(3, 640);
-        self.cap.set(4, 480);
+        self.cap.set(3, 640)
+        self.cap.set(4, 480)
 
         self.graph = tf.get_default_graph()
 
@@ -65,4 +65,6 @@ class Demo:
         self.OneFrameComputation()
 
 demo=Demo()
-demo.StartDemo('/home/giovanni/Immagini/Webcam/io.jpg', '2018-03-08 01:33:11.h5')
+
+demo.StartDemo('/home/edoardo/Pictures/Webcam/2018-03-13-131633.jpg', 'ilToro.h5')
+

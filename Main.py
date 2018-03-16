@@ -36,7 +36,7 @@ TRAINING_DATASET_FOLDER_NAME = '3_preprocessed_1_dataset train'
 TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 
 batch_size = 128 # in each iteration, we consider 32 training examples at once
-num_epochs = 200 # we iterate 200 times over the entire training set
+num_epochs = 100 # we iterate 200 times over the entire training set
 kernel_size = 3 # we will use 3x3 kernels throughout
 pool_size = 2 # we will use 2x2 pooling throughout
 conv_depth_1 = 64 # we will initially have 32 kernels per conv. layer...
@@ -104,7 +104,7 @@ model.compile(loss='categorical_crossentropy', # using the cross-entropy loss fu
               optimizer='adam', # using the Adam optimiser
               metrics=['accuracy']) # reporting the accuracy
 
-earlyStopping = EarlyStopping(monitor='val_loss', min_delta=0.0001, patience=0, verbose=1, mode='auto')
+earlyStopping = EarlyStopping(monitor='val_loss', min_delta=0.0001, patience=2, verbose=1, mode='auto')
 
 #====== configuring tensorboard ======
 

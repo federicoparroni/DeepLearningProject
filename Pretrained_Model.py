@@ -16,12 +16,19 @@ NUM_CLASSES = 2
 TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 MAX_IMAGES_TO_PLOT = 36
 NUM_PRINTED_PAGES = 3
-MODEL_TO_LOAD = '2018-03-06 02:18:46.h5'
+MODEL_TO_LOAD = 'ilToro.h5'
 
 model = load_model(bp + MODEL_TO_LOAD)
 
 (X_test, y_test) = GetData(TEST_DATASET_FOLDER_NAME)
 Y_test = np_utils.to_categorical(y_test, NUM_CLASSES)
+
+sum = 0
+for i in range(len(y_test)):
+    sum += y_test[i]
+
+print(sum)
+print(len(y_test))
 
 predicted_label = model.predict(X_test)
 

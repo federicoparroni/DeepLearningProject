@@ -20,6 +20,9 @@ def LoadData(folder_path):
         a, b = CreatePositiveCouples(folder_path + '/' + i)
         c, d = CreateNegativeCouples(folder_path + '/' + i)
 
+        print(len(a))
+        print(len(c))
+
         for j in range(len(a)):
             img_data_list.append(a[j])
             img_label_list.append(b[j])
