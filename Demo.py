@@ -55,4 +55,4 @@ class Demo:
         self.OneFrameComputation()
 
 demo=Demo()
-demo.StartDemo('/home/giovanni/Immagini/Webcam/samplepoli.jpg', 'ilToro.h5')
+demo.StartDemo('/home/edoardo/Pictures/Webcam/2018-03-16-113105.jpg', 'ilToro.h5')
