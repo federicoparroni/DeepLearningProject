@@ -18,7 +18,7 @@ class Demo:
     ref_img=None
 
     def ElaborateImagesAndMakePredition(self, inp_img):
-        img_data_pipelined = FaceExtractionPipeline.FaceExtractionPipelineImage(inp_img)
+        img_data_pipelined = FaceExtractionPipeline.SingletonPipeline().FaceExtractionPipelineImage(inp_img)
 
         if img_data_pipelined is not None:
             # plt.imshow(self.ref_img, 'gray')
@@ -60,9 +60,9 @@ class Demo:
         bp = 'trained_model/'
         self.model = load_model(bp + model)
 
-        self.ref_img = FaceExtractionPipeline.FaceExtractionPipelineImage(skimage.io.imread(ref))
+        self.ref_img = FaceExtractionPipeline.SingletonPipeline().FaceExtractionPipelineImage(skimage.io.imread(ref))
 
         self.OneFrameComputation()
 
 demo=Demo()
-demo.StartDemo('/home/giovanni/Immagini/Webcam/samplecucina.jpg', '2018-03-08 01:33:11.h5')
+demo.StartDemo('/home/giovanni/Immagini/Webcam/io.jpg', '2018-03-08 01:33:11.h5')
