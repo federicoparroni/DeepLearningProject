@@ -4,6 +4,7 @@ import os
 from face_utils import FaceAligner
 import skimage.io
 import numpy as np
+import time
 
 # path of the preprocessed dataset
 PREPROCESSED_IMAGES_FOLDER_PATH = "3_preprocessed_"
@@ -33,6 +34,8 @@ class SingletonPipeline(object):
     #
     # RETURNS: the extracted face from the image, cropped and with the eyes aligned, if any
     def FaceExtractionPipelineImage(self, image, cut_margin_width=0, cut_margin_heigth=0):
+        # start_time = time.time()
+
         # if we'd like to perform a precut we do it here
         if cut_margin_width != 0 or cut_margin_heigth != 0:
             image = self.CropBorders(image, cut_margin_width, cut_margin_heigth)
@@ -53,6 +56,8 @@ class SingletonPipeline(object):
                     face_aligned = face_aligned*255
                     face_aligned = face_aligned.astype('int')
 
+                # print('----- execution time for the pipeline: ', time.time() - start_time)
+
                 return face_aligned
 
 
@@ -71,7 +76,7 @@ def TryThePipeline(dataset_root_path):
 
     for i in folders: # scan all the images of that folder
         im = skimage.io.imread(dataset_root_path + '/' + i)
-        img = SingletonPipeline().FaceExtractionPipelineImage(im,0, 100)
+        img = SingletonPipeline().FaceExtractionPipelineImage(im, 0, 100)
         if img is not None:
             print(dataset_root_path + '/' + i)
             plt.imshow(img, 'gray')

@@ -7,6 +7,8 @@ import tensorflow as tf
 import LoadData
 import threading
 import numpy as np
+import matplotlib.pyplot as plt
+import math
 
 class Demo:
 
@@ -16,10 +18,15 @@ class Demo:
     ref_img = None
 
     def ElaborateImagesAndMakePredition(self, inp_img):
-
-        img_data_pipelined = FaceExtractionPipeline.SingletonPipeline().FaceExtractionPipelineImage(inp_img, 0, 200)
+        # crop a good percentage of the image in order to gain performances. found a good tradeoff with those values
+        img_data_pipelined = FaceExtractionPipeline.SingletonPipeline().FaceExtractionPipelineImage(inp_img,
+                                                                                                    math.ceil(np.shape(inp_img)[0]*15/100),
+                                                                                                    math.ceil(np.shape(inp_img)[0]*30/100))
 
         if img_data_pipelined is not None:
+            # plt.imshow(img_data_pipelined, 'gray')
+            # plt.show()
+
             inp = LoadData.MergeImages(self.ref_img, img_data_pipelined)
             inp = np.expand_dims(inp, axis=0)
 
