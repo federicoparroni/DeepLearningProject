@@ -37,7 +37,7 @@ class Demo:
 
 
     def OneFrameComputation(self):
-        threading.Timer(5, self.OneFrameComputation).start()
+        threading.Timer(0.5, self.OneFrameComputation).start()
 
         # read frame
         ret, frame = self.cap.read()
@@ -66,5 +66,5 @@ class Demo:
 
 demo=Demo()
 
-demo.StartDemo('/home/edoardo/Pictures/Webcam/2018-03-13-131633.jpg', 'ilToro.h5')
+demo.StartDemo('/home/edoardo/Pictures/Webcam/2018-03-16-113105.jpg', 'ilToro.h5')
 

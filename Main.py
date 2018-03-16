@@ -104,7 +104,7 @@ model.compile(loss='categorical_crossentropy', # using the cross-entropy loss fu
               optimizer='adam', # using the Adam optimiser
               metrics=['accuracy']) # reporting the accuracy
 
-earlyStopping = EarlyStopping(monitor='val_loss', min_delta=0.0001, patience=2, verbose=1, mode='auto')
+earlyStopping = EarlyStopping(monitor='val_loss', min_delta=0.0001, patience=1, verbose=1, mode='auto')
 
 #====== configuring tensorboard ======
 

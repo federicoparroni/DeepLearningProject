@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for i in  {56..107}
+do
+	mkdir "s$i"
+done
