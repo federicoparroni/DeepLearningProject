@@ -2,12 +2,17 @@ form {
   margin: 20px;
 }
 
+#us-photo {
+  width: 250px;
+  margin: 10px auto 0;
+}
+
 .photo-example {
   width: 400px;
 }
 
 @media (max-width: 720px) {
-  .card.tutorial {
-    /* padding-bottom: 0 !important; */
+  .navbar .progress {
+    width: 40% !important;
   }
 }

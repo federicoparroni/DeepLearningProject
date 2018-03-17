@@ -40,7 +40,8 @@ var myDropzone = new Dropzone("#dz", {
 
       // check if name is valid and not empty
       let name = document.querySelector("input[name=name]").value;
-      if(name.length > 0 && name.trim()) {
+      name = name.trim();
+      if(name.length > 0) {
         myDropzone.processQueue();
       }
     });
@@ -48,15 +49,15 @@ var myDropzone = new Dropzone("#dz", {
 
     this.on("sending", function(file, xhr, formData) {
       let name = document.querySelector("input[name=name]").value;
+      name = name.trim();
       formData.append("name", name);
     });
 
     this.on("success", function(file, response) {
-      console.log(file);
-      console.log(response);
-
+      //console.log(file);
+      //console.log(response);
       if(response.success) {
-        window.location = "success.html";
+        window.location = "success.php";
       } else {
 
       }
@@ -76,18 +77,25 @@ btnIt.addEventListener('click', function() {
   introIt.classList.remove('d-none');
   introEn.classList.add('d-none');
 
-  btnIt.classList.remove('btn-secondary');
+  btnIt.classList.remove('btn-light');
   btnIt.classList.add('btn-primary');
   btnEn.classList.remove('btn-primary');
-  btnEn.classList.add('btn-secondary');
+  btnEn.classList.add('btn-light');
 });
 
 btnEn.addEventListener('click', function() {
   introIt.classList.add('d-none');
   introEn.classList.remove('d-none');
 
-  btnEn.classList.remove('btn-secondary');
+  btnEn.classList.remove('btn-light');
   btnEn.classList.add('btn-primary');
   btnIt.classList.remove('btn-primary');
-  btnIt.classList.add('btn-secondary');
+  btnIt.classList.add('btn-light');
 });
+
+// update progress bar
+let sizePercentage = Math.round(folderSize * 100);
+let progressBar = document.getElementById('size-progress');
+progressBar.style.width = sizePercentage + '%';
+progressBar.setAttribute('aria-valuenow', sizePercentage + '%');
+progressBar.innerText = sizePercentage + '%';

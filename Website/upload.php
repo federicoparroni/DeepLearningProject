@@ -18,7 +18,7 @@ if (!empty($_FILES)) {
     // new folder is nickname with a timestamp to make unique folder names
     $folderName = $nickname . "___" . time() . $ds;
     $targetPath = dirname( __FILE__ ) . $ds. $storeFolder . $ds . $folderName;
-    mkdir($targetPath, 0755);
+    mkdir($targetPath, 0777);
 
     for($i = 0; $i < count($_FILES['file']['name']); $i++) {
         // temporary file
@@ -31,7 +31,7 @@ if (!empty($_FILES)) {
         $targetFile =  $targetPath . $name . $ext;
 
         move_uploaded_file($tempFile, $targetFile);
-        chmod($targetFile, 0755);
+        chmod($targetFile, 0777);
     }
 
     // Convert to JSON
