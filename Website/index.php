@@ -83,7 +83,7 @@
             <b class="mt-2">Face poses example</b>
          </div>
 
-         <img src="https://i.pinimg.com/originals/28/de/ed/28deedab62eee58b13cf815b521e8398.jpg" class="photo-example card-img-bottom mx-auto px-3" alt="Face poses example">
+         <img src="img/example.jpg" class="photo-example card-img-bottom mx-auto px-3" alt="Face poses example">
       </div>
          
 
