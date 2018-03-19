@@ -6,7 +6,7 @@ Dropzone.autoDiscover = false;
 var myDropzone = new Dropzone("#dz", {
   url: "upload.php",
   addRemoveLinks: true,
-  maxFilesize: 15, // MB
+  maxFilesize: 100, // MB
   parallelUploads: 15,
   autoProcessQueue: false,
   uploadMultiple: true,
