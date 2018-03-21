@@ -1,5 +1,6 @@
 <html> 
 <head>   
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
@@ -22,11 +23,13 @@
 <body>
    <?php include 'header.php' ?>
 
-   <section>
-      <div class="text-center">
-         <div class="btn-group my-3" role="group" aria-label="Language selection">
-            <button type="button" id="it" class="btn btn-primary">Italiano</button>
-            <button type="button" id="en" class="btn btn-light">English</button>
+   <section class="container-fluid">
+      <div class="row">
+         <div class="col-12 text-center">
+            <div class="btn-group my-3" role="group" aria-label="Language selection">
+               <button type="button" id="it" class="btn btn-primary">Italiano</button>
+               <button type="button" id="en" class="btn btn-light">English</button>
+            </div>
          </div>
       </div>
 
@@ -83,7 +86,13 @@
             <b class="mt-2">Face poses example</b>
          </div>
 
-         <img src="img/example.jpg" class="photo-example card-img-bottom mx-auto px-3" alt="Face poses example">
+         <div class="row">
+            <div class="col"></div>
+            <div class="col-xs-12 col-md-8 col-lg-4">
+               <img src="img/example.jpg" class="photo-example card-img-bottom px-3" alt="Face poses example">
+            </div>
+            <div class="col"></div>
+         </div>
       </div>
          
 
