@@ -4,7 +4,6 @@ import os
 from face_utils import FaceAligner
 import skimage.io
 import numpy as np
-import time
 
 # path of the preprocessed dataset
 PREPROCESSED_IMAGES_FOLDER_PATH = "3_preprocessed_"
@@ -76,7 +75,7 @@ def TryThePipeline(dataset_root_path):
 
     for i in folders: # scan all the images of that folder
         im = skimage.io.imread(dataset_root_path + '/' + i)
-        img = SingletonPipeline().FaceExtractionPipelineImage(im, 0, 100)
+        img = SingletonPipeline().FaceExtractionPipelineImage(im)
         if img is not None:
             print(dataset_root_path + '/' + i)
             plt.imshow(img, 'gray')

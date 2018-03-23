@@ -7,7 +7,6 @@ import tensorflow as tf
 import LoadData
 import threading
 import numpy as np
-import matplotlib.pyplot as plt
 import math
 
 class Demo:
