@@ -1,0 +1,18 @@
+
+#us-photo {
+  width: 250px;
+  margin: 10px auto 0;
+}
+
+.photo-example {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+}
+
+@media (max-width: 720px) {
+  .navbar .progress {
+    width: 40% !important;
+  }
+
+}
