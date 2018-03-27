@@ -1,3 +1,13 @@
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+body {
+  position: relative;
+  min-height: 100%;
+  padding-bottom: 100px;
+}
 
 #us-photo {
   width: 250px;
@@ -8,6 +18,17 @@
   width: auto;
   height: auto;
   max-width: 100%;
+}
+
+.footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.footer small {
+  color: #bbb;
 }
 
 @media (max-width: 720px) {
