@@ -1,5 +1,6 @@
 import Augmentor
 import os
+from PIL import Image, ExifTags
 
 # works recursively from the root path
 def AugmentDataFromPath(path):
@@ -15,3 +16,33 @@ def AugmentDataFromPath(path):
         else:
             p.sample(5*(len([name for name in entries])+1))
             break
+
+
+def FlipImages(path):
+    entries = os.scandir(path)
+    for entry in entries:
+        if entry.is_dir():
+            FlipImages(entry.path)
+        else:
+            try:
+                image=Image.open(entry.path)
+                for orientation in ExifTags.TAGS.keys():
+                    if ExifTags.TAGS[orientation]=='Orientation':
+                        break
+                exif=dict(image._getexif().items())
+
+                if exif[orientation] == 3:
+                    image=image.rotate(180, expand=True)
+                elif exif[orientation] == 6:
+                    image=image.rotate(270, expand=True)
+                elif exif[orientation] == 8:
+                    image=image.rotate(90, expand=True)
+                image.save(entry.path)
+                image.close()
+
+            except (AttributeError, KeyError, IndexError):
+                # cases: image don't have getexif
+                pass
+
+
+FlipImages('/home/giovanni/Scrivania/prova')
