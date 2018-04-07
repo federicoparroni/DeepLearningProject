@@ -5,6 +5,8 @@
   
   <title>Gabdampar corp</title>
 
+  <link href="css/app.css" type="text/css" rel="stylesheet" />
+
   <style type="text/css">
     .navbar .progress {
       display: none;
@@ -27,5 +29,7 @@
 
    </section>
 
+    <?php include 'footer.php' ?>
+    
 </body>
 </html>
