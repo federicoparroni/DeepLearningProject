@@ -84,7 +84,7 @@ def TryThePipeline(dataset_root_path):
             print('error in: ' + dataset_root_path + '/' + i)
 
 # TryThePipeline('/home/giovanni/Immagini/Webcam')
-# TryThePipeline('1_dataset train/s10')
+
 # ==========PREPROCESSING load data ================
 
 def PreprocessImages(folder):

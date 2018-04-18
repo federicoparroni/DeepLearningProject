@@ -5,8 +5,7 @@ from PIL import Image, ExifTags
 # works recursively from the root path
 def AugmentDataFromPath(path):
     entries = os.scandir(path)
-    p = Augmentor.Pipeline(path,
-                           output_directory='.')
+    p = Augmentor.Pipeline(path, output_directory='.')
     p.flip_left_right(probability=0.5)
     p.skew_left_right(probability=1, magnitude=0.20)
 
@@ -16,6 +15,7 @@ def AugmentDataFromPath(path):
         else:
             p.sample(5*(len([name for name in entries])+1))
             break
+
 
 
 def FlipImages(path):
@@ -32,11 +32,14 @@ def FlipImages(path):
                 exif=dict(image._getexif().items())
 
                 if exif[orientation] == 3:
-                    image=image.rotate(180, expand=True)
+                    image = image.rotate(180, expand=True)
+                    print(entry.path)
                 elif exif[orientation] == 6:
-                    image=image.rotate(270, expand=True)
+                    image = image.rotate(270, expand=True)
+                    print(entry.path)
                 elif exif[orientation] == 8:
-                    image=image.rotate(90, expand=True)
+                    image = image.rotate(90, expand=True)
+                    print(entry.path)
                 image.save(entry.path)
                 image.close()
 
@@ -45,4 +48,7 @@ def FlipImages(path):
                 pass
 
 
-FlipImages('/home/giovanni/Scrivania/prova')
+#FlipImages('/home/edoardo/Git_Projects/DeepLearningProject/Neural Network/1_dataset train')
+#FlipImages('/home/edoardo/Git_Projects/DeepLearningProject/Neural Network/2_dataset test')
+#AugmentDataFromPath('/home/edoardo/Git_Projects/DeepLearningProject/Neural Network/1_dataset train')
+AugmentDataFromPath('/home/edoardo/Desktop/ToAugment')

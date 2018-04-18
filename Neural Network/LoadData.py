@@ -63,10 +63,9 @@ def CreateNegativeCouples(folder_path):
         # remove the name of the current folder
         folders.remove(folder_path.split('/')[-1:][0])
 
-        shuffle(folders)
-
-        for i in folders[:couples_to_do]:
-            i = basePath + '/' + i
+        for i in range(couples_to_do):
+            shuffle(folders)
+            i = basePath + '/' + folders[0]
 
             rnd_numb = math.floor(random.random() * len(os.listdir(i)))
             img2 = i + '/' + os.listdir(i)[rnd_numb]
