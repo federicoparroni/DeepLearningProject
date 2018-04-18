@@ -9,6 +9,7 @@ import threading
 import numpy as np
 import math
 
+
 class Demo:
 
     cap = None

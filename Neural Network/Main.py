@@ -99,15 +99,19 @@ tbCallBack = keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=0, wr
 model.fit(X_train, Y_train,   # Train the model using the training set...
           batch_size=batch_size, epochs=num_epochs,
           verbose=1, validation_split=0.3, callbacks=[tbCallBack, earlyStopping]) # ...holding out 30% of the data for validation
-# loss = model.evaluate(X_test, Y_test, verbose=1)  # Evaluate the trained model on the test set!
 
 for _ in range(num_epochs):
     history = model.fit(X_train, y_train, epochs=0, batch_size=batch_size)
     (X_train, y_train) = GetData('prova1')
 
 
+# ONLY WHEN U WANT USE THE TEST SET!!!
+#loss = model.evaluate(X_test, Y_test, verbose=1)  # Evaluate the trained model on the test set!
+
+
+#print(loss)
 print(model.metrics_names)
-# print(loss)
+
 
 #====== save model ======
 
