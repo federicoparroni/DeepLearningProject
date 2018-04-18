@@ -33,7 +33,7 @@ hidden_size = 100 # the FC layer will have 512 neurons
 ## we were loading training and test data like this before ##
 # (X_train, y_train), (X_test, y_test) = (GetData(TRAINING_DATASET_FOLDER_NAME), GetData(TEST_DATASET_FOLDER_NAME)) # fetch data
 
-(X_train, y_train) = GetData('prova')
+(X_train, y_train) = GetData('3_preprocessed_1_dataset train')
 
 num_train, height, width, depth = X_train.shape
 # num_test = X_test.shape[0] #num test images
