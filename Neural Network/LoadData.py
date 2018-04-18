@@ -105,6 +105,7 @@ def MergeImages(img1, img2):
 
 
 def GetData(path):
+    print('fetching data from ' + path)
 
     (img_data_list, img_label_list) = LoadData(path)
 
