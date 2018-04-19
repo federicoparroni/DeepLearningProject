@@ -1,37 +1,46 @@
 from skimage import io
 from random import shuffle
-from skimage.transform import resize
 import skimage
 import numpy as np
 import os
-import random
 import math
-import FaceExtractionPipeline
+import random
 
 
-def LoadData(folder_path):
+def LoadData(folder_path, limit_value = -1, to_avoid = []):
     img_data_list = []  # elements list, an element is a couple of image (i1,i2)
     img_label_list = []  # labels list, can be 1 if the faces are the same or 0 if not
+    folders_list = []
+    count = 0
 
     # load images from the preprocessed folder
     folders = os.listdir(folder_path)
+    random.shuffle(folders)
 
     for i in folders:
-        a, b = CreatePositiveCouples(folder_path + '/' + i)
-        c, d = CreateNegativeCouples(folder_path + '/' + i)
+        if not(len(to_avoid) > 0 and i in to_avoid):
+            print('\n fetching data from ' + folder_path + '/' + i)
+            a, b = CreatePositiveCouples(folder_path + '/' + i)
+            c, d = CreateNegativeCouples(folder_path + '/' + i)
 
-        print(len(a))
-        print(len(c))
+            print(len(a))
+            print(len(c))
 
-        for j in range(len(a)):
-            img_data_list.append(a[j])
-            img_label_list.append(b[j])
+            folders_list.append(i)
 
-        for j in range(len(c)):
-            img_data_list.append(c[j])
-            img_label_list.append(d[j])
+            for j in range(len(a)):
+                img_data_list.append(a[j])
+                img_label_list.append(b[j])
 
-    return img_data_list, img_label_list
+            for j in range(len(c)):
+                img_data_list.append(c[j])
+                img_label_list.append(d[j])
+
+            count += 1
+            if limit_value != -1 and count >= limit_value:
+                break
+
+    return img_data_list, img_label_list, folders_list
 
 
 # creates the couples for which the correspondence of the face is true (same person)
@@ -102,11 +111,10 @@ def MergeImages(img1, img2):
     #return np.concatenate((img1, img2))
     return np.stack((img1, img2), 2)
 
-
-def GetData(path):
-    print('fetching data from ' + path)
-
-    (img_data_list, img_label_list) = LoadData(path)
+# set the attributes to some values if we dont like to fetch all the folders starting from a path
+# as a conseguence, also the attributes of load data will be set to the same values
+def GetData(path, limit_value = -1, to_avoid = []):
+    (img_data_list, img_label_list, folders_list) = LoadData(path, limit_value, to_avoid)
 
     v = list(range(len(img_label_list)))
     shuffle(v)
@@ -122,7 +130,7 @@ def GetData(path):
     #return np.expand_dims(np.array(vec), 4), np.array(label_vec)
 
     #the images are stacked one over the other
-    return np.array(vec), np.array(label_vec)
+    return np.array(vec), np.array(label_vec), folders_list
 
 #print for a vector of extimation if they are correct
 def ResultPrediction(extimation, real_label):

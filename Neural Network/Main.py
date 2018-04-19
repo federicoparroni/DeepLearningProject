@@ -8,6 +8,11 @@ import numpy as np
 import time
 import datetime
 import tensorflow as tf
+from FaceSequence import FaceSequence
+
+class ChangeData(keras.callbacks.Callback):
+    def on_epoch_begin(self, epoch, logs=None):
+        print(self.model.inputs[0].shape)
 
 #====================CONFIGURING GPU ========================================
 
@@ -20,7 +25,7 @@ config.gpu_options.allow_growth = True
 TRAINING_DATASET_FOLDER_NAME = '3_preprocessed_1_dataset train'
 TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 
-batch_size = 128 # in each iteration, we consider 32 training examples at once
+batch_size = 128 # in each iteration, we consider 128 training examples at once
 num_epochs = 2 # we iterate 200 times over the entire training set
 kernel_size = 3 # we will use 3x3 kernels throughout
 pool_size = 2 # we will use 2x2 pooling throughout
@@ -31,9 +36,10 @@ drop_prob_hidden = 0.5 # dropout in the FC layer with probability 0.5
 hidden_size = 100 # the FC layer will have 512 neurons
 
 ## we were loading training and test data like this before ##
-# (X_train, y_train), (X_test, y_test) = (GetData(TRAINING_DATASET_FOLDER_NAME), GetData(TEST_DATASET_FOLDER_NAME)) # fetch data
+# (X_train, y_train), (X_test, y_test) = (GetData(TRAINING_DATASET_FOLDER_NAME, limit_on_fonders_to_fetch = True, limit_value = 4), GetData(TEST_DATASET_FOLDER_NAME)) # fetch data
+(X_validation, y_validation, validation_folders_list) = GetData(TRAINING_DATASET_FOLDER_NAME, limit_value = 4)
+(X_train, y_train, _)= GetData(TRAINING_DATASET_FOLDER_NAME, limit_value = 4, to_avoid=validation_folders_list)
 
-(X_train, y_train) = GetData('3_preprocessed_1_dataset train')
 
 num_train, height, width, depth = X_train.shape
 # num_test = X_test.shape[0] #num test images
@@ -43,9 +49,13 @@ X_train = X_train.astype('float32')
 # X_test = X_test.astype('float32')
 X_train /= np.max(X_train) # Normalise data to [0, 1] range
 # X_test /= np.max(X_test) # Normalise data to [0, 1] range
+X_validation = X_validation.astype('float32')
+# X_test = X_test.astype('float32')
+X_validation /= np.max(X_validation) # Normalise data to [0, 1] range
 
 Y_train = np_utils.to_categorical(y_train, num_classes) # One-hot encode the labels
 # Y_test = np_utils.to_categorical(y_test, num_classes) # One-hot encode the labels
+Y_validation = np_utils.to_categorical(y_validation, num_classes) # One-hot encode the labels
 
 
 inp = Input(shape=(height,width, depth))
@@ -96,14 +106,12 @@ earlyStopping = EarlyStopping(monitor='val_loss', min_delta=0.0001, patience=1, 
 
 tbCallBack = keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=0, write_graph=True, write_images=True)
 
-model.fit(X_train, Y_train,   # Train the model using the training set...
-          batch_size=batch_size, epochs=num_epochs,
-          verbose=1, validation_split=0.3, callbacks=[tbCallBack, earlyStopping]) # ...holding out 30% of the data for validation
+# model.fit(X_train, Y_train,   # Train the model using the training set...
+#          batch_size=batch_size, epochs=num_epochs,
+#          verbose=1, validation_split=0.3, callbacks=[tbCallBack, earlyStopping, changedata]) # ...holding out 30% of the data for validation
 
-for _ in range(num_epochs):
-    history = model.fit(X_train, y_train, epochs=0, batch_size=batch_size)
-    (X_train, y_train) = GetData('prova1')
-
+facesequence = FaceSequence(X_train, Y_train, batch_size, TRAINING_DATASET_FOLDER_NAME, epochs_with_same_data = 2, folders_at_the_same_time = 4, to_avoid=validation_folders_list)
+model.fit_generator(generator=facesequence, epochs=20, validation_data=(X_validation, Y_validation))
 
 # ONLY WHEN U WANT USE THE TEST SET!!!
 #loss = model.evaluate(X_test, Y_test, verbose=1)  # Evaluate the trained model on the test set!
