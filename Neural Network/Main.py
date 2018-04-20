@@ -31,19 +31,20 @@ TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 
 epochs_with_same_data = 3
 folders_at_the_same_time = 15
+validation_folders = 28
 
-batch_size = 128        # in each iteration, we consider 128 training examples at once
-num_epochs = 180          # we iterate 200 times over the entire training set
-kernel_size = 3         # we will use 3x3 kernels throughout
-pool_size = 2           # we will use 2x2 pooling throughout
-conv_depth_1 = 16        # we will initially have 32 kernels per conv. layer...
-conv_depth_2 = 16        # ...switching to 64 after the first pooling layer
-drop_prob_conv = 0.1    # dropout after pooling with probability 0.25
-drop_prob_hidden = 0.3  # dropout in the FC layer with probability 0.5
-hidden_size = 128         # the FC layer will have 512 neurons
+batch_size = 128            # in each iteration, we consider 128 training examples at once
+num_epochs = 180            # we iterate 200 times over the entire training set
+kernel_size = 3             # we will use 3x3 kernels throughout
+pool_size = 2               # we will use 2x2 pooling throughout
+conv_depth_1 = 16           # we will initially have 32 kernels per conv. layer...
+conv_depth_2 = 16           # ...switching to 64 after the first pooling layer
+drop_prob_conv = 0.1        # dropout after pooling with probability 0.25
+drop_prob_hidden = 0.3      # dropout in the FC layer with probability 0.5
+hidden_size = 128           # the FC layer will have 512 neurons
 
 # (X_train, y_train), (X_test, y_test) = (GetData(TRAINING_DATASET_FOLDER_NAME, limit_on_fonders_to_fetch = True, limit_value = 4), GetData(TEST_DATASET_FOLDER_NAME)) # fetch data
-(X_validation, y_validation, validation_folders_list) = GetData(TRAINING_DATASET_FOLDER_NAME, limit_value=17)
+(X_validation, y_validation, validation_folders_list) = GetData(TRAINING_DATASET_FOLDER_NAME, limit_value=validation_folders)
 (X_train, y_train, _) = GetData(TRAINING_DATASET_FOLDER_NAME, limit_value=folders_at_the_same_time, to_avoid=validation_folders_list)
 
 num_train, height, width, depth = X_train.shape
@@ -89,11 +90,11 @@ hidden3 = Dense(hidden_size, activation='relu')(hidden2)
 
 out = Dense(num_classes, activation='softmax')(hidden3)
 
-model = Model(inputs=inp, outputs=out) # To define a model, just specify its input and output layers
+model = Model(inputs=inp, outputs=out)      # To define a model, just specify its input and output layers
 
-model.compile(loss='categorical_crossentropy', # using the cross-entropy loss function
-              optimizer='adam', # using the Adam optimiser
-              metrics=['accuracy']) # reporting the accuracy
+model.compile(loss='categorical_crossentropy',  # using the cross-entropy loss function
+              optimizer='adam',                 # using the Adam optimiser
+              metrics=['accuracy'])             # reporting the accuracy
 
 # INSTRUCTION TO ABLE THE EARLY STOPPING
 earlyStopping = EarlyStopping(monitor='val_loss', min_delta=0.0001, patience=1, verbose=1, mode='auto')
