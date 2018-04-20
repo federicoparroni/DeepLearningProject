@@ -130,7 +130,12 @@ def GetData(path, limit_value = -1, to_avoid = []):
     #return np.expand_dims(np.array(vec), 4), np.array(label_vec)
 
     #the images are stacked one over the other
-    return np.array(vec), np.array(label_vec), folders_list
+    np_vec = np.array(vec)
+    np_label_vec = np.array(label_vec)
+
+    print('dim of loaded vect' + np_vec.shape)
+
+    return np_vec, np_label_vec, folders_list
 
 #print for a vector of extimation if they are correct
 def ResultPrediction(extimation, real_label):

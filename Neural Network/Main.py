@@ -26,21 +26,22 @@ TRAINING_DATASET_FOLDER_NAME = '3_preprocessed_1_dataset train'
 TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 
 
+epochs_with_same_data = 3
+folders_at_the_same_time = 15
+
 batch_size = 128 # in each iteration, we consider 128 training examples at once
-num_epochs = 2 # we iterate 200 times over the entire training set
+num_epochs = 180 # we iterate 200 times over the entire training set
 kernel_size = 3 # we will use 3x3 kernels throughout
 pool_size = 2 # we will use 2x2 pooling throughout
-conv_depth_1 = 2 # we will initially have 32 kernels per conv. layer...
-conv_depth_2 = 2 # ...switching to 64 after the first pooling layer
+conv_depth_1 = 16 # we will initially have 32 kernels per conv. layer...
+conv_depth_2 = 16 # ...switching to 64 after the first pooling layer
 drop_prob_conv = 0.1 # dropout after pooling with probability 0.25
-drop_prob_hidden = 0.5 # dropout in the FC layer with probability 0.5
-hidden_size = 2 # the FC layer will have 512 neurons
+drop_prob_hidden = 0.3 # dropout in the FC layer with probability 0.5
+hidden_size = 128 # the FC layer will have 512 neurons
 
 # (X_train, y_train), (X_test, y_test) = (GetData(TRAINING_DATASET_FOLDER_NAME, limit_on_fonders_to_fetch = True, limit_value = 4), GetData(TEST_DATASET_FOLDER_NAME)) # fetch data
-(X_validation, y_validation, validation_folders_list) = GetData(TRAINING_DATASET_FOLDER_NAME, limit_value = 4)
-(X_train, y_train, _)= GetData(TRAINING_DATASET_FOLDER_NAME, limit_value = 4, to_avoid=validation_folders_list)
-
-
+(X_validation, y_validation, validation_folders_list) = GetData(TRAINING_DATASET_FOLDER_NAME, limit_value = 17)
+(X_train, y_train, _) = GetData(TRAINING_DATASET_FOLDER_NAME, limit_value = folders_at_the_same_time, to_avoid=validation_folders_list)
 
 num_train, height, width, depth = X_train.shape
 # num_test = X_test.shape[0] #num test images
@@ -127,8 +128,8 @@ tbCallBack = keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=0, wr
 #          batch_size=batch_size, epochs=num_epochs,
 #          verbose=1, validation_split=0.3, callbacks=[tbCallBack, earlyStopping, changedata]) # ...holding out 30% of the data for validation
 
-facesequence = FaceSequence(X_train, Y_train, batch_size, TRAINING_DATASET_FOLDER_NAME, epochs_with_same_data = 2, folders_at_the_same_time = 4, to_avoid=validation_folders_list)
-model.fit_generator(generator=facesequence, epochs=20, validation_data=(X_validation, Y_validation))
+facesequence = FaceSequence(X_train, Y_train, batch_size, TRAINING_DATASET_FOLDER_NAME, epochs_with_same_data = epochs_with_same_data, folders_at_the_same_time = folders_at_the_same_time, to_avoid=validation_folders_list)
+model.fit_generator(facesequence, epochs=num_epochs, validation_data=(X_validation, Y_validation))
 
 
 # ONLY WHEN U WANT USE THE TEST SET!!!
@@ -139,7 +140,7 @@ model.fit_generator(generator=facesequence, epochs=20, validation_data=(X_valida
 #====== save model ======
 #the three following instructions must be decommented when we want to save the model at the end of the training
 
-#ts = time.time()
-#st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+ts = time.time()
+st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
 
-#model.save('trained_model/' + st + '.h5')
+model.save('trained_model/' + st + '.h5')

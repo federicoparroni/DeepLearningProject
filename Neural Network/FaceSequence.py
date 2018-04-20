@@ -2,6 +2,7 @@ import keras
 import numpy as np
 import LoadData
 from keras.utils import np_utils
+import math
 
 class FaceSequence(keras.utils.Sequence):
 
@@ -14,9 +15,12 @@ class FaceSequence(keras.utils.Sequence):
         self.training_dataset_folder_name = training_dataset_folder_name
         self.folders_at_the_same_time = folders_at_the_same_time
         self.to_avoid = to_avoid
+        self.steps_per_epoch = 0
+
 
     def __len__(self):
-        return int(np.ceil(len(self.x) / float(self.batch_size)))
+        self.steps_per_epoch = int(np.ceil(len(self.x) / float(self.batch_size)))
+        return self.steps_per_epoch
 
     def __getitem__(self, idx):
         batch_x = self.x[idx * self.batch_size:(idx + 1) * self.batch_size]
@@ -30,6 +34,12 @@ class FaceSequence(keras.utils.Sequence):
             self.y = np_utils.to_categorical(self.y, 2)
             self.x = self.x.astype('float32')
             self.x /= np.max(self.x)
+
+            self.batch_size = math.floor(len(self.x) / self.steps_per_epoch)
+
+            # print('batch-size')
+            # print(self.batch_size)
+
         else:
             s = np.arange(self.x.shape[0])
             np.random.shuffle(s)
