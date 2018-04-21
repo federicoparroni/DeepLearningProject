@@ -12,6 +12,7 @@ import telegram
 
 from LoadData import GetData
 from FaceSequence import FaceSequence
+from ValidationCallback import  ValidationCallback
 
 
 # ====================CONFIGURING GPU ========================================
@@ -19,7 +20,7 @@ config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
 
 # ============================================================================
-enable_telegram_bot = True
+enable_telegram_bot = False
 # chat_id = 125016709               # this is my private chat id
 # chat_id = "@gdptensorboard"       # this is the name of the public channel
 chat_id = -1001223624517            # this is for the private channel
@@ -29,8 +30,9 @@ TRAINING_DATASET_FOLDER_NAME = '3_preprocessed_1_dataset train'
 TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 
 epochs_with_same_data = 3
-folders_at_the_same_time = 15
-validation_folders = 12
+
+folders_at_the_same_time = 3 #15
+validation_folders = 2 #12
 
 batch_size = 128            # in each iteration, we consider 128 training examples at once
 num_epochs = 180            # we iterate 200 times over the entire training set
@@ -46,6 +48,7 @@ hidden_size = 128           # the FC layer will have 512 neurons
 (X_validation, y_validation, validation_folders_list) = GetData(TRAINING_DATASET_FOLDER_NAME, limit_value=validation_folders)
 (X_train, y_train, _) = GetData(TRAINING_DATASET_FOLDER_NAME, limit_value=folders_at_the_same_time, to_avoid=validation_folders_list)
 
+print(X_train.shape)
 num_train, height, width, depth = X_train.shape
 # num_test = X_test.shape[0] #num test images
 num_classes = 2 # there are 2 image classes
@@ -102,23 +105,28 @@ earlyStopping = EarlyStopping(monitor='val_loss', min_delta=0.0001, patience=1, 
 tbCallBack = keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=1, write_graph=True, write_images=True)
 
 # PREVIOUS TRAINING METHOD
-# model.fit(X_train, Y_train,   # Train the model using the training set...
+# model.fit(X_train, Y_train,   # Train the model using the training set...li
 #          batch_size=batch_size, epochs=num_epochs,
 #          verbose=1, validation_split=0.3, callbacks=[tbCallBack, earlyStopping, changedata]) # ...holding out 30% of the data for validation
+
 if enable_telegram_bot:
     bot = telegram.Bot(token='591311395:AAEfSH464BdXSDezWGMZwdiLxLg2_aLlGDE')
     dir(bot)
     bot.send_message(chat_id=chat_id, text="{} - Training iniziato...".format(current_datetime()), timeout=100)
 
+#configuring the custom callback for do the validation
+validation_callback = ValidationCallback(X_validation, Y_validation, 5)
+
 facesequence = FaceSequence(X_train, Y_train, batch_size, TRAINING_DATASET_FOLDER_NAME, epochs_with_same_data=epochs_with_same_data,
                             folders_at_the_same_time = folders_at_the_same_time,
                             to_avoid=validation_folders_list, enable_telegram_bot=enable_telegram_bot, chat_id=chat_id)
 
-model.fit_generator(facesequence, epochs=num_epochs, validation_data=(X_validation, Y_validation),
-                    callbacks=[keras.callbacks.LambdaCallback(on_epoch_begin=lambda batch, logs: facesequence.on_epoch_begin())])
+model.fit_generator(facesequence, epochs=num_epochs,
+                    callbacks=[keras.callbacks.LambdaCallback(on_epoch_begin=lambda batch, logs: facesequence.on_epoch_begin()), validation_callback])
 if enable_telegram_bot:
     bot = telegram.Bot(token='591311395:AAEfSH464BdXSDezWGMZwdiLxLg2_aLlGDE')
     bot.send_message(chat_id=chat_id, text="{} - Training completato!".format(current_datetime()), timeout=100)
+
 
 # ONLY WHEN U WANT USE THE TEST SET!!!
 # WARNING ONLY WHEN WE WANT THE TEST ERROR CAN BE DONE ONLY ONE TIME!
