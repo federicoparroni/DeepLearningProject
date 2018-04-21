@@ -133,7 +133,7 @@ def GetData(path, limit_value = -1, to_avoid = []):
     np_vec = np.array(vec)
     np_label_vec = np.array(label_vec)
 
-    #print('dim of loaded vect' + np_vec.shape)
+    # print('dim of loaded vect' + np_vec.shape)
 
     return np_vec, np_label_vec, folders_list
 
