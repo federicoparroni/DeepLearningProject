@@ -31,8 +31,8 @@ TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 
 epochs_with_same_data = 3
 
-folders_at_the_same_time = 3 #15
-validation_folders = 2 #12
+folders_at_the_same_time = 15
+validation_folders = 12
 
 batch_size = 128            # in each iteration, we consider 128 training examples at once
 num_epochs = 180            # we iterate 200 times over the entire training set
