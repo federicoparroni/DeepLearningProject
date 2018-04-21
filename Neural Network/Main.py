@@ -20,7 +20,7 @@ config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
 
 # ============================================================================
-enable_telegram_bot = False
+enable_telegram_bot = True
 # chat_id = 125016709               # this is my private chat id
 # chat_id = "@gdptensorboard"       # this is the name of the public channel
 chat_id = -1001223624517            # this is for the private channel
