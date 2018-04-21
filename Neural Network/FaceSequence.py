@@ -39,7 +39,6 @@ class FaceSequence(keras.utils.Sequence):
         return np.array(batch_x), np.array(batch_y)
 
     def on_epoch_end(self):
-        self.epoch += 1
         if self.enable_telegram_bot:
             message = "{} - Ho completato l'epoca {}".format(current_datetime(), self.epoch)
             self.bot.send_message(chat_id=self.chat_id, text=message)
