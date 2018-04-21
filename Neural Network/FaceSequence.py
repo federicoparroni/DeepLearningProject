@@ -27,6 +27,7 @@ class FaceSequence(keras.utils.Sequence):
         return np.array(batch_x), np.array(batch_y)
 
     def on_epoch_end(self):
+        print("--- On_epoch_end ---")
         self.epoch += 1
         if self.epoch % self.epochs_with_same_data == 0:
             self.x, self.y, _ = LoadData.GetData(self.training_dataset_folder_name, limit_value=self.folders_at_the_same_time, to_avoid = self.to_avoid)
