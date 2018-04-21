@@ -26,8 +26,6 @@ class FaceSequence(keras.utils.Sequence):
 
         self.enable_telegram_bot = enable_telegram_bot
         self.chat_id = chat_id
-        if enable_telegram_bot:
-            self.bot = telegram.Bot(token='591311395:AAEfSH464BdXSDezWGMZwdiLxLg2_aLlGDE')
 
     def __len__(self):
         self.steps_per_epoch = int(np.ceil(len(self.x) / float(self.batch_size)))
@@ -40,8 +38,9 @@ class FaceSequence(keras.utils.Sequence):
 
     def on_epoch_end(self):
         if self.enable_telegram_bot:
+            bot = telegram.Bot(token='591311395:AAEfSH464BdXSDezWGMZwdiLxLg2_aLlGDE')
             message = "{} - Ho completato l'epoca {}".format(current_datetime(), self.epoch)
-            self.bot.send_message(chat_id=self.chat_id, text=message)
+            bot.send_message(chat_id=self.chat_id, text=message)
 
         if self.epoch % self.epochs_with_same_data == 0:
             self.x = self.x_next_epoch
