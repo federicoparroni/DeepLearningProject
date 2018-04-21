@@ -12,6 +12,7 @@ import datetime
 
 from LoadData import GetData
 from FaceSequence import FaceSequence
+from ValidationCallback import  ValidationCallback
 
 
 class ChangeData(keras.callbacks.Callback):
@@ -30,8 +31,8 @@ TRAINING_DATASET_FOLDER_NAME = '3_preprocessed_1_dataset train'
 TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 
 epochs_with_same_data = 3
-folders_at_the_same_time = 15
-validation_folders = 28
+folders_at_the_same_time = 3
+validation_folders = 2
 
 batch_size = 128            # in each iteration, we consider 128 training examples at once
 num_epochs = 180            # we iterate 200 times over the entire training set
@@ -47,6 +48,7 @@ hidden_size = 128           # the FC layer will have 512 neurons
 (X_validation, y_validation, validation_folders_list) = GetData(TRAINING_DATASET_FOLDER_NAME, limit_value=validation_folders)
 (X_train, y_train, _) = GetData(TRAINING_DATASET_FOLDER_NAME, limit_value=folders_at_the_same_time, to_avoid=validation_folders_list)
 
+print(X_train.shape)
 num_train, height, width, depth = X_train.shape
 # num_test = X_test.shape[0] #num test images
 num_classes = 2 # there are 2 image classes
@@ -128,13 +130,16 @@ tbCallBack = keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=1, wr
 
 
 # PREVIOUS TRAINING METHOD
-# model.fit(X_train, Y_train,   # Train the model using the training set...
+# model.fit(X_train, Y_train,   # Train the model using the training set...li
 #          batch_size=batch_size, epochs=num_epochs,
 #          verbose=1, validation_split=0.3, callbacks=[tbCallBack, earlyStopping, changedata]) # ...holding out 30% of the data for validation
 
 facesequence = FaceSequence(X_train, Y_train, batch_size, TRAINING_DATASET_FOLDER_NAME, epochs_with_same_data=epochs_with_same_data,
                             folders_at_the_same_time = folders_at_the_same_time, to_avoid=validation_folders_list)
-model.fit_generator(facesequence, epochs=num_epochs, validation_data=(X_validation, Y_validation), callbacks=[tbCallBack])
+
+validation_callback = ValidationCallback(X_validation, Y_validation, 5)
+
+model.fit_generator(facesequence, epochs=num_epochs, callbacks=[validation_callback])
 
 # ONLY WHEN U WANT USE THE TEST SET!!!
 # WARNING ONLY WHEN WE WANT THE TEST ERROR CAN BE DONE ONLY ONE TIME!
