@@ -1,7 +1,6 @@
 import numpy as np
 import tensorflow as tf
-import keras
-
+import keras.callbacks
 from keras.models import Model
 from keras.layers import Input, Convolution2D, MaxPooling2D, Dense, Dropout, Flatten
 from keras.utils import np_utils
@@ -13,11 +12,6 @@ import telegram
 
 from LoadData import GetData
 from FaceSequence import FaceSequence
-
-
-class ChangeData(keras.callbacks.Callback):
-    def on_epoch_begin(self, epoch, logs=None):
-        print(self.model.inputs[0].shape)
 
 
 # ====================CONFIGURING GPU ========================================
@@ -36,8 +30,8 @@ TRAINING_DATASET_FOLDER_NAME = '3_preprocessed_1_dataset train'
 TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 
 epochs_with_same_data = 3
-folders_at_the_same_time = 2
-validation_folders = 1
+folders_at_the_same_time = 15
+validation_folders = 12
 
 batch_size = 128            # in each iteration, we consider 128 training examples at once
 num_epochs = 180            # we iterate 200 times over the entire training set
@@ -108,31 +102,6 @@ earlyStopping = EarlyStopping(monitor='val_loss', min_delta=0.0001, patience=1, 
 # ====== configuring tensorboard ======
 tbCallBack = keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=1, write_graph=True, write_images=True)
 
-
-# k-folds crossvalidation
-# def K_Fold_CrossValidation(X_Train, Y_Train, K):
-#     inputs_folds = np.array_split(X_Train, K)
-#     outputs_folds = np.array_split(Y_Train, K)
-#     folds_val_acc = []
-#     for i in range(len(inputs_folds)):
-#
-#         validation = [inputs_folds[i], outputs_folds[i]]
-#
-#         print(np.array(inputs_folds).shape)
-#         print(np.array(inputs_folds[:i]).shape)
-#         print(np.array(inputs_folds[i+1:]).shape)
-#
-#         train_inp = np.concatenate((inputs_folds[:i], inputs_folds[i+1:]))
-#         train_out = np.concatenate((outputs_folds[:i], outputs_folds[i+1:]))
-#
-#         fold_i = model.fit(train_inp, train_out,
-#                       batch_size=batch_size, epochs=num_epochs,
-#                       verbose=1, validation_data=validation, shuffle='true', callbacks=[tbCallBack, earlyStopping])
-#         folds_val_acc.append(fold_i.history.get('val_acc'))
-#         k_fold_acc = np.sum(folds_val_acc) / K
-#         print(k_fold_acc)
-
-
 # PREVIOUS TRAINING METHOD
 # model.fit(X_train, Y_train,   # Train the model using the training set...
 #          batch_size=batch_size, epochs=num_epochs,
@@ -144,7 +113,8 @@ facesequence = FaceSequence(X_train, Y_train, batch_size, TRAINING_DATASET_FOLDE
                             folders_at_the_same_time = folders_at_the_same_time,
                             to_avoid=validation_folders_list, enable_telegram_bot=enable_telegram_bot, chat_id=chat_id)
 
-model.fit_generator(facesequence, epochs=num_epochs, validation_data=(X_validation, Y_validation), callbacks=[tbCallBack])
+model.fit_generator(facesequence, epochs=num_epochs, validation_data=(X_validation, Y_validation),
+                    callbacks=[keras.callbacks.LambdaCallback(on_epoch_begin=lambda batch, logs: facesequence.on_epoch_begin())])
 
 bot.send_message(chat_id=chat_id, text="{} - Training completato!".format(current_datetime()))
 
