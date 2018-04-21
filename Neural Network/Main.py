@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 import keras
-
+import keras.callbacks
 from keras.models import Model
 from keras.layers import Input, Convolution2D, MaxPooling2D, Dense, Dropout, Flatten
 from keras.utils import np_utils
@@ -12,11 +12,6 @@ import datetime
 
 from LoadData import GetData
 from FaceSequence import FaceSequence
-
-
-class ChangeData(keras.callbacks.Callback):
-    def on_epoch_begin(self, epoch, logs=None):
-        print(self.model.inputs[0].shape)
 
 # ====================CONFIGURING GPU ========================================
 
@@ -29,9 +24,9 @@ config.gpu_options.allow_growth = True
 TRAINING_DATASET_FOLDER_NAME = '3_preprocessed_1_dataset train'
 TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 
-epochs_with_same_data = 3
-folders_at_the_same_time = 15
-validation_folders = 28
+epochs_with_same_data = 2
+folders_at_the_same_time = 4
+validation_folders = 4
 
 batch_size = 128            # in each iteration, we consider 128 training examples at once
 num_epochs = 180            # we iterate 200 times over the entire training set
@@ -126,15 +121,17 @@ tbCallBack = keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=1, wr
 #         k_fold_acc = np.sum(folds_val_acc) / K
 #         print(k_fold_acc)
 
-
 # PREVIOUS TRAINING METHOD
 # model.fit(X_train, Y_train,   # Train the model using the training set...
 #          batch_size=batch_size, epochs=num_epochs,
 #          verbose=1, validation_split=0.3, callbacks=[tbCallBack, earlyStopping, changedata]) # ...holding out 30% of the data for validation
 
-facesequence = FaceSequence(X_train, Y_train, batch_size, TRAINING_DATASET_FOLDER_NAME, epochs_with_same_data=epochs_with_same_data,
-                            folders_at_the_same_time = folders_at_the_same_time, to_avoid=validation_folders_list)
-model.fit_generator(facesequence, epochs=num_epochs, validation_data=(X_validation, Y_validation), callbacks=[tbCallBack])
+facesequence = FaceSequence(X_train, Y_train, batch_size, TRAINING_DATASET_FOLDER_NAME,
+                            epochs_with_same_data=epochs_with_same_data,
+                            folders_at_the_same_time=folders_at_the_same_time,
+                            to_avoid=validation_folders_list)
+model.fit_generator(facesequence, epochs=num_epochs, validation_data=(X_validation, Y_validation),
+                    callbacks=[tbCallBack, keras.callbacks.LambdaCallback(on_epoch_begin=lambda batch, logs: facesequence.on_epoch_begin())])
 
 # ONLY WHEN U WANT USE THE TEST SET!!!
 # WARNING ONLY WHEN WE WANT THE TEST ERROR CAN BE DONE ONLY ONE TIME!
