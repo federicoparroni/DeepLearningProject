@@ -4,10 +4,10 @@ import LoadData
 from keras.utils import np_utils
 import math
 
+
 class FaceSequence(keras.utils.Sequence):
 
-
-    def __init__(self, x_set, y_set, batch_size, training_dataset_folder_name, epochs_with_same_data = 5, folders_at_the_same_time = 20, to_avoid = []):
+    def __init__(self, x_set, y_set, batch_size, training_dataset_folder_name, epochs_with_same_data=5, folders_at_the_same_time=20, to_avoid=[]):
         self.x, self.y = x_set, y_set
         self.epoch = 0
         self.batch_size = batch_size
@@ -16,7 +16,6 @@ class FaceSequence(keras.utils.Sequence):
         self.folders_at_the_same_time = folders_at_the_same_time
         self.to_avoid = to_avoid
         self.steps_per_epoch = 0
-
 
     def __len__(self):
         self.steps_per_epoch = int(np.ceil(len(self.x) / float(self.batch_size)))
