@@ -107,7 +107,8 @@ tbCallBack = keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=1, wr
 #          verbose=1, validation_split=0.3, callbacks=[tbCallBack, earlyStopping, changedata]) # ...holding out 30% of the data for validation
 if enable_telegram_bot:
     bot = telegram.Bot(token='591311395:AAEfSH464BdXSDezWGMZwdiLxLg2_aLlGDE')
-    bot.send_message(chat_id=chat_id, text="{} - Training iniziato...".format(current_datetime()))
+    dir(bot)
+    bot.send_message(chat_id=chat_id, text="{} - Training iniziato...".format(current_datetime()), timeout=100)
 
 facesequence = FaceSequence(X_train, Y_train, batch_size, TRAINING_DATASET_FOLDER_NAME, epochs_with_same_data=epochs_with_same_data,
                             folders_at_the_same_time = folders_at_the_same_time,
@@ -117,7 +118,7 @@ model.fit_generator(facesequence, epochs=num_epochs, validation_data=(X_validati
                     callbacks=[keras.callbacks.LambdaCallback(on_epoch_begin=lambda batch, logs: facesequence.on_epoch_begin())])
 if enable_telegram_bot:
     bot = telegram.Bot(token='591311395:AAEfSH464BdXSDezWGMZwdiLxLg2_aLlGDE')
-    bot.send_message(chat_id=chat_id, text="{} - Training completato!".format(current_datetime()))
+    bot.send_message(chat_id=chat_id, text="{} - Training completato!".format(current_datetime()), timeout=100)
 
 # ONLY WHEN U WANT USE THE TEST SET!!!
 # WARNING ONLY WHEN WE WANT THE TEST ERROR CAN BE DONE ONLY ONE TIME!
@@ -128,9 +129,9 @@ if enable_telegram_bot:
 # the three following instructions must be decommented when we want to save the model at the end of the training
 if enable_telegram_bot:
     bot = telegram.Bot(token='591311395:AAEfSH464BdXSDezWGMZwdiLxLg2_aLlGDE')
-    bot.send_message(chat_id=chat_id, text="{} - Sto salvando il modello".format(current_datetime()))
+    bot.send_message(chat_id=chat_id, text="{} - Sto salvando il modello".format(current_datetime()), timeout=100)
 
 model.save('trained_model/{}.h5'.format(current_datetime()))
 
 if enable_telegram_bot:
-    bot.send_message(chat_id=chat_id, text="{} - Modello salvato!".format(current_datetime()))
+    bot.send_message(chat_id=chat_id, text="{} - Modello salvato!".format(current_datetime()), timeout=100)

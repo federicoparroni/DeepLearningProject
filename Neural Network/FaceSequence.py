@@ -40,7 +40,7 @@ class FaceSequence(keras.utils.Sequence):
         if self.enable_telegram_bot:
             bot = telegram.Bot(token='591311395:AAEfSH464BdXSDezWGMZwdiLxLg2_aLlGDE')
             message = "{} - Ho completato l'epoca {}".format(current_datetime(), self.epoch)
-            bot.send_message(chat_id=self.chat_id, text=message)
+            bot.send_message(chat_id=self.chat_id, text=message, timeout=100)
 
         if self.epoch % self.epochs_with_same_data == 0:
             self.x = self.x_next_epoch
