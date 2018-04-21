@@ -7,8 +7,9 @@ from keras.layers import Input, Convolution2D, MaxPooling2D, Dense, Dropout, Fla
 from keras.utils import np_utils
 from keras.callbacks import EarlyStopping
 
-import time
-import datetime
+from Utils import current_datetime
+
+import telegram
 
 from LoadData import GetData
 from FaceSequence import FaceSequence
@@ -18,20 +19,25 @@ class ChangeData(keras.callbacks.Callback):
     def on_epoch_begin(self, epoch, logs=None):
         print(self.model.inputs[0].shape)
 
-# ====================CONFIGURING GPU ========================================
 
+# ====================CONFIGURING GPU ========================================
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
 
 # ============================================================================
+enable_telegram_bot = True
+# chat_id = 125016709               # this is my private chat id
+# chat_id = "@gdptensorboard"       # this is the name of the public channel
+chat_id = -1001223624517            # this is for the private channel
+bot = telegram.Bot(token='591311395:AAEfSH464BdXSDezWGMZwdiLxLg2_aLlGDE')
 
 # defining the folders path train and test
 TRAINING_DATASET_FOLDER_NAME = '3_preprocessed_1_dataset train'
 TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 
 epochs_with_same_data = 3
-folders_at_the_same_time = 15
-validation_folders = 28
+folders_at_the_same_time = 2
+validation_folders = 1
 
 batch_size = 128            # in each iteration, we consider 128 training examples at once
 num_epochs = 180            # we iterate 200 times over the entire training set
@@ -64,7 +70,7 @@ Y_train = np_utils.to_categorical(y_train, num_classes)             # One-hot en
 Y_validation = np_utils.to_categorical(y_validation, num_classes)   # One-hot encode the labels
 
 
-inp = Input(shape=(height,width, depth))
+inp = Input(shape=(height, width, depth))
 
 # Conv [32] -> Conv [32] -> Pool (with dropout on the pooling layer)
 conv_1 = Convolution2D(conv_depth_1, (kernel_size, kernel_size), padding='same', activation='relu')(inp)
@@ -132,9 +138,15 @@ tbCallBack = keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=1, wr
 #          batch_size=batch_size, epochs=num_epochs,
 #          verbose=1, validation_split=0.3, callbacks=[tbCallBack, earlyStopping, changedata]) # ...holding out 30% of the data for validation
 
+bot.send_message(chat_id=chat_id, text="{} - Training iniziato...".format(current_datetime()))
+
 facesequence = FaceSequence(X_train, Y_train, batch_size, TRAINING_DATASET_FOLDER_NAME, epochs_with_same_data=epochs_with_same_data,
-                            folders_at_the_same_time = folders_at_the_same_time, to_avoid=validation_folders_list)
+                            folders_at_the_same_time = folders_at_the_same_time,
+                            to_avoid=validation_folders_list, enable_telegram_bot=enable_telegram_bot, chat_id=chat_id)
+
 model.fit_generator(facesequence, epochs=num_epochs, validation_data=(X_validation, Y_validation), callbacks=[tbCallBack])
+
+bot.send_message(chat_id=chat_id, text="{} - Training completato!".format(current_datetime()))
 
 # ONLY WHEN U WANT USE THE TEST SET!!!
 # WARNING ONLY WHEN WE WANT THE TEST ERROR CAN BE DONE ONLY ONE TIME!
@@ -143,8 +155,8 @@ model.fit_generator(facesequence, epochs=num_epochs, validation_data=(X_validati
 
 # ====== save model ======
 # the three following instructions must be decommented when we want to save the model at the end of the training
+bot.send_message(chat_id=chat_id, text="{} - Sto salvando il modello".format(current_datetime()))
 
-ts = time.time()
-st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+model.save('trained_model/{}.h5'.format(current_datetime()))
 
-model.save('trained_model/' + st + '.h5')
+bot.send_message(chat_id=chat_id, text="{} - Modello salvato!".format(current_datetime()))
