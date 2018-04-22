@@ -20,8 +20,8 @@ dense,128
 dropout,0.3
 
 dense,128
-dropout,0.3
 
 dense,128
 
-dense,2
+dense,2,softmax
+
