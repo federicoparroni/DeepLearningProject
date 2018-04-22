@@ -20,7 +20,7 @@ config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
 
 # ============================================================================
-enable_telegram_bot = False
+enable_telegram_bot = True
 # chat_id = 125016709               # this is my private chat id
 # chat_id = "@gdptensorboard"       # this is the name of the public channel
 chat_id = -1001223624517            # this is for the private channel
@@ -30,9 +30,8 @@ TRAINING_DATASET_FOLDER_NAME = '3_preprocessed_1_dataset train'
 TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 
 epochs_with_same_data = 3
-
-folders_at_the_same_time = 3 #15
-validation_folders = 2 #12
+folders_at_the_same_time = 30
+validation_folders = 12
 
 batch_size = 128            # in each iteration, we consider 128 training examples at once
 num_epochs = 180            # we iterate 200 times over the entire training set
@@ -80,7 +79,6 @@ pool_3 = MaxPooling2D(pool_size=(pool_size, pool_size))(conv_3)
 drop_3 = Dropout(drop_prob_conv)(pool_3)
 conv_4 = Convolution2D(conv_depth_2, (kernel_size, kernel_size), padding='same', activation='relu')(drop_3)
 
-
 # Now flatten to 1D, apply FC -> ReLU (with dropout) -> softmax
 flat = Flatten()(conv_4)
 
@@ -111,10 +109,11 @@ tbCallBack = keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=1, wr
 
 if enable_telegram_bot:
     bot = telegram.Bot(token='591311395:AAEfSH464BdXSDezWGMZwdiLxLg2_aLlGDE')
-    bot.send_message(chat_id=chat_id, text="{} - Training iniziato...".format(current_datetime()))
+    dir(bot)
+    bot.send_message(chat_id=chat_id, text="{} - Training iniziato...".format(current_datetime()), timeout=100)
 
 #configuring the custom callback for do the validation
-validation_callback = ValidationCallback(X_validation, Y_validation, 5)
+validation_callback = ValidationCallback(X_validation, Y_validation, 5, chat_id=chat_id)
 
 facesequence = FaceSequence(X_train, Y_train, batch_size, TRAINING_DATASET_FOLDER_NAME, epochs_with_same_data=epochs_with_same_data,
                             folders_at_the_same_time = folders_at_the_same_time,
@@ -126,7 +125,7 @@ model.fit_generator(facesequence, epochs=num_epochs,
                     callbacks=[keras.callbacks.LambdaCallback(on_epoch_begin=lambda batch, logs: facesequence.on_epoch_begin()), validation_callback])
 if enable_telegram_bot:
     bot = telegram.Bot(token='591311395:AAEfSH464BdXSDezWGMZwdiLxLg2_aLlGDE')
-    bot.send_message(chat_id=chat_id, text="{} - Training completato!".format(current_datetime()))
+    bot.send_message(chat_id=chat_id, text="{} - Training completato!".format(current_datetime()), timeout=100)
 
 
 # ONLY WHEN U WANT USE THE TEST SET!!!
@@ -138,9 +137,9 @@ if enable_telegram_bot:
 # the three following instructions must be decommented when we want to save the model at the end of the training
 if enable_telegram_bot:
     bot = telegram.Bot(token='591311395:AAEfSH464BdXSDezWGMZwdiLxLg2_aLlGDE')
-    bot.send_message(chat_id=chat_id, text="{} - Sto salvando il modello".format(current_datetime()))
+    bot.send_message(chat_id=chat_id, text="{} - Sto salvando il modello".format(current_datetime()), timeout=100)
 
 model.save('trained_model/{}.h5'.format(current_datetime()))
 
 if enable_telegram_bot:
-    bot.send_message(chat_id=chat_id, text="{} - Modello salvato!".format(current_datetime()))
+    bot.send_message(chat_id=chat_id, text="{} - Modello salvato!".format(current_datetime()), timeout=100)
