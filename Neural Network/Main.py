@@ -115,7 +115,7 @@ if enable_telegram_bot:
     bot.send_message(chat_id=chat_id, text="{} - Training iniziato...".format(current_datetime()), timeout=100)
 
 #configuring the custom callback for do the validation
-validation_callback = ValidationCallback(X_validation, Y_validation, 5)
+validation_callback = ValidationCallback(X_validation, Y_validation, 5, chat_id=chat_id)
 
 facesequence = FaceSequence(X_train, Y_train, batch_size, TRAINING_DATASET_FOLDER_NAME, epochs_with_same_data=epochs_with_same_data,
                             folders_at_the_same_time = folders_at_the_same_time,

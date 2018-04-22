@@ -6,7 +6,7 @@ from Utils import current_datetime
 
 class ValidationCallback(keras.callbacks.Callback):
 
-    def __init__(self, x_val, y_val, validate_every, enable_telegram_bot=True):
+    def __init__(self, x_val, y_val, validate_every, enable_telegram_bot=True, chat_id="undefined"):
         self.counter = 1
         self.val_history_index = 0
         self.validation_history = []
@@ -14,6 +14,7 @@ class ValidationCallback(keras.callbacks.Callback):
         self.y = y_val
         self.validate_every = validate_every
         self.enable_telegram_bot = enable_telegram_bot
+        self.chat_id = chat_id
 
     def on_epoch_end(self, epoch, logs=None):
 
