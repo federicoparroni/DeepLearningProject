@@ -30,8 +30,7 @@ TRAINING_DATASET_FOLDER_NAME = '3_preprocessed_1_dataset train'
 TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 
 epochs_with_same_data = 3
-
-folders_at_the_same_time = 15
+folders_at_the_same_time = 30
 validation_folders = 12
 
 batch_size = 128            # in each iteration, we consider 128 training examples at once
@@ -79,7 +78,6 @@ conv_3 = Convolution2D(conv_depth_2, (kernel_size, kernel_size), padding='same',
 pool_3 = MaxPooling2D(pool_size=(pool_size, pool_size))(conv_3)
 drop_3 = Dropout(drop_prob_conv)(pool_3)
 conv_4 = Convolution2D(conv_depth_2, (kernel_size, kernel_size), padding='same', activation='relu')(drop_3)
-
 
 # Now flatten to 1D, apply FC -> ReLU (with dropout) -> softmax
 flat = Flatten()(conv_4)

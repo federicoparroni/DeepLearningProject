@@ -4,6 +4,7 @@ import LoadData
 from keras.utils import np_utils
 import math
 import threading
+import gc
 
 from Utils import current_datetime
 import telegram
@@ -42,15 +43,22 @@ class FaceSequence(keras.utils.Sequence):
             message = "{} - Ho completato l'epoca {}".format(current_datetime(), self.epoch)
             bot.send_message(chat_id=self.chat_id, text=message, timeout=100)
 
-        if self.epoch % self.epochs_with_same_data == 0:
-            self.x = self.x_next_epoch
-            self.y = self.y_next_epoch
-            self.batch_size = math.floor(len(self.x) / self.steps_per_epoch)
-        else:
-            s = np.arange(self.x.shape[0])
-            np.random.shuffle(s)
-            self.x = self.x[s]
-            self.y = self.y[s]
+        try:
+            gc.collect()
+            if self.epoch % self.epochs_with_same_data == 0:
+                self.x = self.x_next_epoch
+                self.y = self.y_next_epoch
+                self.batch_size = math.floor(len(self.x) / self.steps_per_epoch)
+            else:
+                s = np.arange(self.x.shape[0])
+                np.random.shuffle(s)
+                self.x = self.x[s]
+                self.y = self.y[s]
+        except Exception as error:
+            bot = telegram.Bot(token='591311395:AAEfSH464BdXSDezWGMZwdiLxLg2_aLlGDE')
+            message = "{} - Sono schiantato malamente :/\n{}".format(current_datetime(), error)
+            bot.send_message(chat_id=self.chat_id, text=message, timeout=100)
+
 
     def on_epoch_begin(self):
         self.epoch += 1
