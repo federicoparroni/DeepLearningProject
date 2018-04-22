@@ -48,7 +48,21 @@ class ModelBuilder:
                     model.add(Activation('relu'))
         self.model = model
 
-a = [['conv', 16, 3], ['pool', 3], ['flatten'], ['dense', 128], ['dense', 128]]
+    @staticmethod
+    def read_model(filepath):
+        out = []
+
+        with open(filepath) as file:
+            for line in file.readlines():
+                line = line.strip()
+                if line and not line.startswith("#"):
+                    out.append(line.split(","))
+
+        return out
+
+
+# a = [['conv', 16, 3], ['pool', 3], ['flatten'], ['dense', 128], ['dense', 128]]
+a = ModelBuilder.read_model("models/model1.txt")
 size = (80, 80, 2)
 modelObject = ModelBuilder(a, size)
 print(modelObject.model.summary())
