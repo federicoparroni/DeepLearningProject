@@ -120,6 +120,8 @@ facesequence = FaceSequence(X_train, Y_train, batch_size, TRAINING_DATASET_FOLDE
                             folders_at_the_same_time = folders_at_the_same_time,
                             to_avoid=validation_folders_list, enable_telegram_bot=enable_telegram_bot, chat_id=chat_id)
 
+print(model.summary())
+
 model.fit_generator(facesequence, epochs=num_epochs,
                     callbacks=[keras.callbacks.LambdaCallback(on_epoch_begin=lambda batch, logs: facesequence.on_epoch_begin()), validation_callback])
 if enable_telegram_bot:
