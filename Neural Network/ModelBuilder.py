@@ -20,21 +20,21 @@ class ModelBuilder:
             ms = model_structure[i]
             if ms[0] == 'conv':
                 if i == 0:
-                    if len(ms) == 4:
-                        model.add(Convolution2D(ms[1], (ms[2], ms[2]), input_shape=input_shape))
-                        model.add(Activation(ms[3]))
+                    if len(ms) == 5:
+                        model.add(Convolution2D(ms[1], (ms[2], ms[3]), input_shape=input_shape))
+                        model.add(Activation(ms[4]))
                     else:
-                        model.add(Convolution2D(ms[1], (ms[2], ms[2]), input_shape=input_shape))
+                        model.add(Convolution2D(ms[1], (ms[2], ms[3]), input_shape=input_shape))
                         model.add(Activation('relu'))
                 else:
-                    if len(ms) == 4:
-                        model.add(Convolution2D(ms[1], (ms[2], ms[2])))
-                        model.add(Activation(ms[3]))
+                    if len(ms) == 5:
+                        model.add(Convolution2D(ms[1], (ms[2], ms[3])))
+                        model.add(Activation(ms[4]))
                     else:
-                        model.add(Convolution2D(ms[1], (ms[2], ms[2])))
+                        model.add(Convolution2D(ms[1], (ms[2], ms[3])))
                         model.add(Activation('relu'))
             elif ms[0] == 'pool':
-                model.add(MaxPooling2D(pool_size=(ms[1], ms[1])))
+                model.add(MaxPooling2D(pool_size=(ms[1], ms[2])))
             elif ms[0] == 'dropout':
                 model.add(Dropout(ms[1]))
             elif ms[0] == 'flatten':
@@ -56,8 +56,16 @@ class ModelBuilder:
             for line in file.readlines():
                 line = line.strip()
                 if line and not line.startswith("#"):
-                    out.append(line.split(","))
+                    fields = line.split(",")
+                    # cast
+                    v = [fields[0]]
+                    for i in range(1, len(fields)):
+                        if v[0] == "dropout":
+                            v.append(float(fields[i]))
+                        else:
+                            v.append(int(fields[i]))
 
+                    out.append(v)
         return out
 
 
