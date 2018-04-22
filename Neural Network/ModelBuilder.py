@@ -56,8 +56,16 @@ class ModelBuilder:
             for line in file.readlines():
                 line = line.strip()
                 if line and not line.startswith("#"):
-                    out.append(line.split(","))
+                    fields = line.split(",")
+                    # cast
+                    v = [fields[0]]
+                    for i in range(1, len(fields)):
+                        if v[0] == "dropout":
+                            v.append(float(fields[i]))
+                        else:
+                            v.append(int(fields[i]))
 
+                    out.append(v)
         return out
 
 
