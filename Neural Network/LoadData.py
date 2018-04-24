@@ -23,8 +23,8 @@ def LoadData(folder_path, limit_value=-1, to_avoid=[]):
             a, b = CreatePositiveCouples(folder_path + '/' + i)
             c, d = CreateNegativeCouples(folder_path + '/' + i)
 
-            print(len(a))
-            print(len(c))
+            # print(len(a))
+            # print(len(c))
 
             folders_list.append(i)
 

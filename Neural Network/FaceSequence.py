@@ -11,11 +11,16 @@ import telegram
 
 class FaceSequence(keras.utils.Sequence):
 
-    def __init__(self, x_set, y_set, batch_size, training_dataset_folder_name, epochs_with_same_data=5,
+    def __init__(self, batch_size, training_dataset_folder_name, total_epochs, epochs_with_same_data=5,
                  folders_at_the_same_time=20, to_avoid=[], enable_telegram_bot=True, chat_id="undefined"):
+        self.x, self.y, _ = LoadData.GetData(training_dataset_folder_name,
+                                             limit_value=folders_at_the_same_time,
+                                             to_avoid=to_avoid)
+        self.y = np_utils.to_categorical(self.y, 2)
+        self.x = self.x.astype('float32')
+        self.x /= np.max(self.x)
 
-        self.x, self.y = x_set, y_set
-        self.x_next_epoch, self.y_next_epoch = x_set, y_set
+        self.x_next_epoch, self.y_next_epoch = self.x, self.y
         self.epoch = 0
         self.batch_size = batch_size
         self.epochs_with_same_data = epochs_with_same_data
@@ -23,7 +28,8 @@ class FaceSequence(keras.utils.Sequence):
         self.folders_at_the_same_time = folders_at_the_same_time
         self.to_avoid = to_avoid
         self.steps_per_epoch = 0
-
+        self.t = None
+        self.total_epochs = total_epochs
         self.enable_telegram_bot = enable_telegram_bot
         self.chat_id = chat_id
 
@@ -43,6 +49,8 @@ class FaceSequence(keras.utils.Sequence):
             bot.send_message(chat_id=self.chat_id, text=message, timeout=100)
 
         if self.epoch % self.epochs_with_same_data == 0:
+            if self.t != None:
+                self.t.join()
             self.x = self.x_next_epoch
             self.y = self.y_next_epoch
             self.batch_size = math.floor(len(self.x) / self.steps_per_epoch)
@@ -53,11 +61,14 @@ class FaceSequence(keras.utils.Sequence):
             self.y = self.y[s]
 
     def on_epoch_begin(self):
-        self.epoch += 1
         if self.epoch % self.epochs_with_same_data == 0:
-            t = threading.Thread(target=self.fetch_data_for_next_couple_of_epochs, args=())
-            t.setDaemon(True)
-            t.start()
+            if self.epoch + self.epochs_with_same_data != self.total_epochs:
+                if self.t != None:
+                    self.t.join()
+                self.t = threading.Thread(target=self.fetch_data_for_next_couple_of_epochs, args=())
+                self.t.setDaemon(True)
+                self.t.start()
+        self.epoch += 1
 
     def fetch_data_for_next_couple_of_epochs(self):
         self.x_next_epoch, self.y_next_epoch, _ = LoadData.GetData(self.training_dataset_folder_name,

@@ -6,7 +6,7 @@ from Utils import current_datetime
 
 class ValidationCallback(keras.callbacks.Callback):
 
-    def __init__(self, x_val, y_val, validate_every, enable_telegram_bot=True, chat_id="undefined"):
+    def __init__(self, x_val, y_val, validate_every=5, enable_telegram_bot=True, chat_id="undefined"):
         self.counter = 1
         self.val_history_index = 0
         self.validation_history = []
@@ -31,7 +31,7 @@ class ValidationCallback(keras.callbacks.Callback):
 
             self.validation_history.append(evaluation)
             print('\nval_loss -> {} \nval_accuracy -> {}'.format(self.validation_history[self.val_history_index][0],
-                                                             self.validation_history[self.val_history_index][1]))
+                                                              self.validation_history[self.val_history_index][1]))
             self.val_history_index += 1
 
         self.counter += 1
