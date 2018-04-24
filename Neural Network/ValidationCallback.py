@@ -35,3 +35,33 @@ class ValidationCallback(keras.callbacks.Callback):
             self.val_history_index += 1
 
         self.counter += 1
+
+
+""" parameter explanation
+
+patience:
+how many epochs (NB: in which the validation is computed) in a row
+the val_accuracy can decrease
+
+tolerance: 
+min value for which the accuracy is considered decreased
+
+"""
+"""
+def custom_early_stopping(val_history, patience, tolerance, back_positions_considered):
+    temp = []
+    if len(val_history) < back_positions_considered+1:
+        return
+    else:
+        min = 101
+        for i in range(len(val_history)-2-back_positions_considered, len(val_history)-2):
+            if val_history[i][1] < min:
+                min = val_history[i][1]
+        if min - tolerance > val_history[len(val_history)-1][1]:
+            #stop training
+"""
+
+
+
+
+
