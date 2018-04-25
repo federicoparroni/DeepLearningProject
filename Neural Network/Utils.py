@@ -1,6 +1,7 @@
 import time
 import datetime
 import urllib3
+import socket
 
 import telegram
 
@@ -16,11 +17,14 @@ def current_datetime():
 
 
 def connection_available():
+    REMOTE_SERVER = "www.google.com"
     try:
-        urllib3.urlopen('http://216.58.192.142', timeout=1)
+        host = socket.gethostbyname(REMOTE_SERVER)
+        socket.create_connection((host, 80), 2)
         return True
-    except urllib3.URLError as _:
-        return False
+    except:
+        pass
+    return False
 
 
 # Send a message through telegram
