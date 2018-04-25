@@ -1,6 +1,5 @@
 import time
 import datetime
-import urllib3
 import socket
 
 import telegram
