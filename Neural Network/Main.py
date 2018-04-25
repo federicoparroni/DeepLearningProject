@@ -8,7 +8,9 @@ from ModelBuilder import read_model
 import ModelBuilder
 from LoadData import GetData
 from FaceSequence import FaceSequence
-from ValidationCallback import  ValidationCallback
+from Utils import connection_available
+from ValidationCallback import ValidationCallback
+from Training import train
 
 
 # ====================CONFIGURING GPU ========================================
@@ -17,7 +19,7 @@ config.gpu_options.allow_growth = False
 
 # ============================================================================
 
-enable_telegram_bot = True
+enable_telegram_bot = True if connection_available() else False
 # chat_id = 125016709               # this is my private chat id
 # chat_id = "@gdptensorboard"       # this is the name of the public channel
 chat_id = -1001223624517            # this is for the private channel
@@ -29,7 +31,7 @@ TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 epochs_with_same_data = 3
 folders_at_the_same_time = 30
 validation_folders = 12
-
+validate_every = 5
 
 batch_size = 128            # in each iteration, we consider 128 training examples at once
 num_epochs = 180            # we iterate 200 times over the entire training set
@@ -40,7 +42,7 @@ height = 80
 width = 80
 depth = 2
 # num_test = X_test.shape[0] #num test images
-num_classes = 2 # there are 2 image classes
+num_classes = 2         # there are 2 image classes
 
 # inp = Input(shape=(height, width, depth))
 #
@@ -70,7 +72,7 @@ num_classes = 2 # there are 2 image classes
 #
 # model = Model(inputs=inp, outputs=out)      # To define a model, just specify its input and output layers
 
-#load the model
+# load the model
 a = read_model("models/model1.txt")
 modelObject = ModelBuilder.ModelBuilder(a, (height, width, depth))
 model = modelObject.model
@@ -87,6 +89,7 @@ X_validation /= np.max(X_validation)    # Normalise data to [0, 1] range
 Y_validation = np_utils.to_categorical(y_validation, num_classes)   # One-hot encode the labels
 
 # configuring callbacks
+"""
 earlyStopping = EarlyStopping(monitor='val_loss', min_delta=0.0001, patience=1, verbose=1, mode='auto')
 tbCallBack = keras.callbacks.TensorBoard(log_dir='./Graph', histogram_freq=1, write_graph=True, write_images=True)
 validation_callback = ValidationCallback(X_validation, Y_validation, validate_every=1, chat_id=chat_id)
@@ -98,6 +101,13 @@ facesequence = FaceSequence(batch_size, TRAINING_DATASET_FOLDER_NAME,
                             chat_id=chat_id)
 # do the actual training
 Train(model, facesequence, num_epochs, chat_id=chat_id, training_callbacks=[validation_callback])
+"""
+
+train(model, training_dataset_folder_name=TRAINING_DATASET_FOLDER_NAME, epochs=num_epochs, batch_size=batch_size,
+      epochs_with_same_data=epochs_with_same_data, training_folders_count=folders_at_the_same_time,
+      validation_folders_count=validation_folders, validate_every=validate_every, enable_telegram_bot=enable_telegram_bot)
+
+# TO-DO: test the model
 
 # crossvalidate
 # models = [model, model]
