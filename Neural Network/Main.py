@@ -83,11 +83,12 @@ model.compile(loss='categorical_crossentropy',  # using the cross-entropy loss f
               metrics=['accuracy'])             # reporting the accuracy
 
 # configuring training sequence
+"""
 (X_validation, y_validation, validation_folders_list) = GetData(TRAINING_DATASET_FOLDER_NAME, limit_value=validation_folders)
 X_validation = X_validation.astype('float32')
 X_validation /= np.max(X_validation)    # Normalise data to [0, 1] range
 Y_validation = np_utils.to_categorical(y_validation, num_classes)   # One-hot encode the labels
-
+"""
 # configuring callbacks
 """
 earlyStopping = EarlyStopping(monitor='val_loss', min_delta=0.0001, patience=1, verbose=1, mode='auto')

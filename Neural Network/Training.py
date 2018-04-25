@@ -13,8 +13,8 @@ def train(model, training_dataset_folder_name, epochs, batch_size, epochs_with_s
 
     # train the model for the number of epochs specified
     for current_epoch in range(1, epochs+1):
-        if (current_epoch-1) % epochs_with_same_data:
-            x, y = load_data(folders=training_dataset_folder_name, folders_to_load=training_folders_count, to_avoid=validation_folders)
+        if (current_epoch-1) % epochs_with_same_data == 0:
+            x, y, _ = load_data(training_dataset_folder_name, training_folders_count, to_avoid=validation_folders)
 
         model.fit(x, y, batch_size=batch_size, epochs=1, verbose=1, callbacks=None, shuffle=True)
 
