@@ -61,16 +61,16 @@ class SingletonTrain(object):
 
         # train the model for the number of epochs specified
         for current_epoch in range(epochs):
-            print("\nactually running epoch " + str(current_epoch))
+            # print("\nactually running epoch " + str(current_epoch))
             if current_epoch % epochs_with_same_data == 0:
-                print("\ncurrent_epoch % epochs_with_same_data = 0, i will fetch data for the next epoch")
+                # print("\ncurrent_epoch % epochs_with_same_data = 0, i will fetch data for the next epoch")
                 t = threading.Thread(target=self.load_data, args=(training_dataset_folder_name, training_folders_count,
                                                                   to_avoid))
                 t.setDaemon(True)
                 t.start()
 
-            model.fit(x, y, batch_size=batch_size, epochs=1, verbose=0, callbacks=None, shuffle=True)
-            print("\nfit for epoch " + str(current_epoch) + " end")
+            model.fit(x, y, batch_size=batch_size, epochs=1, verbose=1, callbacks=None, shuffle=True)
+            # print("\nfit for epoch " + str(current_epoch) + " end")
 
             # perform validation
             if current_epoch % validate_every == 0:
@@ -92,11 +92,11 @@ class SingletonTrain(object):
         return validation_history
 
     def load_data(self, folders, folders_to_load=15, to_avoid=[]):
-        print("\nstarted the fetch of data for the next epoch in parallel")
+        # print("\nstarted the fetch of data for the next epoch in parallel")
         self.x_next_epoch, self.y_next_epoch, loaded_folders_list = LoadData.GetData(folders, limit_value=folders_to_load,
                                                                            to_avoid=to_avoid)
         self.y_next_epoch = np_utils.to_categorical(self.y_next_epoch, 2)
         self.x_next_epoch = self.x_next_epoch.astype('float32')
         self.x_next_epoch /= np.max(self.x_next_epoch)
-        print("\nended the fetch of data for the next epoch in parallel")
+        # print("\nended the fetch of data for the next epoch in parallel")
         return self.x_next_epoch, self.y_next_epoch, loaded_folders_list
