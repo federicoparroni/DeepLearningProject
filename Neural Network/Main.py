@@ -1,16 +1,12 @@
-import numpy as np
 import tensorflow as tf
-import keras.callbacks
-from keras.utils import np_utils
-from keras.callbacks import EarlyStopping
-from Train import Train
+import Train
+import numpy as np
 from ModelBuilder import read_model
 import ModelBuilder
-from LoadData import GetData
-from FaceSequence import FaceSequence
 from Utils import connection_available
-from ValidationCallback import ValidationCallback
-from Training import train
+from keras.utils import np_utils
+from LoadData import GetData
+from KFoldCrossValidation import CrossValidate
 
 
 # ====================CONFIGURING GPU ========================================
@@ -103,15 +99,17 @@ facesequence = FaceSequence(batch_size, TRAINING_DATASET_FOLDER_NAME,
 Train(model, facesequence, num_epochs, chat_id=chat_id, training_callbacks=[validation_callback])
 """
 
-train(model, training_dataset_folder_name=TRAINING_DATASET_FOLDER_NAME, epochs=num_epochs, batch_size=batch_size,
-      epochs_with_same_data=epochs_with_same_data, training_folders_count=folders_at_the_same_time,
-      validation_folders_count=validation_folders, validate_every=validate_every, enable_telegram_bot=enable_telegram_bot)
+# _ = Train.SingletonTrain().Train(model, training_dataset_folder_name=TRAINING_DATASET_FOLDER_NAME, epochs=num_epochs,
+#                                  batch_size=batch_size, epochs_with_same_data=epochs_with_same_data,
+#                                  training_folders_count=folders_at_the_same_time, validation_x= X_validation,
+#                                  validation_y=Y_validation, to_avoid=validation_folders_list,
+#                                  validate_every=validate_every, enable_telegram_bot=enable_telegram_bot)
 
 # TO-DO: test the model
 
 # crossvalidate
-# models = [model, model]
-# CrossValidate(2, models, TRAINING_DATASET_FOLDER_NAME, batch_size=batch_size, num_epochs=4, folders_at_the_same_time=folders_at_the_same_time, epochs_with_same_data=2, validate_every=2)
+models = [model, model]
+CrossValidate(2, models, TRAINING_DATASET_FOLDER_NAME, batch_size=batch_size, num_epochs=4, folders_at_the_same_time=folders_at_the_same_time, epochs_with_same_data=2, validate_every=2)
 
 # PREVIOUS TRAINING METHOD
 # model.fit(X_train, Y_train,   # Train the model using the training set...li

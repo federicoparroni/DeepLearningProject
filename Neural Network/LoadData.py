@@ -19,7 +19,7 @@ def LoadData(folder_path, limit_value=-1, to_avoid=[]):
 
     for i in folders:
         if not(len(to_avoid) > 0 and i in to_avoid):
-            print('\n{}/{} fetching data from {}/{}'.format(count, limit_value, folder_path, i))
+            # print('\n{}/{} fetching data from {}/{}'.format(count, limit_value, folder_path, i))
             a, b = CreatePositiveCouples(folder_path + '/' + i)
             c, d = CreateNegativeCouples(folder_path + '/' + i)
 
