@@ -50,7 +50,8 @@ class SingletonTrain(object):
     y_next_epoch = []
     x_next_epoch = []
     def Train(self, model, training_dataset_folder_name, epochs, batch_size, epochs_with_same_data,
-              training_folders_count, validation_x, validation_y, to_avoid, validate_every, class_weight, enable_telegram_bot=False):
+              training_folders_count, validation_x, validation_y, to_avoid, validate_every, class_weight,
+              enable_telegram_bot=False, save_model=True):
         t = None
         validation_history = []
 
@@ -90,7 +91,11 @@ class SingletonTrain(object):
                 x = self.x_next_epoch
                 y = self.y_next_epoch
 
+        if save_model:
+            model.save('trained_model/{}.h5'.format(current_datetime()))
+
         return validation_history
+
 
     def load_data(self, folders, folders_to_load=15, to_avoid=[]):
         # print("\nstarted the fetch of data for the next epoch in parallel")
