@@ -83,6 +83,7 @@ model.compile(loss='categorical_crossentropy',  # using the cross-entropy loss f
               metrics=['accuracy'])             # reporting the accuracy
 
 # configuring training sequence
+print("Loading {} validation folders...".format(validation_folders))
 
 (X_validation, y_validation, validation_folders_list) = GetData(TRAINING_DATASET_FOLDER_NAME, limit_value=validation_folders)
 X_validation = X_validation.astype('float32')
@@ -104,12 +105,14 @@ facesequence = FaceSequence(batch_size, TRAINING_DATASET_FOLDER_NAME,
 Train(model, facesequence, num_epochs, chat_id=chat_id, training_callbacks=[validation_callback])
 """
 
-
-_ = Train.SingletonTrain().Train(model, training_dataset_folder_name=TRAINING_DATASET_FOLDER_NAME, epochs=num_epochs,
-                                 batch_size=batch_size, epochs_with_same_data=epochs_with_same_data,
-                                 training_folders_count=folders_at_the_same_time, validation_x=X_validation,
-                                 validation_y=Y_validation, to_avoid=validation_folders_list,
-                                 validate_every=validate_every, class_weight=class_weight, enable_telegram_bot=enable_telegram_bot)
+print("Starting training")
+history = Train.SingletonTrain().Train(model, training_dataset_folder_name=TRAINING_DATASET_FOLDER_NAME,
+                                       epochs=num_epochs, batch_size=batch_size,
+                                       epochs_with_same_data=epochs_with_same_data,
+                                       training_folders_count=folders_at_the_same_time, validation_x=X_validation,
+                                       validation_y=Y_validation, to_avoid=validation_folders_list,
+                                       validate_every=validate_every, class_weight=class_weight,
+                                       enable_telegram_bot=enable_telegram_bot)
 
 # TO-DO: test the model
 
