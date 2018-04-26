@@ -40,6 +40,10 @@ depth = 2
 # num_test = X_test.shape[0] #num test images
 num_classes = 2         # there are 2 image classes
 
+#weight of the classes, when an error occour on class 0 -> false positive.
+class_weight = {0: 1.5, 1: 1}
+
+
 # inp = Input(shape=(height, width, depth))
 #
 # # Conv [32] -> Conv [32] -> Pool (with dropout on the pooling layer)
@@ -79,12 +83,12 @@ model.compile(loss='categorical_crossentropy',  # using the cross-entropy loss f
               metrics=['accuracy'])             # reporting the accuracy
 
 # configuring training sequence
-"""
+
 (X_validation, y_validation, validation_folders_list) = GetData(TRAINING_DATASET_FOLDER_NAME, limit_value=validation_folders)
 X_validation = X_validation.astype('float32')
 X_validation /= np.max(X_validation)    # Normalise data to [0, 1] range
 Y_validation = np_utils.to_categorical(y_validation, num_classes)   # One-hot encode the labels
-"""
+
 # configuring callbacks
 """
 earlyStopping = EarlyStopping(monitor='val_loss', min_delta=0.0001, patience=1, verbose=1, mode='auto')
@@ -100,17 +104,18 @@ facesequence = FaceSequence(batch_size, TRAINING_DATASET_FOLDER_NAME,
 Train(model, facesequence, num_epochs, chat_id=chat_id, training_callbacks=[validation_callback])
 """
 
-# _ = Train.SingletonTrain().Train(model, training_dataset_folder_name=TRAINING_DATASET_FOLDER_NAME, epochs=num_epochs,
-#                                  batch_size=batch_size, epochs_with_same_data=epochs_with_same_data,
-#                                  training_folders_count=folders_at_the_same_time, validation_x= X_validation,
-#                                  validation_y=Y_validation, to_avoid=validation_folders_list,
-#                                  validate_every=validate_every, enable_telegram_bot=enable_telegram_bot)
+
+_ = Train.SingletonTrain().Train(model, training_dataset_folder_name=TRAINING_DATASET_FOLDER_NAME, epochs=num_epochs,
+                                 batch_size=batch_size, epochs_with_same_data=epochs_with_same_data,
+                                 training_folders_count=folders_at_the_same_time, validation_x=X_validation,
+                                 validation_y=Y_validation, to_avoid=validation_folders_list,
+                                 validate_every=validate_every, class_weight=class_weight, enable_telegram_bot=enable_telegram_bot)
 
 # TO-DO: test the model
 
 # crossvalidate
-models = [model, model]
-CrossValidate(2, models, TRAINING_DATASET_FOLDER_NAME, batch_size=batch_size, num_epochs=4, folders_at_the_same_time=folders_at_the_same_time, epochs_with_same_data=2, validate_every=2)
+#models = [model, model]
+#CrossValidate(2, models, TRAINING_DATASET_FOLDER_NAME, batch_size=batch_size, num_epochs=4, folders_at_the_same_time=folders_at_the_same_time, epochs_with_same_data=2, validate_every=2)
 
 # PREVIOUS TRAINING METHOD
 # model.fit(X_train, Y_train,   # Train the model using the training set...li

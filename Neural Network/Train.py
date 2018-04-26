@@ -50,7 +50,7 @@ class SingletonTrain(object):
     y_next_epoch = []
     x_next_epoch = []
     def Train(self, model, training_dataset_folder_name, epochs, batch_size, epochs_with_same_data,
-              training_folders_count, validation_x, validation_y, to_avoid, validate_every, enable_telegram_bot=False):
+              training_folders_count, validation_x, validation_y, to_avoid, validate_every, class_weight, enable_telegram_bot=False):
         t = None
         validation_history = []
 
@@ -69,20 +69,21 @@ class SingletonTrain(object):
                 t.setDaemon(True)
                 t.start()
 
-            model.fit(x, y, batch_size=batch_size, epochs=1, verbose=1, callbacks=None, shuffle=True)
-            # print("\nfit for epoch " + str(current_epoch) + " end")
+            print("\nEpoch {}/{}".format(current_epoch+1, epochs))
+            model.fit(x, y, batch_size=batch_size, epochs=1, verbose=1, class_weight=class_weight, callbacks=None,
+                      shuffle=True)
 
             # perform validation
-            if current_epoch % validate_every == 0:
+            if (current_epoch+1) % validate_every == 0:
                 evaluation = model.evaluate(validation_x, validation_y)
                 print(evaluation)
                 validation_history.append(evaluation)
                 if enable_telegram_bot:
                     telegram_send_msg("Ho completato l'epoca {}\n{}\nValidation loss: {}, validation_accuracy: {}"
-                                      .format(current_epoch, "-"*15, evaluation[0], evaluation[1]))
+                                      .format(current_epoch+1, "-"*15, evaluation[0], evaluation[1]))
 
             if enable_telegram_bot:
-                telegram_send_msg("Ho completato l'epoca {}".format(current_epoch))
+                telegram_send_msg("Ho completato l'epoca {}".format(current_epoch+1))
 
             if (current_epoch + 1) % epochs_with_same_data == 0:
                 t.join()
