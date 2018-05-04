@@ -8,6 +8,13 @@ from Utils import connection_available
 from keras.utils import np_utils
 from LoadData import GetData
 from KFoldCrossValidation import CrossValidate
+from Utils import telegram_send_msg
+
+
+def inc():
+    global count
+    count += 1
+    telegram_send_msg("actually running test.py, epoch : " + str(count))
 
 # defining the folders path train and test
 TRAINING_DATASET_FOLDER_NAME = '3_preprocessed_1_dataset train'
@@ -47,6 +54,3 @@ model.fit(X_train, Y_train,   # Train the model using the training set...li
           verbose=1, validation_split=0.2, callbacks=[keras.callbacks.LambdaCallback(
                             on_epoch_begin=lambda batch, logs: inc())])
 
-def inc():
-    global count
-    count += 1
