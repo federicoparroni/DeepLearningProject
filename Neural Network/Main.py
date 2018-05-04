@@ -72,6 +72,7 @@ num_classes = 2         # there are 2 image classes
 a = read_model("models/model1.txt")
 modelObject = ModelBuilder.ModelBuilder(a, (height, width, depth))
 model = modelObject.model
+
 print(model.summary())
 
 model.compile(loss='categorical_crossentropy',  # using the cross-entropy loss function
@@ -110,7 +111,7 @@ Train(model, facesequence, num_epochs, chat_id=chat_id, training_callbacks=[vali
 
 # crossvalidate
 models = [model, model]
-CrossValidate(2, models, TRAINING_DATASET_FOLDER_NAME, batch_size=batch_size, num_epochs=4, folders_at_the_same_time=folders_at_the_same_time, epochs_with_same_data=2, validate_every=2)
+CrossValidate(1, models, TRAINING_DATASET_FOLDER_NAME, batch_size=batch_size, num_epochs=2, folders_at_the_same_time=folders_at_the_same_time, epochs_with_same_data=2, validate_every=1)
 
 # PREVIOUS TRAINING METHOD
 # model.fit(X_train, Y_train,   # Train the model using the training set...li
