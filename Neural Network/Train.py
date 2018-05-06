@@ -6,6 +6,7 @@ import LoadData
 import threading
 from keras.utils import np_utils
 from Utils import telegram_send_msg
+from numpy import sum
 
 _instances = {}
 
@@ -55,7 +56,7 @@ class SingletonTrain(object):
 
         # load validation data that will be used to validate during the training
 
-        x, y, _ = self.load_data(folders=training_dataset_folder_name, folders_to_load=5,
+        x, y, _ = self.load_data(folders=training_dataset_folder_name, folders_to_load=1,
                                  to_avoid=to_avoid)
 
         # train the model for the number of epochs specified
@@ -97,7 +98,7 @@ class SingletonTrain(object):
 
     def load_data(self, folders, folders_to_load=15, to_avoid=[]):
         # print("\nstarted the fetch of data for the next epoch in parallel")
-        self.x_next_epoch, self.y_next_epoch, loaded_folders_list = LoadData.GetData(folders,limit_value=folders_to_load,
+        self.x_next_epoch, self.y_next_epoch, loaded_folders_list = LoadData.GetData(folders, limit_value=folders_to_load,
                                                                                      to_avoid=to_avoid)
         self.y_next_epoch = np_utils.to_categorical(self.y_next_epoch, 2)
         self.x_next_epoch = self.x_next_epoch.astype('float32')

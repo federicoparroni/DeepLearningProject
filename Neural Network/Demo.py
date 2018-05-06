@@ -8,6 +8,8 @@ import LoadData
 import threading
 import numpy as np
 import math
+import ModelBuilder
+from ModelBuilder import read_model
 
 
 class Demo:
@@ -33,7 +35,7 @@ class Demo:
             with self.graph.as_default():
                 predicted_label = self.model.predict(inp)
 
-            print(('same' if predicted_label[0, 1] > 0.5 else 'wrong') + str(predicted_label))
+            print(('same' if predicted_label[0, 1] > 0.99 else 'wrong') + str(predicted_label))
 
 
     def OneFrameComputation(self):
@@ -48,7 +50,7 @@ class Demo:
         t.start()
 
 
-    def StartDemo(self, ref, model):
+    def StartDemo(self, ref, model_path):
         self.cap = cv2.VideoCapture(0)
         self.cap.set(3, 640)
         self.cap.set(4, 480)
@@ -57,9 +59,14 @@ class Demo:
 
         bp = 'trained_model/'
 
-        self.model = load_model(bp + model)
+        a = read_model("models/model1.txt")
+        modelObject = ModelBuilder.ModelBuilder(a, (80, 80, 2))
+        self.model = modelObject.model
+        self.model.load_weights(bp+model_path)
+
+        #self.model = load_model(bp+model_path)
         self.ref_img = FaceExtractionPipeline.SingletonPipeline().FaceExtractionPipelineImage(skimage.io.imread(ref))
         self.OneFrameComputation()
 
 demo=Demo()
-demo.StartDemo('/home/edoardo/Pictures/Webcam/2018-03-16-113105.jpg', 'ilToro.h5')
+demo.StartDemo('/home/edoardo/Pictures/Webcam/2018-05-06-224307.jpg', '2018-05-06 15:25:00.h5')

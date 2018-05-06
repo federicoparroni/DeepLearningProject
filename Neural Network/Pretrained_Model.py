@@ -6,6 +6,8 @@ from PlotImage import plot
 from keras.utils import np_utils
 from keras.models import load_model
 import numpy as np
+import ModelBuilder
+from ModelBuilder import read_model
 
 
 #===================================
@@ -13,15 +15,27 @@ import numpy as np
 bp = 'trained_model/'
 
 NUM_CLASSES = 2
-TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
+TEST_DATASET_FOLDER_NAME = '3_preprocessed_1_dataset train'
 MAX_IMAGES_TO_PLOT = 36
 NUM_PRINTED_PAGES = 3
-MODEL_TO_LOAD = 'ilToro.h5'
+MODEL_TO_LOAD = '2018-05-06 15:25:00.h5'
 
-model = load_model(bp + MODEL_TO_LOAD)
+a = read_model("models/model1.txt")
+modelObject = ModelBuilder.ModelBuilder(a, (80, 80, 2))
+model = modelObject.model
+model.load_weights(bp + MODEL_TO_LOAD)
 
-(X_test, y_test) = GetData(TEST_DATASET_FOLDER_NAME)
+#model = load_model(bp + MODEL_TO_LOAD)
+
+(X_test, y_test, _) = GetData(TEST_DATASET_FOLDER_NAME, 5)
 Y_test = np_utils.to_categorical(y_test, NUM_CLASSES)
+X_test = X_test.astype('float32')
+X_test/= np.max(X_test)    # Normalise data to [0, 1] range
+model.compile(loss='categorical_crossentropy',  # using the cross-entropy loss function
+              optimizer='adam',                 # using the Adam optimiser
+              metrics=['accuracy'])
+
+print(model.evaluate(X_test, Y_test))
 
 sum = 0
 for i in range(len(y_test)):
