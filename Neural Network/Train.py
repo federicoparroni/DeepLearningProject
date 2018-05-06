@@ -48,7 +48,7 @@ class SingletonTrain(object):
     x_next_epoch = []
 
     def Train(self, model, training_dataset_folder_name, epochs, batch_size, epochs_with_same_data,
-              training_folders_count, validation_x, validation_y, to_avoid, validate_every, class_weight,
+              training_folders_count, validation_x, validation_y, to_avoid, validate_every, class_weight={0: 1, 1: 1},
               enable_telegram_bot=False, save_model=True):
         t = None
         validation_history = []
