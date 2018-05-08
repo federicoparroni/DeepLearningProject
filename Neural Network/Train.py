@@ -50,8 +50,9 @@ class SingletonTrain(object):
 
 
     def Train(self, model, training_dataset_folder_name, epochs, batch_size, training_folders_count, validation_x,
-              validation_y, to_avoid, validate_every, change_data_treshold=0.98, epochs_with_same_data=25, class_weight={0: 1, 1: 1},
-              enable_telegram_bot=False, save_model=True):
+              validation_y, to_avoid, validate_every, early_stopping_after_epochs, early_stopping_margin, change_data_treshold=0.98,
+              epochs_with_same_data=25, class_weight={0: 1, 1: 1}, enable_telegram_bot=False, save_model=True):
+
         t = None
         validation_history = []
         # initialization of partial result
@@ -81,7 +82,10 @@ class SingletonTrain(object):
             last_pos = len(last_epoch_result.history['acc'])
             last_epoch_acc = last_epoch_result.history['acc'][last_pos-1]
 
-            # perform validation
+
+            # ============= VALIDATION
+            # perform validation every "validate_every" epochs
+
             if (current_epoch+1) % validate_every == 0:
                 evaluation = model.evaluate(validation_x, validation_y)
                 print(evaluation)
@@ -89,6 +93,21 @@ class SingletonTrain(object):
                 if enable_telegram_bot:
                     telegram_send_msg("Ho completato l'epoca {}\n{}\nValidation loss: {}, validation_accuracy: {}"
                                       .format(current_epoch+1, "-"*15, evaluation[0], evaluation[1]))
+
+                if 0 < early_stopping_after_epochs < len(validation_history):
+                    current_val_accuracy = evaluation[1]
+                    should_terminate = True
+                    for e in validation_history:
+                        if current_val_accuracy > e[1] - early_stopping_margin:
+                            should_terminate = False
+
+                    if should_terminate:
+                        print("~~~~~~~~~~~~~ Early-stopping occurred! Last {} validation accuracies: "
+                              .format(early_stopping_after_epochs))
+                        [print(h[1]) for h in validation_history[-early_stopping_after_epochs-1:]]
+                        print("~~~~~~~~~~~~~")
+                        return validation_history
+            # ============= end validation
 
             if enable_telegram_bot:
                 telegram_send_msg("Ho completato l'epoca {}".format(current_epoch+1))
@@ -117,7 +136,6 @@ class SingletonTrain(object):
             model.save('trained_model/{}.h5'.format(current_datetime()))
 
         return validation_history
-
 
     def load_data(self, folders, folders_to_load=15, to_avoid=[]):
         # print("\nstarted the fetch of data for the next epoch in parallel")

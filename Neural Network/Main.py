@@ -6,7 +6,6 @@ import ModelBuilder
 from Utils import connection_available
 from keras.utils import np_utils
 from LoadData import GetData
-from KFoldCrossValidation import CrossValidate
 
 
 # ====================CONFIGURING GPU ========================================
@@ -24,7 +23,7 @@ chat_id = -1001223624517            # this is for the private channel
 TRAINING_DATASET_FOLDER_NAME = '3_preprocessed_1_dataset train'
 TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 
-epochs_with_same_data = 1
+epochs_with_same_data = 10
 folders_at_the_same_time = 5
 validation_folders = 1
 validate_every = 10
@@ -112,8 +111,9 @@ history = Train.SingletonTrain().Train(model, training_dataset_folder_name=TRAIN
                                        epochs_with_same_data=epochs_with_same_data,
                                        training_folders_count=folders_at_the_same_time, validation_x=X_validation,
                                        validation_y=Y_validation, to_avoid=validation_folders_list,
-                                       validate_every=validate_every, class_weight=class_weight,
-                                       enable_telegram_bot=enable_telegram_bot)
+                                       validate_every=validate_every,
+                                       early_stopping_after_epochs=3, early_stopping_margin=0.01,
+                                       class_weight=class_weight, enable_telegram_bot=enable_telegram_bot)
 
 # TO-DO: test the model
 #models = [model, model]
