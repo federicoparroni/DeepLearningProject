@@ -6,7 +6,6 @@ import ModelBuilder
 from Utils import connection_available
 from keras.utils import np_utils
 from LoadData import GetData
-from KFoldCrossValidation import CrossValidate
 
 
 # ====================CONFIGURING GPU ========================================
@@ -112,8 +111,9 @@ history = Train.SingletonTrain().Train(model, training_dataset_folder_name=TRAIN
                                        epochs_with_same_data=epochs_with_same_data,
                                        training_folders_count=folders_at_the_same_time, validation_x=X_validation,
                                        validation_y=Y_validation, to_avoid=validation_folders_list,
-                                       validate_every=validate_every, class_weight=class_weight,
-                                       enable_telegram_bot=enable_telegram_bot)
+                                       validate_every=validate_every,
+                                       early_stopping_after_epochs=3, early_stopping_margin=0.01,
+                                       class_weight=class_weight, enable_telegram_bot=enable_telegram_bot)
 
 # TO-DO: test the model
 #models = [model, model]
