@@ -15,7 +15,7 @@ from ModelBuilder import read_model
 bp = 'trained_model/'
 
 NUM_CLASSES = 2
-TEST_DATASET_FOLDER_NAME = '3_preprocessed_1_dataset train'
+TEST_DATASET_FOLDER_NAME ='3_preprocessed_1_dataset train'
 MAX_IMAGES_TO_PLOT = 36
 NUM_PRINTED_PAGES = 3
 MODEL_TO_LOAD = '2018-05-06 15:25:00.h5'
@@ -30,7 +30,7 @@ model.load_weights(bp + MODEL_TO_LOAD)
 (X_test, y_test, _) = GetData(TEST_DATASET_FOLDER_NAME, 5)
 Y_test = np_utils.to_categorical(y_test, NUM_CLASSES)
 X_test = X_test.astype('float32')
-X_test/= np.max(X_test)    # Normalise data to [0, 1] range
+X_test /= np.max(X_test)    # Normalise data to [0, 1] range
 model.compile(loss='categorical_crossentropy',  # using the cross-entropy loss function
               optimizer='adam',                 # using the Adam optimiser
               metrics=['accuracy'])

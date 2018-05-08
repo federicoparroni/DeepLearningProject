@@ -25,12 +25,12 @@ TRAINING_DATASET_FOLDER_NAME = '3_preprocessed_1_dataset train'
 TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 
 epochs_with_same_data = 1
-folders_at_the_same_time = 3
+folders_at_the_same_time = 5
 validation_folders = 1
 validate_every = 10
 
 batch_size = 128            # in each iteration, we consider 128 training examples at once
-num_epochs = 1            # we iterate 200 times over the entire training set
+num_epochs = 50            # we iterate 200 times over the entire training set
 
 # (X_train, y_train), (X_test, y_test) = (GetData(TRAINING_DATASET_FOLDER_NAME, limit_on_fonders_to_fetch = True, limit_value = 4), GetData(TEST_DATASET_FOLDER_NAME)) # fetch data
 
