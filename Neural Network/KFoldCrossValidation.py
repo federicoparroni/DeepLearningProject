@@ -45,4 +45,3 @@ def CrossValidate(k, models, dataset_folder_name, batch_size, num_epochs=200, ch
 
         with open('crossvaliationresults.txt', 'a') as the_file:
             the_file.write('\n validation results ' + str(sum_model_validations_acc / k))
-    a = 1

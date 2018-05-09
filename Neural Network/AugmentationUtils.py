@@ -1,21 +1,23 @@
 import Augmentor
 import os
+import AlterBrightness
 from PIL import Image, ExifTags
 
-# works recursively from the root path
+
 def AugmentDataFromPath(path):
     entries = os.scandir(path)
+    alter_brightness = AlterBrightness.AlterBrightness(1)
     p = Augmentor.Pipeline(path, output_directory='.')
     p.flip_left_right(probability=0.5)
     p.skew_left_right(probability=1, magnitude=0.20)
+    p.add_operation(alter_brightness)
 
     for entry in entries:
         if entry.is_dir():
             AugmentDataFromPath(entry.path)
         else:
-            p.sample(5*(len([name for name in entries])+1))
+            p.sample(6*(len([name for name in entries])+1))
             break
-
 
 
 def FlipImages(path):
@@ -27,9 +29,9 @@ def FlipImages(path):
             try:
                 image=Image.open(entry.path)
                 for orientation in ExifTags.TAGS.keys():
-                    if ExifTags.TAGS[orientation]=='Orientation':
+                    if ExifTags.TAGS[orientation] == 'Orientation':
                         break
-                exif=dict(image._getexif().items())
+                exif = dict(image._getexif().items())
 
                 if exif[orientation] == 3:
                     image = image.rotate(180, expand=True)
@@ -47,8 +49,4 @@ def FlipImages(path):
                 # cases: image don't have getexif
                 pass
 
-
-#FlipImages('/home/edoardo/Git_Projects/DeepLearningProject/Neural Network/1_dataset train')
-#FlipImages('/home/edoardo/Git_Projects/DeepLearningProject/Neural Network/2_dataset test')
-#AugmentDataFromPath('/home/edoardo/Git_Projects/DeepLearningProject/Neural Network/1_dataset train')
-AugmentDataFromPath('/home/edoardo/Desktop/ToAugment')
+AugmentDataFromPath('/home/giovanni/Immagini/Webcam/')
