@@ -56,7 +56,8 @@ class SingletonPipeline(object):
                     face_aligned = face_aligned.astype('int')
 
                 # print('----- execution time for the pipeline: ', time.time() - start_time)
-
+                face_aligned = face_aligned.astype('float32')
+                face_aligned /= np.max(face_aligned)
                 return face_aligned
 
 
