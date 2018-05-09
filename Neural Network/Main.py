@@ -6,7 +6,6 @@ import ModelBuilder
 from Utils import connection_available
 from keras.utils import np_utils
 from LoadData import GetData
-from KFoldCrossValidation import CrossValidate
 
 
 # ====================CONFIGURING GPU ========================================
@@ -24,13 +23,13 @@ chat_id = -1001223624517            # this is for the private channel
 TRAINING_DATASET_FOLDER_NAME = '3_preprocessed_1_dataset train'
 TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 
-epochs_with_same_data = 3
-folders_at_the_same_time = 30
-validation_folders = 12
-validate_every = 5
+epochs_with_same_data = 10
+folders_at_the_same_time = 5
+validation_folders = 1
+validate_every = 10
 
 batch_size = 128            # in each iteration, we consider 128 training examples at once
-num_epochs = 180            # we iterate 200 times over the entire training set
+num_epochs = 50            # we iterate 200 times over the entire training set
 
 # (X_train, y_train), (X_test, y_test) = (GetData(TRAINING_DATASET_FOLDER_NAME, limit_on_fonders_to_fetch = True, limit_value = 4), GetData(TEST_DATASET_FOLDER_NAME)) # fetch data
 
@@ -77,7 +76,7 @@ a = read_model("models/model1.txt")
 modelObject = ModelBuilder.ModelBuilder(a, (height, width, depth))
 model = modelObject.model
 
-print(model.summary())
+model.summary()
 
 model.compile(loss='categorical_crossentropy',  # using the cross-entropy loss function
               optimizer='adam',                 # using the Adam optimiser
@@ -112,8 +111,9 @@ history = Train.SingletonTrain().Train(model, training_dataset_folder_name=TRAIN
                                        epochs_with_same_data=epochs_with_same_data,
                                        training_folders_count=folders_at_the_same_time, validation_x=X_validation,
                                        validation_y=Y_validation, to_avoid=validation_folders_list,
-                                       validate_every=validate_every, class_weight=class_weight,
-                                       enable_telegram_bot=enable_telegram_bot)
+                                       validate_every=validate_every,
+                                       early_stopping_after_epochs=3, early_stopping_margin=0.01,
+                                       class_weight=class_weight, enable_telegram_bot=enable_telegram_bot)
 
 # TO-DO: test the model
 #models = [model, model]

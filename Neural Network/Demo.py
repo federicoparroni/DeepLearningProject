@@ -8,6 +8,9 @@ import LoadData
 import threading
 import numpy as np
 import math
+import matplotlib.pyplot as plt
+import ModelBuilder
+from ModelBuilder import read_model
 
 
 class Demo:
@@ -24,42 +27,55 @@ class Demo:
                                                                                                     math.ceil(np.shape(inp_img)[0]*30/100))
 
         if img_data_pipelined is not None:
-            # plt.imshow(img_data_pipelined, 'gray')
-            # plt.show()
+            plt.imshow(img_data_pipelined, 'gray')
+            plt.show()
 
             inp = LoadData.MergeImages(self.ref_img, img_data_pipelined)
             inp = np.expand_dims(inp, axis=0)
 
-            with self.graph.as_default():
-                predicted_label = self.model.predict(inp)
+            #with self.graph.as_default():
+            predicted_label = self.model.predict(inp)
 
-            print(('same' if predicted_label[0, 1] > 0.5 else 'wrong') + str(predicted_label))
+            print(('same' if predicted_label[0, 1] > 0.85 else 'wrong') + str(predicted_label))
+
+        self.OneFrameComputation()
 
 
     def OneFrameComputation(self):
-        threading.Timer(0.5, self.OneFrameComputation).start()
+        # threading.Timer(0.5, self.OneFrameComputation).start()
 
         # read frame
         ret, frame = self.cap.read()
 
+        self.ElaborateImagesAndMakePredition(frame)
+
         # do the prediction in a different thread
-        t = threading.Thread(target=self.ElaborateImagesAndMakePredition, args=(frame,))
-        t.setDaemon(True)
-        t.start()
+        #t = threading.Thread(target=self.ElaborateImagesAndMakePredition, args=(frame,))
+        #t.setDaemon(True)
+        #t.start()
 
 
-    def StartDemo(self, ref, model):
+    def StartDemo(self, ref, model_path):
         self.cap = cv2.VideoCapture(0)
         self.cap.set(3, 640)
         self.cap.set(4, 480)
 
-        self.graph = tf.get_default_graph()
+        # self.graph = tf.get_default_graph()
 
         bp = 'trained_model/'
 
-        self.model = load_model(bp + model)
+        a = read_model("models/model1.txt")
+        modelObject = ModelBuilder.ModelBuilder(a, (80, 80, 2))
+        self.model = modelObject.model
+        self.model.load_weights(bp+model_path)
+
+        #self.model = load_model(bp+model_path)
         self.ref_img = FaceExtractionPipeline.SingletonPipeline().FaceExtractionPipelineImage(skimage.io.imread(ref))
+
+        plt.imshow(self.ref_img, 'gray')
+        plt.show()
+
         self.OneFrameComputation()
 
 demo=Demo()
-demo.StartDemo('/home/edoardo/Pictures/Webcam/2018-03-16-113105.jpg', 'ilToro.h5')
+demo.StartDemo('/home/edoardo/Pictures/Webcam/3.jpg', '2018-05-06 15:25:00.h5')
