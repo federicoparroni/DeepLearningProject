@@ -1,24 +1,26 @@
 import Augmentor
 import os
 import AlterBrightness
+import HistogramEqualization
 from PIL import Image, ExifTags
 
 
 def AugmentDataFromPath(path):
     entries = os.scandir(path)
     alter_brightness = AlterBrightness.AlterBrightness(1)
+    histogram_equalization = HistogramEqualization.HistogramEqualization(0.5)
     p = Augmentor.Pipeline(path, output_directory='.')
     p.flip_left_right(probability=0.5)
     p.skew_left_right(probability=1, magnitude=0.20)
     p.add_operation(alter_brightness)
+    p.add_operation(histogram_equalization)
 
     for entry in entries:
         if entry.is_dir():
             AugmentDataFromPath(entry.path)
         else:
-            p.sample(6*(len([name for name in entries])+1))
+            p.sample((6*len([name for name in entries])+1))
             break
-
 
 def FlipImages(path):
     entries = os.scandir(path)
