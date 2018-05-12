@@ -78,4 +78,4 @@ class Demo:
         self.OneFrameComputation()
 
 demo=Demo()
-demo.StartDemo('/home/edoardo/Pictures/Webcam/3.jpg', '2018-05-06 15:25:00.h5')
+demo.StartDemo('/home/edoardo/Pictures/Webcam/3.jpg', '2018-05-12 15:45:47.h5')

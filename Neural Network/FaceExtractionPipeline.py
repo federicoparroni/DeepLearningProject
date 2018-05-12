@@ -89,25 +89,23 @@ def TryThePipeline(dataset_root_path):
 # ==========PREPROCESSING load data ================
 
 def PreprocessImages(folder):
-    preproc_folder = PREPROCESSED_IMAGES_FOLDER_PATH + folder
-    if not os.path.isdir(preproc_folder):
-        os.mkdir(preproc_folder)
+    #preproc_folder = PREPROCESSED_IMAGES_FOLDER_PATH + folder
+    preproc_folder = folder
+    if not os.path.isdir(preproc_folder + '_p'):
+        os.mkdir(preproc_folder + '_p')
 
     for f in os.listdir(folder):
-        if not os.path.isdir(preproc_folder + "/" + f):
-            os.mkdir(preproc_folder + "/" + f)
+        if not os.path.isdir(preproc_folder + '_p'+ "/" + f):
+            os.mkdir(preproc_folder + '_p' + "/" + f)
             for img in os.listdir(folder + "/" + f):
                 image = skimage.io.imread(folder + "/" + f + '/' + img)
                 preproc_img = SingletonPipeline().FaceExtractionPipelineImage(image)
 
                 if preproc_img is not None:
-                    skimage.io.imsave(preproc_folder + "/" + f + '/' + img, preproc_img)
-                    print("Created: " + preproc_folder + "/" + f + '/' + img)
+                    skimage.io.imsave(preproc_folder + '_p'+ "/" + f + '/' + img, preproc_img)
+                    print("Created: " + preproc_folder + '_p' + "/" + f + '/' + img)
                 else:
-                    print("Image null: " + preproc_folder + "/" + f + '/' + img)
-    else:
-        print("Folder already created. Delete the old one and retry.")
-
-#PreprocessImages("2_dataset test")
-#PreprocessImages("1_dataset train")
+                    print("Image null: " + preproc_folder + '_p' + "/" + f + '/' + img)
+    #else:
+    #    print("Folder already created. Delete the old one and retry.")
 

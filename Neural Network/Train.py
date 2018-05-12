@@ -50,7 +50,7 @@ class SingletonTrain(object):
 
 
     def Train(self, model, training_dataset_folder_name, epochs, batch_size, training_folders_count, validation_x,
-              validation_y, to_avoid, validate_every, early_stopping_after_epochs, early_stopping_margin, change_data_treshold=0.98,
+              validation_y, to_avoid, validate_every, early_stopping_after_epochs=0, early_stopping_margin=1, change_data_treshold=0.98,
               epochs_with_same_data=25, class_weight={0: 1, 1: 1}, enable_telegram_bot=False, save_model=True):
 
         t = None

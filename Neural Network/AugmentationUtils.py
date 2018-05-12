@@ -2,10 +2,16 @@ import Augmentor
 import os
 import AlterBrightness
 import HistogramEqualization
+from Utils import convert_to_jpg
 from PIL import Image, ExifTags
+from FaceExtractionPipeline import PreprocessImages
 
 
 def AugmentDataFromPath(path):
+    #rotate the images in vertical positions
+    FlipImages(path)
+
+    #augementation part of the code
     entries = os.scandir(path)
     alter_brightness = AlterBrightness.AlterBrightness(1)
     histogram_equalization = HistogramEqualization.HistogramEqualization(0.5)
@@ -19,15 +25,16 @@ def AugmentDataFromPath(path):
         if entry.is_dir():
             AugmentDataFromPath(entry.path)
         else:
+            #convert the image to jpg
+            convert_to_jpg(entry.path)
+
             p.sample((6*len([name for name in entries])+1))
             break
 
 def FlipImages(path):
     entries = os.scandir(path)
     for entry in entries:
-        if entry.is_dir():
-            FlipImages(entry.path)
-        else:
+        if not entry.is_dir():
             try:
                 image=Image.open(entry.path)
                 for orientation in ExifTags.TAGS.keys():
@@ -51,4 +58,13 @@ def FlipImages(path):
                 # cases: image don't have getexif
                 pass
 
-AugmentDataFromPath('/home/giovanni/Immagini/Webcam/')
+
+
+def FlipImagesRecursive(path):
+    entries = os.scandir(path)
+    for entry in entries:
+        if not entry.is_dir():
+            FlipImages(path)
+        else:
+            FlipImagesRecursive(entry.path)
+
