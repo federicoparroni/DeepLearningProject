@@ -59,4 +59,4 @@ def convert_to_jpeg_recursive(path):
                 convert_to_jpeg_recursive(entry.path)
 
 
-convert_to_jpeg_recursive('/home/edoardo/Desktop/Dataset/2_dataset test')
+#convert_to_jpeg_recursive('/home/edoardo/Desktop/Dataset/2_dataset test')
