@@ -6,7 +6,9 @@ import LoadData
 import threading
 from keras.utils import np_utils
 from Utils import telegram_send_msg
-from numpy import sum
+from telegram.ext import Updater, CommandHandler
+
+BOT_TOKEN = "591311395:AAEfSH464BdXSDezWGMZwdiLxLg2_aLlGDE"
 
 _instances = {}
 
@@ -52,6 +54,13 @@ class SingletonTrain(object):
     def Train(self, model, training_dataset_folder_name, epochs, batch_size, training_folders_count, validation_x,
               validation_y, to_avoid, validate_every, early_stopping_after_epochs=0, early_stopping_margin=1, change_data_treshold=0.98,
               epochs_with_same_data=25, class_weight={0: 1, 1: 1}, enable_telegram_bot=False, save_model=True):
+
+        # telegram bot init
+        updater = Updater(token=BOT_TOKEN)
+        dispatcher = updater.dispatcher
+        interrupt_handler = CommandHandler('next_model', self._stop_training)
+        dispatcher.add_handler(interrupt_handler)
+        updater.start_polling()
 
         t = None
         validation_history = []
@@ -146,3 +155,6 @@ class SingletonTrain(object):
         self.x_next_epoch /= np.max(self.x_next_epoch)
         # print("\nended the fetch of data for the next epoch in parallel")
         return self.x_next_epoch, self.y_next_epoch, loaded_folders_list
+
+    def _stop_training(self):
+        self.stop_training = True

@@ -43,7 +43,7 @@ def CrossValidate(k, models, dataset_folder_name, batch_size, num_epochs=200, ch
                                                               batch_size=batch_size, epochs_with_same_data=epochs_with_same_data,
                                                               training_folders_count=folders_at_the_same_time, validation_x= X_validation,
                                                               validation_y=Y_validation, to_avoid=validation_folders_list,
-                                                              validate_every=validate_every, enable_telegram_bot=False if chat_id == "undefined" else True)
+                                                              validate_every=validate_every, enable_telegram_bot=(chat_id != "undefined"))
 
             sum_model_validations_acc += (validation_history[-1])[1]
 
