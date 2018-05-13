@@ -16,6 +16,7 @@ class SingletonTrain(object):
     def __new__(cls, *args, **kw):
         if not cls in _instances:
             instance = super().__new__(cls)
+            instance.stop_train = False
             _instances[cls] = instance
 
         return _instances[cls]
@@ -66,6 +67,12 @@ class SingletonTrain(object):
 
         # train the model for the number of epochs specified
         for current_epoch in range(epochs):
+
+            #insert an interrupt in the training with a telegram message
+            if self.stop_training:
+                self.stop_training = False
+                break
+
             # print("\nactually running epoch " + str(current_epoch))
             #if current_epoch % epochs_with_same_data == 0:
             if last_epoch_acc > change_data_treshold or change_data_counter == epochs_with_same_data:
