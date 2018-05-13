@@ -44,8 +44,8 @@ def CrossValidate(k, models, dataset_folder_name, batch_size, num_epochs=200, ch
                                                               training_folders_count=folders_at_the_same_time, validation_x= X_validation,
                                                               validation_y=Y_validation, to_avoid=validation_folders_list,
                                                               validate_every=validate_every, enable_telegram_bot=(chat_id != "undefined"))
-
-            sum_model_validations_acc += (validation_history[-1])[1]
+            if len(validation_history) > 0:
+                sum_model_validations_acc += (validation_history[-1])[1]
 
         avg_val_accuracy_models += [sum_model_validations_acc / k]
 

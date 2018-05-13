@@ -18,10 +18,13 @@ class SingletonTrain(object):
     def __new__(cls, *args, **kw):
         if not cls in _instances:
             instance = super().__new__(cls)
-            instance.stop_train = False
+            instance.stop_training = False
             _instances[cls] = instance
 
         return _instances[cls]
+
+    def _stop_training(self):
+        self.stop_training = True
 
     def Train_Sequence(self, model, train_sequence, num_epochs=200, chat_id="undefined", training_callbacks=[], save_model=True):
         if chat_id != "undefined":
@@ -59,7 +62,7 @@ class SingletonTrain(object):
         # telegram bot init
         updater = Updater(token=BOT_TOKEN)
         dispatcher = updater.dispatcher
-        interrupt_handler = CommandHandler('next_model', self._stop_training)
+        interrupt_handler = CommandHandler('next_model', lambda b, u: self._stop_training())
         dispatcher.add_handler(interrupt_handler)
         updater.start_polling()
 
@@ -80,6 +83,7 @@ class SingletonTrain(object):
             #insert an interrupt in the training with a telegram message
             if self.stop_training:
                 self.stop_training = False
+                t.join()
                 break
 
             # print("\nactually running epoch " + str(current_epoch))
@@ -163,5 +167,4 @@ class SingletonTrain(object):
         # print("\nended the fetch of data for the next epoch in parallel")
         return self.x_next_epoch, self.y_next_epoch, loaded_folders_list
 
-    def _stop_training(self):
-        self.stop_training = True
+
