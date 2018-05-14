@@ -4,9 +4,10 @@ from LoadData import GetData
 from keras.utils import np_utils
 import Train
 from Utils import current_datetime
+from Utils import telegram_send_msg
 
 
-def CrossValidate(k, models, dataset_folder_name, batch_size, num_epochs=200, chat_id="undefined",
+def CrossValidate(k, models, models_array_name, dataset_folder_name, batch_size, num_epochs=200, chat_id="undefined",
                   folders_at_the_same_time=20, max_num_of_validation_folders=12, epochs_with_same_data=5,
                   validate_every=5):
 
@@ -20,7 +21,7 @@ def CrossValidate(k, models, dataset_folder_name, batch_size, num_epochs=200, ch
         the_file.write(current_datetime() + '\n')
 
     for i in range(len(models)):
-        print("\n validating model: " + str(i))
+        print("\n validating model: " + models_array_name[i])
         sum_model_validations_acc = 0
         to_avoid_validation = []
 
@@ -29,6 +30,10 @@ def CrossValidate(k, models, dataset_folder_name, batch_size, num_epochs=200, ch
 
         with open(path, 'a') as the_file:
             models[i].summary(print_fn=lambda x: the_file.write('\n' + x + '\n'))
+
+        #send a message on telegram when the training of another model is starting
+        if chat_id != 'undefined':
+            telegram_send_msg("START TRAINING {}".format(models_array_name[i]))
 
         for j in range(k):
             print("\n validation round " + str(j))
@@ -43,7 +48,8 @@ def CrossValidate(k, models, dataset_folder_name, batch_size, num_epochs=200, ch
                                                               batch_size=batch_size, epochs_with_same_data=epochs_with_same_data,
                                                               training_folders_count=folders_at_the_same_time, validation_x= X_validation,
                                                               validation_y=Y_validation, to_avoid=validation_folders_list,
-                                                              validate_every=validate_every, enable_telegram_bot=(chat_id != "undefined"))
+                                                              validate_every=validate_every, enable_telegram_bot=(chat_id != "undefined"),
+                                                              save_model=models_array_name[i])
             if len(validation_history) > 0:
                 sum_model_validations_acc += (validation_history[-1])[1]
 

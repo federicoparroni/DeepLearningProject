@@ -75,6 +75,8 @@ print(modelObject.model.summary())
 
 def model_array_builder(filepath_array):
     models_array = []
+    models_name_array = []
+
     for i in filepath_array:
         a = read_model(i)
         modelObject = ModelBuilder(a, (80, 80, 2))
@@ -84,5 +86,6 @@ def model_array_builder(filepath_array):
                       optimizer='adam',  # using the Adam optimiser
                       metrics=['accuracy'])
         models_array.append(model)
+        models_name_array.append(i.split('/')[-1])
 
-    return models_array
+    return models_array, models_name_array
