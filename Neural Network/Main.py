@@ -78,7 +78,7 @@ history = Train.SingletonTrain().Train(model, training_dataset_folder_name=TRAIN
 #LOAD THE MODELS TO CROSSVALIDATE
 
 models_array, models_array_name = model_array_builder(
-    ['models/' + file for file in os.listdir('models')]
+    sorted(['models/' + file for file in os.listdir('models')])
 )
 
 CrossValidate(1, models_array, models_array_name, TRAINING_DATASET_FOLDER_NAME, batch_size=batch_size, num_epochs=num_epochs,

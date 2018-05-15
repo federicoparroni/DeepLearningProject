@@ -1,5 +1,4 @@
 from Utils import current_datetime
-import telegram
 import keras
 import numpy as np
 import LoadData
@@ -16,7 +15,7 @@ _instances = {}
 class SingletonTrain(object):
 
     def __new__(cls, *args, **kw):
-        if not cls in _instances:
+        if cls not in _instances:
             instance = super().__new__(cls)
             instance.stop_training = False
             _instances[cls] = instance
@@ -54,7 +53,6 @@ class SingletonTrain(object):
     y_next_epoch = []
     x_next_epoch = []
 
-
     def Train(self, model, training_dataset_folder_name, epochs, batch_size, training_folders_count, validation_x,
               validation_y, to_avoid, validate_every, early_stopping_after_epochs=0, early_stopping_margin=1, change_data_treshold=0.98,
               epochs_with_same_data=25, class_weight={0: 1, 1: 1}, enable_telegram_bot=False, save_model=None):
@@ -80,14 +78,14 @@ class SingletonTrain(object):
         # train the model for the number of epochs specified
         for current_epoch in range(epochs):
 
-            #insert an interrupt in the training with a telegram message
+            # insert an interrupt in the training with a telegram message
             if self.stop_training:
                 self.stop_training = False
                 t.join()
                 break
 
             # print("\nactually running epoch " + str(current_epoch))
-            #if current_epoch % epochs_with_same_data == 0:
+            # if current_epoch % epochs_with_same_data == 0:
             if last_epoch_acc > change_data_treshold or change_data_counter == epochs_with_same_data:
                 # print("\ncurrent_epoch % epochs_with_same_data = 0, i will fetch data for the next epoch")
                 t = threading.Thread(target=self.load_data, args=(training_dataset_folder_name, training_folders_count,
@@ -96,8 +94,8 @@ class SingletonTrain(object):
                 t.start()
 
             print("\nEpoch {}/{}".format(current_epoch+1, epochs))
-            last_epoch_result = model.fit(x, y, batch_size=batch_size, epochs=1, verbose=1, class_weight=class_weight, callbacks=None,
-                      shuffle=True)
+            last_epoch_result = model.fit(x, y, batch_size=batch_size, epochs=1, verbose=1,
+                                          class_weight=class_weight, callbacks=None, shuffle=True)
 
             last_pos = len(last_epoch_result.history['acc'])
             last_epoch_acc = last_epoch_result.history['acc'][last_pos-1]
@@ -112,8 +110,8 @@ class SingletonTrain(object):
                 print("training_accuracy: {}".format(last_epoch_acc))
                 validation_history.append(evaluation)
                 if enable_telegram_bot:
-                    telegram_send_msg("Ho completato l'epoca {}\n{}\nValidation loss: {}, \n validation_accuracy: {}, \n\n "
-                                      "training_accuracy: {}"
+                    telegram_send_msg("Ho completato l'epoca {}\n{}\nValidation loss: {}, \n "
+                                      "validation_accuracy: {}, \n\n training_accuracy: {}"
                                       .format(current_epoch+1, "-"*15, evaluation[0], evaluation[1], last_epoch_acc))
 
                 if 0 < early_stopping_after_epochs < len(validation_history):
@@ -135,7 +133,6 @@ class SingletonTrain(object):
             if enable_telegram_bot and (current_epoch+1) % validate_every != 0:
                 telegram_send_msg("Ho completato l'epoca {} \n accuracy: {}".format(current_epoch+1, last_epoch_acc))
 
-
             # change tha training dataset when the network
             # reached 98 percent accuracy in the last epoch
             if last_epoch_acc >= change_data_treshold or change_data_counter == epochs_with_same_data:
@@ -150,7 +147,6 @@ class SingletonTrain(object):
                 change_data_counter = 1
             else:
                 change_data_counter += 1
-
 
             # code to use if we want to oblige the network
             # to do a fixed amount of epochs with the loaded data
@@ -174,5 +170,3 @@ class SingletonTrain(object):
         self.x_next_epoch /= np.max(self.x_next_epoch)
         # print("\nended the fetch of data for the next epoch in parallel")
         return self.x_next_epoch, self.y_next_epoch, loaded_folders_list
-
-
