@@ -16,6 +16,9 @@ def CrossValidate(k, models, models_array_name, dataset_folder_name, batch_size,
     timestamp = current_datetime()
     path = 'Crossvalidation Results/crossvaliationresults_' + timestamp + '.txt'
 
+    # folders where models will be saved
+    os.mkdir("trained_model/" + timestamp)
+
     with open(path, 'w') as the_file:
         the_file.write(current_datetime() + '\n')
 
@@ -44,12 +47,10 @@ def CrossValidate(k, models, models_array_name, dataset_folder_name, batch_size,
             to_avoid_validation = to_avoid_validation + validation_folders_list
 
             validation_history = Train.SingletonTrain().Train(
-
                 models[i], training_dataset_folder_name=dataset_folder_name, epochs=num_epochs, batch_size=batch_size,
                 training_folders_count=folders_at_the_same_time, validation_x= X_validation, validation_y=Y_validation,
-                to_avoid=validation_folders_list, validate_every=validate_every,
+                to_avoid=validation_folders_list, validate_every=validate_every, subfolder_name=timestamp,
                 enable_telegram_bot=(chat_id != "undefined"), save_model=models_array_name[i]
-
             )
 
             if len(validation_history) > 0:
