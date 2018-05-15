@@ -140,6 +140,11 @@ class SingletonTrain(object):
             # reached 98 percent accuracy in the last epoch
             if last_epoch_acc >= change_data_treshold or change_data_counter == epochs_with_same_data:
                 t.join()
+
+                #send a message when the data are changing
+                if enable_telegram_bot:
+                    telegram_send_msg("Changing data")
+                    
                 x = self.x_next_epoch
                 y = self.y_next_epoch
                 change_data_counter = 1
