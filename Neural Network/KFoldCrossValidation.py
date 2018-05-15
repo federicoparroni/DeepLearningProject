@@ -17,6 +17,9 @@ def CrossValidate(k, models, models_array_name, dataset_folder_name, batch_size,
     timestamp = current_datetime()
     path = 'Crossvalidation Results/crossvaliationresults_' + timestamp + '.txt'
 
+    # folders where models will be saved
+    os.mkdir("trained_model/" + timestamp)
+
     with open(path, 'w') as the_file:
         the_file.write(current_datetime() + '\n')
 
@@ -31,7 +34,7 @@ def CrossValidate(k, models, models_array_name, dataset_folder_name, batch_size,
         with open(path, 'a') as the_file:
             models[i].summary(print_fn=lambda x: the_file.write('\n' + x + '\n'))
 
-        #send a message on telegram when the training of another model is starting
+        # send a message on telegram when the training of another model is starting
         if chat_id != 'undefined':
             telegram_send_msg("START TRAINING {}".format(models_array_name[i]))
 
@@ -49,7 +52,7 @@ def CrossValidate(k, models, models_array_name, dataset_folder_name, batch_size,
                                                               training_folders_count=folders_at_the_same_time, validation_x= X_validation,
                                                               validation_y=Y_validation, to_avoid=validation_folders_list,
                                                               validate_every=validate_every, enable_telegram_bot=(chat_id != "undefined"),
-                                                              save_model=models_array_name[i])
+                                                              save_model=models_array_name[i], subfolder_name=timestamp)
             if len(validation_history) > 0:
                 sum_model_validations_acc += (validation_history[-1])[1]
 

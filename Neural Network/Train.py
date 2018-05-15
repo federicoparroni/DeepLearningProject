@@ -55,7 +55,7 @@ class SingletonTrain(object):
 
     def Train(self, model, training_dataset_folder_name, epochs, batch_size, training_folders_count, validation_x,
               validation_y, to_avoid, validate_every, early_stopping_after_epochs=0, early_stopping_margin=1, change_data_treshold=0.98,
-              epochs_with_same_data=25, class_weight={0: 1, 1: 1}, enable_telegram_bot=False, save_model=None):
+              epochs_with_same_data=25, class_weight={0: 1, 1: 1}, enable_telegram_bot=False, save_model=None, subfolder_name=None):
 
         # telegram bot init
         updater = Updater(token=BOT_TOKEN)
@@ -157,7 +157,10 @@ class SingletonTrain(object):
             #    y = self.y_next_epoch
 
         if save_model is not None:
-            model.save('trained_model/{}_{}.h5'.format(current_datetime(), save_model))
+            if subfolder_name is None:
+                model.save('trained_model/{}_{}.h5'.format(save_model, current_datetime()))
+            else:
+                model.save('trained_model/{}/{}_{}.h5'.format(subfolder_name, save_model, current_datetime()))
 
         return validation_history
 
