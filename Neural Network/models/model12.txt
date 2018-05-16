@@ -1,4 +1,4 @@
-#same network of the starting one with half kernels
+# model 12
 
 conv,8,3,3
 pool,2,2
@@ -13,14 +13,21 @@ pool,2,2
 dropout,0.1
 
 conv,8,3,3
+pool,2,2
+dropout,0.1
 
 flatten
 
-dense,128
-dropout,0.3
+dense,256
+dropout,0.2
+
+dense,256
+dropout,0.2
 
 dense,128
+dropout,0.2
 
 dense,128
+dropout,0.2
 
 dense,2,softmax
