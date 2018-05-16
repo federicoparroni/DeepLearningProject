@@ -1,30 +1,27 @@
-#parro model
+# model 99
 
-conv,16,5,5
-conv,8,3,3
-pool,2,2
-dropout,0.1
-
-conv,16,5,5
-conv,8,3,3
+conv,16,3,3
 pool,2,2
 dropout,0.1
 
 conv,16,3,3
-conv,8,3,3
 pool,2,2
 dropout,0.1
 
 conv,16,3,3
-conv,8,3,3
 pool,2,2
 dropout,0.1
+
+conv,16,3,3
 
 flatten
 
 dense,128
-dropout,0.1
+dropout,0.3
+
+dense,128
 
 dense,128
 
 dense,2,softmax
+

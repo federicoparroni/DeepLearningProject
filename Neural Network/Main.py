@@ -78,9 +78,11 @@ history = Train.SingletonTrain().Train(model, training_dataset_folder_name=TRAIN
 #LOAD THE MODELS TO CROSSVALIDATE
 
 models_array, models_array_name = model_array_builder(
-    ['models/' + file for file in os.listdir('models')]
+    sorted(['models/' + file for file in os.listdir('models')])
 )
 
-CrossValidate(1, models_array, models_array_name, TRAINING_DATASET_FOLDER_NAME, batch_size=batch_size, num_epochs=num_epochs,
-              folders_at_the_same_time=folders_at_the_same_time, epochs_with_same_data=epochs_with_same_data,
-              validate_every=validate_every, chat_id=chat_id, max_num_of_validation_folders=validation_folders)
+CrossValidate(
+    1, models_array, models_array_name, TRAINING_DATASET_FOLDER_NAME, batch_size=batch_size, num_epochs=num_epochs,
+    folders_at_the_same_time=folders_at_the_same_time, validate_every=validate_every, chat_id=chat_id,
+    max_num_of_validation_folders=validation_folders
+)
