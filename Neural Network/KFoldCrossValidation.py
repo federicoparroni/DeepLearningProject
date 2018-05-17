@@ -8,7 +8,7 @@ from Utils import telegram_send_msg
 
 
 def CrossValidate(k, models, models_array_name, dataset_folder_name, batch_size, num_epochs=200, chat_id="undefined",
-                  folders_at_the_same_time=20, max_num_of_validation_folders=12, validate_every=5):
+                  folders_at_the_same_time=20, max_num_of_validation_folders=12, validate_every=5, validation_treshold=0):
 
     avg_val_accuracy_models = []
     total_num_folders = len(os.listdir(dataset_folder_name))
@@ -50,7 +50,7 @@ def CrossValidate(k, models, models_array_name, dataset_folder_name, batch_size,
                 models[i], training_dataset_folder_name=dataset_folder_name, epochs=num_epochs, batch_size=batch_size,
                 training_folders_count=folders_at_the_same_time, validation_x= X_validation, validation_y=Y_validation,
                 to_avoid=validation_folders_list, validate_every=validate_every, subfolder_name=timestamp,
-                enable_telegram_bot=(chat_id != "undefined"), save_model=models_array_name[i]
+                enable_telegram_bot=(chat_id != "undefined"), save_model=models_array_name[i], validation_treshold=validation_treshold
             )
 
             if len(validation_history) > 0:
