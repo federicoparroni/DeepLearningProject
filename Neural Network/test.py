@@ -11,7 +11,9 @@ from KFoldCrossValidation import CrossValidate
 import os
 
 import keras
+from Utils import current_datetime
 from ModelBuilder import read_model
+from ModelBuilder import ModelBuilder
 
 
 # ====================CONFIGURING GPU ========================================
@@ -30,9 +32,9 @@ TRAINING_DATASET_FOLDER_NAME = '3_preprocessed_1_dataset train'
 TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 
 epochs_with_same_data = 10
-folders_at_the_same_time = 1
+folders_at_the_same_time = 25
 validation_folders = 1
-validate_every = 10
+validate_every = 2
 
 batch_size = 128            # in each iteration, we consider 128 training examples at once
 num_epochs = 1            # we iterate 200 times over the entire training set
@@ -45,6 +47,15 @@ num_classes = 2
 # weight of the classes, when an error occour on class 0 -> false positive.
 class_weight = {0: 1, 1: 1}
 
+timestamp = current_datetime()
+
+# load data
+(X_validation, y_validation, validation_folders_list) = GetData(TRAINING_DATASET_FOLDER_NAME, limit_value=validation_folders)
+X_validation = X_validation.astype('float32')
+X_validation /= np.max(X_validation)    # Normalise data to [0, 1] range
+Y_validation = np_utils.to_categorical(y_validation, num_classes)   # One-hot encode the labels
+
+
 # load models
 m1 = read_model("models/model01.txt")
 modelObject1 = ModelBuilder(m1, (80, 80, 2))
@@ -54,10 +65,11 @@ model1.compile(loss='categorical_crossentropy',  # using the cross-entropy loss 
               metrics=['accuracy'])
 
 
-CrossValidate(
-    1, [model1], ["model01"], TRAINING_DATASET_FOLDER_NAME, batch_size=batch_size, num_epochs=20,
-    folders_at_the_same_time=folders_at_the_same_time, validate_every=validate_every, chat_id=chat_id,
-    max_num_of_validation_folders=validation_folders
+Train.SingletonTrain().Train(
+                model1, training_dataset_folder_name=TRAINING_DATASET_FOLDER_NAME, epochs=20, batch_size=batch_size,
+                training_folders_count=folders_at_the_same_time, validation_x=X_validation, validation_y=Y_validation,
+                to_avoid=validation_folders_list, validate_every=validate_every, subfolder_name=timestamp,
+                enable_telegram_bot=(chat_id != "undefined"), save_model="model01", validation_treshold=0.015
 )
 
 
@@ -70,9 +82,9 @@ model2.compile(loss='categorical_crossentropy',  # using the cross-entropy loss 
               optimizer=keras.optimizers.SGD(),
               metrics=['accuracy'])
 
-
-CrossValidate(
-    1, [model2], ["model02"], TRAINING_DATASET_FOLDER_NAME, batch_size=batch_size, num_epochs=150,
-    folders_at_the_same_time=folders_at_the_same_time, validate_every=validate_every, chat_id=chat_id,
-    max_num_of_validation_folders=validation_folders
+Train.SingletonTrain().Train(
+                model2, training_dataset_folder_name=TRAINING_DATASET_FOLDER_NAME, epochs=150, batch_size=batch_size,
+                training_folders_count=folders_at_the_same_time, validation_x=X_validation, validation_y=Y_validation,
+                to_avoid=validation_folders_list, validate_every=validate_every, subfolder_name=timestamp,
+                enable_telegram_bot=(chat_id != "undefined"), save_model="model02", validation_treshold=0.015
 )
