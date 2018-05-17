@@ -84,7 +84,7 @@ def model_array_builder(filepath_array):
         model = modelObject.model
 
         model.compile(loss='categorical_crossentropy',  # using the cross-entropy loss function
-                      optimizer=keras.optimizers.SGD(lr=0.1, decay=0, momentum=0, nesterov=False),  # using the Adam optimiser
+                      optimizer=keras.optimizers.SGD(lr=0.01, decay=0, momentum=0, nesterov=False),  # using the Adam optimiser
                       metrics=['accuracy'])
         models_array.append(model)
         models_name_array.append(i.split('/')[-1])
