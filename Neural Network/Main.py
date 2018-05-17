@@ -28,7 +28,7 @@ TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 epochs_with_same_data = 10
 folders_at_the_same_time = 25
 validation_folders = 25
-validate_every = 5
+validate_every = 2
 
 batch_size = 128            # in each iteration, we consider 128 training examples at once
 num_epochs = 200            # we iterate 200 times over the entire training set
@@ -38,7 +38,7 @@ width = 80
 depth = 2
 num_classes = 2
 
-#weight of the classes, when an error occour on class 0 -> false positive.
+# weight of the classes, when an error occour on class 0 -> false positive.
 class_weight = {0: 1, 1: 1}
 
 """
@@ -75,7 +75,7 @@ history = Train.SingletonTrain().Train(model, training_dataset_folder_name=TRAIN
 
 #=============== CROSS-VALIDATION =============
 
-#LOAD THE MODELS TO CROSSVALIDATE
+# LOAD THE MODELS TO CROSSVALIDATE
 
 models_array, models_array_name = model_array_builder(
     sorted(['models/' + file for file in os.listdir('models')])
