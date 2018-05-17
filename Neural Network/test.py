@@ -48,6 +48,7 @@ num_classes = 2
 class_weight = {0: 1, 1: 1}
 
 timestamp = current_datetime()
+os.mkdir("trained_model/" + timestamp)
 
 # load data
 (X_validation, y_validation, validation_folders_list) = GetData(TRAINING_DATASET_FOLDER_NAME, limit_value=validation_folders)
