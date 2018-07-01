@@ -87,5 +87,7 @@ def model_array_builder(filepath_array):
                       metrics=['accuracy'])
         models_array.append(model)
         models_name_array.append(i.split('/')[-1])
+        del modelObject
+        del model
 
     return models_array, models_name_array
