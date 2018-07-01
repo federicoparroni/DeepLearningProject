@@ -6,13 +6,15 @@
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{natbib}
+\bibliographystyle{abbrvnat}
 
 % Include other packages here, before hyperref.
 
 % If you comment hyperref and then uncomment it, you should delete
 % egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
 % run, let it finish, and you should be clear).
-\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+\usepackage[citecolor=black,pagebackref=true,breaklinks=true,letterpaper=true,colorlinks=true,linkcolor=black,bookmarks=false]{hyperref}
 
 \cvprfinalcopy % *** Uncomment this line for the final submission
 
@@ -101,13 +103,10 @@ Ours & Makes one's heart Frob\\
 \caption{Results.   Ours is better.}
 \end{table}
 
+
 %-------------------------------------------------------------------------
 
-
-
-{\small
-\bibliographystyle{ieee}
 \bibliography{egbib}
-}
+
 
 \end{document}
