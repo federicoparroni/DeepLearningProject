@@ -3,7 +3,7 @@
 %
 %You can divide the section in paragraphs or subsections that can be useful for the presentation of your method. Usually at this point you may want to place equations, figures and tables to clarify what you are explaining.
 
-To accomplish our work we used a CNN. This kind of model is now a days the most widely used for Image Recognition tasks \cit{Schroff}{google}
+To accomplish our work we used a CNN. This kind of model is now a days the most widely used for Image Recognition tasks. Many ways have been proposed to tackle the problem of stating similarity among different images, for example \cit{Schroff}{google}. Our solution is based on the idea of using directly convolutional layers to extract similarity, which is in our case expressed in terms of identity of people. In order to follow this idea, we used as input of our Convolutional Neural Network two Gray Scale images stacked one upon the other one. Then, two dimensional Convolutional Layers would filter those two levels images, transforming the initial input in tighter and thighter embeddings. The vector which comes from the last Convolutional Layer will contain an embedding of features which would naturally tell the relation the two images in terms of similarity among identities of people appearing in those. Then the embedding of features is used as input of a Fully Connected Neural Network, which will, in the really end, output a number between Zero and One, i.e. the probability of having two photos who depict the same person.
 
 %-------------------------------------------------------------------------
 %\subsection{Mathematics}
