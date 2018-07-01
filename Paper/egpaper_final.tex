@@ -6,9 +6,10 @@
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{natbib}
-\bibliographystyle{abbrvnat}
 \usepackage{eurosym}
+
+% 1st arg: Author. 2nd arg: Label
+\newcommand{\cit}[2]{#1 \textit{et al.} \cite{#2}}
 
 % Include other packages here, before hyperref.
 
@@ -109,10 +110,14 @@ Ours & Makes one's heart Frob\\
 \caption{Results.   Ours is better.}
 \end{table}
 
-
 %-------------------------------------------------------------------------
+\begin{thebibliography}{9}
 
-\bibliography{egbib}
+\bibitem{google} 
+Florian Schroff, Dmitry Kalenichenko and James Philbin
+\textit{FaceNet: A unified embedding for face recognition and clustering}. 
+
+\end{thebibliography}
 
 
 \end{document}
