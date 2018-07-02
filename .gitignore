@@ -16,3 +16,6 @@ Neural Network/3_preprocessed_2_dataset test
 Neural Network/old out dataset
 
 Neural Network/Graph
+*.aux
+*.log
+*.gz
