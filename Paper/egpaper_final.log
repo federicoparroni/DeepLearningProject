@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.7.1)  2 JUL 2018 01:23
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.7.1)  2 JUL 2018 02:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -409,7 +409,17 @@ LaTeX Warning: Citation `twit:ref' on page 1 undefined on input line 2.
 ) (./proposedapproach.tex [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
 
-]) (./experiments.tex) (./conclusion.tex) (./egpaper_final.brf)
+]
+Underfull \hbox (badness 10000) in paragraph at lines 9--13
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 14--15
+
+ []
+
+) (./experiments.tex) (./conclusion.tex) [2] (./egpaper_final.brf)
 \tf@brf=\write3
 \openout3 = `egpaper_final.brf'.
 
@@ -418,30 +428,34 @@ Underfull \hbox (badness 2698) in paragraph at lines 119--119
 []\OT1/ptm/m/n/10 Florian Schroff, Dmitry Kalenichenko and James
  []
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 123.
-[2] [3
 
-]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 123.
+Underfull \hbox (badness 10000) in paragraph at lines 124--124
+[]\OT1/ptm/m/n/10 Yoshua Ben-gio \OT1/ptm/m/it/10 Prac-ti-cal Rec-om-men-da-tio
+ns for
+ []
+
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 128.
+[3]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 128.
  (./egpaper_final.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 123.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 123.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 128.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 128.
 Package rerunfilecheck Info: File `egpaper_final.brf' has not changed.
-(rerunfilecheck)             Checksum: 354C3DA91DB7AD66D7C3DD5898ADEECC;128.
+(rerunfilecheck)             Checksum: 1BC296643127735C67F6537B001E86D5;173.
 
 
 LaTeX Warning: There were undefined references.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 123.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 128.
  ) 
 Here is how much of TeX's memory you used:
- 6563 strings out of 493029
- 94399 string characters out of 6136235
- 185664 words of memory out of 5000000
- 9961 multiletter control sequences out of 15000+600000
- 25399 words of font info for 67 fonts, out of 8000000 for 9000
+ 6570 strings out of 493029
+ 94468 string characters out of 6136235
+ 185692 words of memory out of 5000000
+ 9965 multiletter control sequences out of 15000+600000
+ 26506 words of font info for 68 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 34i,9n,26p,1204b,324s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 34i,9n,26p,1229b,324s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/share/texlive/texmf-dist/
@@ -452,10 +466,10 @@ osym/feymr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.
 pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share
 /texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-
 dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on egpaper_final.pdf (3 pages, 111195 bytes).
+Output written on egpaper_final.pdf (3 pages, 113676 bytes).
 PDF statistics:
- 84 PDF objects out of 1000 (max. 8388607)
- 68 compressed objects within 1 object stream
- 20 named destinations out of 1000 (max. 500000)
+ 88 PDF objects out of 1000 (max. 8388607)
+ 72 compressed objects within 1 object stream
+ 22 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
