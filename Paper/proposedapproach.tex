@@ -4,12 +4,21 @@ This is the core of your paper, where you describe the details of the proposed m
 You can divide the section in paragraphs or subsections that can be useful for the presentation of your method. Usually at this point you may want to place equations, figures and tables to clarify what you are explaining.
 %-------------------------------------------------------------------------
 \subsection{Mathematics}
-Please number all of your sections and displayed equations.  It is
-important for readers to be able to refer to any particular equation.  Just
-because you didn't refer to it in the text does not mean some future reader
-might not need to refer to it.  It is cumbersome to have to use
-circumlocutions like ``the equation second from the top of page 3 column
-1''. 
+We can consider training samples as i.i.d observation from a Bernoulli random variable. We want that our model approximates as well as possible this Bernoulli variable ($t_n$ can assume only values $0$ or $1$):
+\begin{equation}
+P(t_n = 1|x_n, \textbf{w}) = y(x_n)
+\end{equation}
+where $y(x_n)$ is the output of the convolutional neural network for the $n^{th}$ sample.
+\\
+We want to maximize the likelihood of getting the right ouput. To do so, we have to choose the vector of coefficients $\textbf{w}$ such that:
+\begin{equation}
+\argmax _{\textbf{w}} J(\textbf{w}) = \argmax _{\textbf{w}} \prod _n^N {y_n}^{t_n}(1-y_n)^{1-t_n}
+\end{equation}
+Passing to the log, we get the standard binary crossentropy:
+\begin{equation}
+\argmax _{\textbf{w}} J(\textbf{w}) = \sum _{n=1}^{N}\ {\bigg [}t_{n}\log {y_n}+(1-t_{n})\log(1-{y_n}){\bigg ]}
+\end{equation}
+
 %-------------------------------------------------------------------------
 \subsection{Footnotes}
 Please use footnotes\footnote {This is what a footnote looks like.  It
