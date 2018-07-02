@@ -14,7 +14,17 @@ import keras
 from Utils import current_datetime
 from ModelBuilder import read_model
 from ModelBuilder import ModelBuilder
+from keras.utils.vis_utils import plot_model
 
+from mlxtend.plotting import plot_confusion_matrix
+import matplotlib.pyplot as plt
+import numpy as np
+import sklearn
+import seaborn as sn
+import pandas as pd
+import itertools
+from sklearn import metrics
+from math import ceil
 
 # ====================CONFIGURING GPU ========================================
 config = tf.ConfigProto()
@@ -44,48 +54,123 @@ width = 80
 depth = 2
 num_classes = 2
 
-# weight of the classes, when an error occour on class 0 -> false positive.
-class_weight = {0: 1, 1: 1}
-
-timestamp = current_datetime()
-os.mkdir("trained_model/" + timestamp)
-
-# load data
-(X_validation, y_validation, validation_folders_list) = GetData(TRAINING_DATASET_FOLDER_NAME, limit_value=validation_folders)
-X_validation = X_validation.astype('float32')
-X_validation /= np.max(X_validation)    # Normalise data to [0, 1] range
-Y_validation = np_utils.to_categorical(y_validation, num_classes)   # One-hot encode the labels
+def vect_to_1D(vector,threshold):
+    predictions_1D = []
+    for i in vector:
+        if i[1] > threshold:
+            predictions_1D.append(1)
+        else:
+            predictions_1D.append(0)
+    return predictions_1D
 
 
-# load models
-m1 = read_model("models/model01.txt")
-modelObject1 = ModelBuilder(m1, (80, 80, 2))
-model1 = modelObject1.model
-model1.compile(loss='categorical_crossentropy',  # using the cross-entropy loss function
-              optimizer=keras.optimizers.SGD(),
+def plot_confusion_matrix(cm, classes,
+                          normalize=False,
+                          title='Confusion matrix',
+                          cmap=plt.cm.Blues):
+    """
+    This function prints and plots the confusion matrix.
+    Normalization can be applied by setting `normalize=True`.
+    """
+    if normalize:
+        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+        print("Normalized confusion matrix")
+    else:
+        print('Confusion matrix, without normalization')
+
+    print(cm)
+
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    plt.title(title)
+    plt.colorbar()
+    tick_marks = np.arange(len(classes))
+    plt.xticks(tick_marks, classes, rotation=45)
+    plt.yticks(tick_marks, classes)
+
+    fmt = '.2f' if normalize else 'd'
+    thresh = cm.max() / 2.
+    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+        plt.text(j, i, format(cm[i, j], fmt),
+                 horizontalalignment="center",
+                 color="white" if cm[i, j] > thresh else "black")
+
+    plt.tight_layout()
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+
+
+
+
+a = read_model("models/model01.txt")
+modelObject = ModelBuilder(a, (80, 80, 2))
+model = modelObject.model
+model.load_weights('trained_model/2018-05-16 12:49:03/model01.txt_2018-05-16 15:12:17.h5')
+#plot_model(model, to_file='model_graph.png', show_shapes=True, show_layer_names=True)
+
+(X_test, y_test, _) = GetData(TEST_DATASET_FOLDER_NAME)
+Y_test = np_utils.to_categorical(y_test, num_classes)
+X_test = X_test.astype('float32')
+X_test /= np.max(X_test)    # Normalise data to [0, 1] range
+model.compile(loss='categorical_crossentropy',  # using the cross-entropy loss function
+              optimizer='adam',                 # using the Adam optimiser
               metrics=['accuracy'])
 
+model.summary()
+#evaluate the mode
+print(model.evaluate(X_test, Y_test))
+predictions = model.predict(X_test)
 
-Train.SingletonTrain().Train(
-                model1, training_dataset_folder_name=TRAINING_DATASET_FOLDER_NAME, epochs=20, batch_size=batch_size,
-                training_folders_count=folders_at_the_same_time, validation_x=X_validation, validation_y=Y_validation,
-                to_avoid=validation_folders_list, validate_every=validate_every, subfolder_name=timestamp,
-                enable_telegram_bot=(chat_id != "undefined"), save_model="model01", validation_treshold=0.015
-)
+#========================PRINT CONFUSION MATRIX==============================
+#predict labels
+
+predictions_1D = vect_to_1D(predictions,0.8)
+real_label_1D = vect_to_1D(Y_test,0.8)
+
+cm1 = sklearn.metrics.confusion_matrix(vect_to_1D(predictions, 0.8), vect_to_1D(Y_test, 0.8))
+cm2 = sklearn.metrics.confusion_matrix(vect_to_1D(predictions, 0.5), vect_to_1D(Y_test, 0.5))
+
+np.set_printoptions(precision=2)
+plt.figure()
+plot_confusion_matrix(cm1, classes=[0, 1], normalize=True,
+                      title='Confusion matrix')
+plt.show()
+plot_confusion_matrix(cm2, classes=[0, 1], normalize=True,
+                      title='Confusion matrix')
+plt.show()
+
+#==========================================================================
+
+# calculate the fpr and tpr for all thresholds of the classification
+probs = model.predict_proba(X_test)
+preds = predictions[:, 1]
+fpr, tpr, threshold = metrics.roc_curve(y_test, preds)
+roc_auc = metrics.auc(fpr, tpr)
+
+"""
+fpr_discrete = []
+tpr_discrete = []
+threshold_discrete = []
+
+for i in range(len(threshold)):
+    if i%1000 == 0:
+        fpr_discrete.append(fpr[i])
+        tpr_discrete.append(tpr[i])
+        threshold_discrete.append(threshold[i])
+"""
 
 
-# =============================
+# method I: plt
+plt.title('Receiver Operating Characteristic')
+plt.plot(fpr, tpr, 'b', label = 'AUC = %0.2f' % roc_auc)
+plt.legend(loc = 'lower right')
+plt.plot([0, 1], [0, 1],'r--')
+plt.xlim([0, 1])
+plt.ylim([0, 1])
+plt.ylabel('True Positive Rate')
+plt.xlabel('False Positive Rate')
+plt.grid
+plt.show()
 
-m2 = read_model("models/model02.txt")
-modelObject2 = ModelBuilder(m2, (80, 80, 2))
-model2 = modelObject2.model
-model2.compile(loss='categorical_crossentropy',  # using the cross-entropy loss function
-              optimizer=keras.optimizers.SGD(),
-              metrics=['accuracy'])
 
-Train.SingletonTrain().Train(
-                model2, training_dataset_folder_name=TRAINING_DATASET_FOLDER_NAME, epochs=150, batch_size=batch_size,
-                training_folders_count=folders_at_the_same_time, validation_x=X_validation, validation_y=Y_validation,
-                to_avoid=validation_folders_list, validate_every=validate_every, subfolder_name=timestamp,
-                enable_telegram_bot=(chat_id != "undefined"), save_model="model02", validation_treshold=0.015
-)
+
+

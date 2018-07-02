@@ -64,7 +64,7 @@ class Demo:
 
         bp = 'trained_model/'
 
-        a = read_model("models/model1.txt")
+        a = read_model("models/model01.txt")
         modelObject = ModelBuilder.ModelBuilder(a, (80, 80, 2))
         self.model = modelObject.model
         self.model.load_weights(bp+model_path)
@@ -78,4 +78,4 @@ class Demo:
         self.OneFrameComputation()
 
 demo=Demo()
-demo.StartDemo('/home/edoardo/Pictures/Webcam/3.jpg', '2018-05-12 15:45:47.h5')
+demo.StartDemo('/home/edoardo/Pictures/Webcam/2018-03-04-181614.jpg', '2018-05-16 12:49:03/model01.txt_2018-05-16 15:12:17.h5')
