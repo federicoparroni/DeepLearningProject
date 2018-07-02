@@ -7,17 +7,21 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{eurosym}
-
 \usepackage{amsmath}
+
 \DeclareMathOperator*{\argmax}{\arg\!\max}
 \DeclareMathOperator*{\argmin}{\arg\!\min}
+
+% 1st arg: Author. 2nd arg: Label
+\newcommand{\cit}[2]{#1 \textit{et al.} \cite{#2}}
+
 
 % Include other packages here, before hyperref.
 
 % If you comment hyperref and then uncomment it, you should delete
 % egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
 % run, let it finish, and you should be clear).
-\usepackage[pagebackref=true,breaklinks=true,letterpaper=true,colorlinks,bookmarks=false]{hyperref}
+\usepackage[citecolor=black,pagebackref=true,breaklinks=true,letterpaper=true,colorlinks=true,linkcolor=black,bookmarks=false]{hyperref}
 
 \cvprfinalcopy % *** Uncomment this line for the final submission
 
@@ -112,12 +116,18 @@ Ours & Makes one's heart Frob\\
 \end{table}
 
 %-------------------------------------------------------------------------
+\begin{thebibliography}{9}
 
+\bibitem{google} 
+Florian Schroff, Dmitry Kalenichenko and James Philbin
+\textit{FaceNet: A unified embedding for face recognition and clustering}.
 
+\bibitem{hypsel}
+Yoshua Bengio
+\textit{Practical Recommendations for Gradient-Based Training of Deep
+Architectures}
 
-{\small
-\bibliographystyle{ieee}
-\bibliography{egbib}
-}
+\end{thebibliography}
+
 
 \end{document}
