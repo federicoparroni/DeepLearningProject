@@ -50,6 +50,8 @@ def CreatePositiveCouples(folder_path):
 
     for img1 in os.listdir(folder_path):
         for img2 in os.listdir(folder_path):
+            #no consider the same image when creating positive couple
+            #if img1 != img2:
             couple = CreateCouple(folder_path + '/' + img1, folder_path + '/' + img2)
             if couple is not None:
                 img_data_list.append(couple)
