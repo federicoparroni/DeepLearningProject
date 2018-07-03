@@ -1,0 +1,135 @@
+\section{Experiments}
+%In this section you validate your method showing the experiments that you performed. The experiments will vary depending on the project, but you might compare with previously published methods, perform an ablation study to determine the impact of various components of your system, experiment with different hyperparameters or architectural choices, use visualization techniques to gain insight into how your model works, discuss common failure modes of your model, etc. You should include graphs, tables, or other figures to illustrate your experimental results. Divide in subsections or paragraphs to help the reader navigate in your paper.
+
+\subsection{Evaluation}
+We have evaluated our method on a test set that accounts for approximately the 20\% of the intial dataset that we gathered up, so the test data has the same distribution of our training set, but disjoint identities.
+The model has been evaluated also on two different test sets, the YLF and YTBF for comparing it to the state of the art level of face recognition. 
+\paragraph{}
+A substantial between the training and test set images is that the test set has not been augmented so that the evaluation of the performance can unbiased with respect to the training set as much as possible, augmentation has been performed only on the training set (see next subsection).
+\paragraph{}
+we have evaluated the method on the face verification task (say wheter two face images are representing the same person) using as prediction the output of the net $Y(i,j)$ representing the $probability$ of having the same person on the two images. All faces pairs $(i,j)$ of the same identity are denoted with $N_{same}$, whereas all pairs of different identities are denoted with $N_{diff}$.\\
+ 
+\begin{figure}[t]
+\includegraphics[width=1\linewidth]{images/falsepositive.jpg}
+   \caption{Examples of false positive training samples, obtained with a threshold equals to $0.9$. On top of each couple we have the prediction of the network \ie the second number, but all those images were labelled as 0, infact they depict the same person}
+\label{fig:long}
+\label{fig:onecol}
+\end{figure} 
+ 
+We define the set of all \textit{true accepts} as
+\begin{equation}
+TA(thld)=\{(i,j) \in N_{same}, with Y(i,j) > thld\}
+\end{equation}
+these are the face pairs $(i,j)$ that were correctly classified at treshold $thld$.
+Similarly we can define the \textit{False accepts} as 
+\begin{equation}
+FA(thld)=\{(i,j) \in N_{diff}, with Y(i,j) > thld\} 
+\end{equation}
+is the set of all pairs that was missclassified as \textit{same}, this figure of merit has a main role on the evaluation of our work since the method as been created with the aim of being used as a security check so the false accepts can not be tolerated.
+\paragraph{Obtained performance}
+after 5/6 hours of training (200 epochs) we have reached a
+\begin{equation}
+validationaccuracy = 0.81 with thld = 0.5
+\end{equation}
+For evaluate the generalization performance the ROC curve and the AUC parameter has been considered.
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width=0.8\linewidth]{images/ROC.png}
+   \caption{ROC curve of the model.}
+\label{fig:long}
+\label{fig:onecol}
+\end{center}
+\end{figure}
+
+the $AUC$ obtained is 0.92 and from the ROC curve we can extract important information on which value the treshold of the model has to be set depending on the utilization purpose of the net.
+Since the model has been developed for security reasons a possible idea is to tolerate at most a 10\% of false positive to achieve that the treshold has to be set to 0.9 as suggested by the ROC curve, so that the network will recognize a couple of faces $(i,j)$ as the same person only when $Y(i,j)>0.9$. The performance between two different tresholds can be compared using the confusion matrices taking into account also the
+\begin{equation}
+Precision(thld) = \frac{TA(thld)}{TA(thld)+FA(thld)}. 
+\end{equation}
+ 
+ 
+%\begin{figure}[t]
+%\begin{center}
+%\includegraphics[width=0.8\linewidth]{images/conf_matrix.jpg}
+%   \caption{comparison between the confusion matrix with two different tresholds 0.5(on the left) and 0.9}
+%\label{fig:long}
+%\label{fig:onecol}
+%\end{center}
+%\end{figure}
+
+\begin{figure*}
+\begin{center}
+\includegraphics[width=1\linewidth]{images/cm.jpg}
+\end{center}
+   \caption{comparison between the confusion matrix with two different tresholds 0.5(on the left) and 0.9}
+\label{fig:conf_matrices}
+\end{figure*}
+
+
+\begin{table}[]
+\centering
+\begin{tabular}{|c|ll|}
+\hline
+Treshold & Accuracy & Precision \\ \hline
+0.5                          & 0.835    & 0.791     \\ \hline
+0.9                          & 0.795    & 0.953     \\ \hline
+\end{tabular}
+\end{table}
+
+
+The accuracies obtained changing the two tresholds are comparable but the $precision$ is considerably higher(20\%) when the treshold is set to 0.9.
+
+
+
+\subsection{Datasets}
+\subsubsection{Own Dataset}
+We gathered our own data through a web page \cite{gdpdataret} that we set up. Through it, people had the possibility to upload their own photos. As a result, we obtained a set of more than eighty folders of photos, each one belonging to a different person. On avarage, we managed to get ten photos per person. Those photos are characterized by really regular poses of the person depicted in it, because the contributors were explicitly asked in the website to shot the photos keeping the camera in from of them, while they were watching it.
+\paragraph{Data Augmentation}
+The quantity of data that we obtained is not even close to the usual amount used in large scale Deep Learning projects. So we proceeded with augmentation procedures of our training set. In particular we resorted to the Augumentor Python library \cite{augmentor}. This library allows to generate, starting from a set of images, other images, obtained from various transformations of the former set. Those transformations can be customized and can be applied randomly to each image. It follows that each augmented image is the combination of the application of a random number of transformation specified by the developer, resulting in a great variety in the augmented set.
+
+\begin{figure}[t]
+\includegraphics[width=1\linewidth]{images/augmented.png}
+   \caption{Example of nine augmented photos obtained from a starting one, which is depicted at the bottom-right. We can see the good variety of images obtained from our augmentation procedure.}
+\label{fig:long}
+\label{fig:onecol}
+\end{figure}
+
+The transformation applied, with probabilities, are:
+\begin{itemize}
+\item Flip left-right with probability 0.5;
+\item Skew left-right with probability 1: the skew magnitude is random and varies from 0 to 0.2, which experimentally guarantees resulting images which are not deformed;
+\item Alter brightness with probability 1: we perform a non linear trasformation as suggested in \cite{nonlintransf}, using parameters $\theta = 1$ and $\phi = 1$ respectively. In particular we used this transformation increasing the pixel brightness and decreasing it with probability 0.5 in both cases;
+\item Adaptive equalization \cite{histeq} with probability 0.5, using a clip limit of 0.01;
+\end{itemize}
+In particular the last two methods were employed in order to obtain more variety of lightning conditions, which turned out to be characteristic that was lacking the most in our own dataset.
+Using this augmentation procedure, we crafted five brand new images from just one, obtaining fifty images per person on our dataset.
+
+
+
+\paragraph{Data preprocessing}
+The data that we managed to harvest and the results of the augmentation procedure were affected by noise and really low regularity. To hope to get good results, we needed to have all the images in a standardized form factor. To accomplish this idea, we set up a pipeline useful to apply to all the images those following steps:
+
+\begin{enumerate}
+\item Find the face in the image and crop everything else
+\item Resize the image to a standard size
+\item Rotate the image in order to get the person eye in a standard position
+\end{enumerate}
+
+Finding a face in an image and pick the bounding box which includes it is a really known task in Computer Vision and really efficient and reliable algorithms exist. We resorted to the HOG Algorithm \cite{hog}. A more tough problem is rotating an image so that the eyes are aligned at the same position, however a detailed description of how to tackle this problem can be found in \cite{facealign}
+
+\begin{figure}[t]
+\includegraphics[width=1\linewidth]{images/processed.png}
+   \caption{Examples of the application of the pipeline. On the left we see the processed images, on the right we have the original ones. We see the difference of sizing, the eye alignment and the face that has been cropped}
+\label{fig:long}
+\label{fig:onecol}
+\end{figure}
+
+\paragraph{Couple creation}
+At this point, we have a considerable number of folders, one for each identity, each one containing a set of, on avarage, fifty augmented photos. Still, we are missing our actual dataset, which is composed of couples of images and a labels: if the two photos come from the same folder, then the label will be Zero, otherwise One. Since we are considering couples, the number of training samples grows not linearly with the number of photos, but quadratically: for any photo in a folder, we can pair it with all the other photos on the folder and with an equal number of photos picked from other random folders. In formulas, a folder with $N$ photos will give $2(N-1)^2$ training samples.
+Using this trick, at the really end we managed to have a dataset with more than one million samples.
+
+%Describe the data you are working with for your project. Usually you need to explain what type of data is it, how much data are you working with and if you applied any pre-processing, filtering, or other special treatment to use it. Remember that you have to cite each dataset you used in your project if it has been published from someone else. Instead, if you collected it by yourself you have to describe accurately how you gathered (and labeled) your data.
+
+\subsubsection{Academic Datasets}
+\paragraph{Labelled Faces in the Wild} We have validated the performance of our network in this well known dataset. We have built the couples and assigned the labels as we did in our own dataset, and then evaluated the accuracy.
