@@ -11,11 +11,11 @@ Schroff \textit{et al.} [] use a deep convolutional neural network to generate a
 The work presented does not directly solve the problem of the face recognition but create a proper enviroment in which a simple K-NN classifier can solve the task.
 \\
 \par
-Aleju \textit{et al.} [] The network presented uses two branches, one per image. Each branch applies a few convolutions and ends in a fully connected layer. The outputs of both branches are then merged and further processed by another fully connected layer, before making the final yes-no-decision (whether both images show the same person).
+Aleju \cite{aleju} The network presented uses two branches, one per image. Each branch applies a few convolutions and ends in a fully connected layer. The outputs of both branches are then merged and further processed by another fully connected layer, before making the final yes-no-decision (whether both images show the same person).
 \\
 \par
-Taigman \textit{et al.} [] propose a multi-stage approach that aligns faces to a general 3D shape model. A multi-class net-work is trained to perform the face recognition task on over four thousand identities. The authors also experimented with a so called Siamese network where they directly opti-
+\cit{Taigman}{taigman} propose a multi-stage approach that aligns faces to a general 3D shape model. A multi-class net-work is trained to perform the face recognition task on over four thousand identities. The authors also experimented with a so called Siamese network where they directly opti-
 mize the $L1$-distance between two face features. Their best performance on LFW (97.35\%) obtained from an ensemble of three networks using different alignments and color channels. The predicted distances (non-linear SVM predictions) of those networks are combined using a non-linear SVM.
 \\
 \par
-Zhenyao \textit{et al.} [] employ a deep network  to “warp” faces into a canonical frontal view and then learn CNN that classifies each face as belonging to a known identity. For face verification, PCA on the network output in conjunction with an ensemble of SVMs is used.
+\cit{Zhenyao}{zhenyao} employ a deep network  to “warp” faces into a canonical frontal view and then learn CNN that classifies each face as belonging to a known identity. For face verification, PCA on the network output in conjunction with an ensemble of SVMs is used.

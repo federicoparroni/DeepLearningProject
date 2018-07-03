@@ -1,6 +1,13 @@
 \section{Proposed approach}
 To accomplish our work we used a Convolutional Neural Network. This kind of model is now a days the most widely used for Image Recognition tasks. Many ways have been proposed to tackle the problem of stating similarity among different images, for example \cit{Schroff}{google}. Our solution is based on the idea of using directly convolutional layers to extract similarity, which is in our case expressed in terms of identity of people. In order to follow this idea, we used as input of our Convolutional Neural Network two gray scale images stacked one upon the other one. Then, two dimensional Convolutional Layers would filter those two levels images, transforming the initial input in tighter and thighter embeddings. The vector which comes from the last Convolutional Layer will contain an embedding of features which would naturally tell the relation the two images in terms of similarity among identities of people appearing in those. Then the embedding of features is used as input of a Fully Connected Neural Network, which will, at the really end, output a number between 0 and 1, i.e. the probability of having two photos who depict the same person.
 
+\begin{figure}[t]
+\includegraphics[width=0.8\linewidth]{images/stackedconvolution.png}
+   \caption{Convolution between two stacked image. Large convolution filters can help to capture similiarities.}
+\label{fig:long}
+\label{fig:onecol}
+\end{figure}
+
 %-------------------------------------------------------------------------
 \subsection{Mathematics}
 We can consider training samples as i.i.d observation from a Bernoulli random variable. We want that our model approximates as well as possible this Bernoulli variable ($t_n$ can assume only values $0$ or $1$):
@@ -19,49 +26,50 @@ Passing to the log, we get the standard binary crossentropy:
 \end{equation}
 
 %-------------------------------------------------------------------------
-\subsection{Footnotes}
-Please use footnotes\footnote {This is what a footnote looks like.  It
-often distracts the reader from the main flow of the argument.} sparingly.
-Indeed, try to avoid footnotes altogether and include necessary peripheral
-observations in
-the text (within parentheses, if you prefer, as in this sentence).  If you
-wish to use a footnote, place it at the bottom of the column on the page on
-which it is referenced. Use Times 8-point type, single-spaced.
-%-------------------------------------------------------------------------
-\subsection{References}
-List and number all bibliographical references in 9-point Times,
-single-spaced, at the end of your paper. When referenced in the text,
-enclose the citation number in square brackets, for
-example~\cite{Authors14}.  Where appropriate, include the name(s) of
-editors of referenced books.
-%-------------------------------------------------------------------------
-\subsection{Illustrations, graphs, and photographs}
-All graphics should be centered.  Please ensure that any point you wish to
-make is resolvable in a printed copy of the paper.  Resize fonts in figures
-to match the font in the body text, and choose line widths which render
-effectively in print.  Many readers (and reviewers), even of an electronic
-copy, will choose to print your paper in order to read it.  You cannot
-insist that they do otherwise, and therefore must not assume that they can
-zoom in to see tiny details on a graphic.
-
 
 \subsection{Model Selection}
 The model selection has been one of the main challanges during our activity: we did not have other already existing works from which transfer the structure of the network, at least no other research product which was using the same approach to achieve the same goal. So first we decided to go for a Cross Validation among the possible models. Even if the amount of data that we managed to harvest (section 4) was enough to proceed with this idea, the methodology appeared to be computationally unfeasible. So we decided to go for a standerd validation approach. Even in this case, the set of models to validate was growing too much, considering the high number of hyperparameters that a complex model, like a Convolutional Neural Network, holds. So at the really end we did not validate every possible model but instead we listed a set of fifteen networks of growing complexity. As a guideline for this ranking we have mainly considered \cit{Bengio}{hypsel}
 To have the most unbiased estimate of the true error from our validation set, we randomly split the data into validation and training set before the actual validation procedure, and before any of the candidate network was trained and evaluated on the data.
 When validating the various models, we used Adam Optimizer: this guaranteed to be free from the choice of the learning rate, removing one degree of freedom from our validation procedure.
-The model resulting from our the procedure is presented below:\\
-
-(table and image of the network)\\
-
+The model resulting from our the procedure is presented below:
+\\
+\begin{table}[]
+\begin{center}
+\begin{tabular}{l|l|l}
+Layer        & Output shape & Number of params \\
+\hline
+Conv2D       & (80, 80, 4)  & 76               \\
+\hline
+MaxPooling2D & (40, 40, 4)  & 0                \\
+\hline
+Dropout      & (40, 40, 4)  & 0                \\
+\hline
+Conv2D       & (40, 40, 4)  & 148              \\
+\hline
+MaxPooling2D & (20, 20, 4)  & 0                \\
+\hline
+Dropout      & (20, 20, 4)  & 0                \\
+\hline
+Flatten      & (1600)         & 0                \\
+\hline
+Dense        & (64)           & 102 464          \\
+\hline
+Dropout      & (64)           & 0                \\
+\hline
+Dense        & (64)           & 4160             \\
+\hline
+Dropout      & (64)           & 0                \\
+\hline
+Dense        & (2)            & 130              \\
+\hline
+\multicolumn{2}{l}{Total}   & 106 978         
+\end{tabular}
+\end{center}
+\caption{Structure of the network}
+\end{table}
+\\
 All the models have been trained for twohundred epochs changing dinamically the training data: when the model started overfitting i.e. when the training and test error were starting to be uncorrelated, we swapped to a different training set, sampled from the whole set of training samples. Every sampled chunck counted roughly fitythousand couples of images. This tecnique was on one hand necessary, because the whole dataset was not fitting on memory, and on the other hand turned out to be a powerful regularization tool.
-%\subsection{Illustrations, graphs, and photographs}
-%All graphics should be centered.  Please ensure that any point you wish to
-%make is resolvable in a printed copy of the paper.  Resize fonts in figures
-%to match the font in the body text, and choose line widths which render
-%effectively in print.  Many readers (and reviewers), even of an electronic
-%copy, will choose to print your paper in order to read it.  You cannot
-%insist that they do otherwise, and therefore must not assume that they can
-%zoom in to see tiny details on a graphic.
+
 %
 %When placing figures in \LaTeX, it's almost always best to use
 %\verb+\includegraphics+, and to specify the  figure width as a multiple of

@@ -60,10 +60,9 @@ Politecnico di Milano\\
 \begin{abstract}
 In this paper we present a method to compare two images and get a similarity measure of these. Common usages of such a technique are really several, first of all, authentication and face matching.
 \\
-This system, called Face2Face, uses a deep convolutional neural network to map a couple of images into a vector of similarity features. Then, this vector is processed by the last fully-connected layers of the network which outputs a measure in the range 0,1. Training has been done by stacking couples of images one on top of the other, exploiting large convolution filters in order to capture face similarities. This method boosts also the size of the training set: in fact, each image of the N in the training set can be coupled with all the others, so $N^2$ training samples can be obtained.
+This system, called Face2Face, uses a deep convolutional neural network to map a couple of images into a vector of similarity features. Then, this vector is processed by the last fully-connected layers of the network which outputs a measure in the range [0,1]. Training has been done by stacking couples of images one on top of the other, exploiting large convolution filters in order to capture face similarities. This method boosts also the size of the training set: in fact, each image of the N in the training set can be coupled with all the others, so $N^2$ training samples can be obtained.
 \\
 The main benefit of this mechanism are essentially the almost absence of hardware needed (only a camera) and the ease of use for the actual implementation. 
-On the Labeled Faces in the Wild (LFW) dataset, our system achieves an accuracy of 98\%.
 \end{abstract}
 
 %%%%%%%%% BODY TEXT
@@ -138,7 +137,24 @@ Architectures}
 
 \bibitem{histeq}
 \textit{https://towardsdatascience.com/image-augmentation-for-deep-learning-using-keras-and-histogram-equalization-9329f6ae5085}
-\end{thebibliography}
 
+\bibitem{hog}
+\textit{https://www.learnopencv.com/histogram-of-oriented-gradients/}
+
+\bibitem{facealign}
+\textit{https://www.pyimagesearch.com/2017/05/22/face-alignment-with-opencv-and-python/}
+
+\bibitem{aleju}
+\textit{https://github.com/aleju/face-comparer}
+
+\bibitem{taigman}
+\textit{Y. Taigman, M. Yang, M. Ranzato, and L. Wolf. Deepface:
+Closing the gap to human-level performance in face verification.}
+
+\bibitem{zhenyao}
+\textit{Z. Zhu, P. Luo, X. Wang, and X. Tang. Recover canonical view
+faces in the wild with deep neural networks.}
+
+\end{thebibliography}
 
 \end{document}
