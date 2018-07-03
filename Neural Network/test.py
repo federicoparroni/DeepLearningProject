@@ -126,15 +126,15 @@ predictions = model.predict(X_test)
 predictions_1D = vect_to_1D(predictions,0.8)
 real_label_1D = vect_to_1D(Y_test,0.8)
 
-cm1 = sklearn.metrics.confusion_matrix(vect_to_1D(predictions, 0.8), vect_to_1D(Y_test, 0.8))
+cm1 = sklearn.metrics.confusion_matrix(vect_to_1D(predictions, 0.9), vect_to_1D(Y_test, 0.9))
 cm2 = sklearn.metrics.confusion_matrix(vect_to_1D(predictions, 0.5), vect_to_1D(Y_test, 0.5))
 
 np.set_printoptions(precision=2)
 plt.figure()
-plot_confusion_matrix(cm1, classes=[0, 1], normalize=True,
+plot_confusion_matrix(cm1, classes=[1, 0], normalize=True,
                       title='Confusion matrix')
 plt.show()
-plot_confusion_matrix(cm2, classes=[0, 1], normalize=True,
+plot_confusion_matrix(cm2, classes=[1, 0], normalize=True,
                       title='Confusion matrix')
 plt.show()
 
