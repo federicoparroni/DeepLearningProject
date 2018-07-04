@@ -1,10 +1,6 @@
 # model 15
 
-conv,32,3,3
-dropout,0.1
-pool,2,2
-
-conv,16,3,3
+conv,4,3,3
 dropout,0.1
 pool,2,2
 
@@ -12,7 +8,11 @@ conv,8,3,3
 dropout,0.1
 pool,2,2
 
-conv,4,3,3
+conv,16,3,3
+dropout,0.1
+pool,2,2
+
+conv,32,3,3
 dropout,0.1
 pool,2,2
 
