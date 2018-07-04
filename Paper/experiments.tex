@@ -9,6 +9,13 @@ A substantial between the training and test set images is that the test set has 
 \paragraph{}
 we have evaluated the method on the face verification task (say wheter two face images are representing the same person) using as prediction the output of the net $Y(i,j)$ representing the $probability$ of having the same person on the two images. All faces pairs $(i,j)$ of the same identity are denoted with $N_{same}$, whereas all pairs of different identities are denoted with $N_{diff}$.\\
  
+\begin{figure}[t]
+\includegraphics[width=1\linewidth]{images/falsepositive.jpg}
+   \caption{Examples of false positive training samples, obtained with a threshold equals to $0.9$. On top of each couple we have the prediction of the network \ie the second number, but all those images were labelled as 0, infact they depict the same person}
+\label{fig:long}
+\label{fig:onecol}
+\end{figure} 
+ 
 We define the set of all \textit{true accepts} as
 \begin{equation}
 TA(thld)=\{(i,j) \in N_{same}, with Y(i,j) > thld\}
@@ -73,11 +80,21 @@ Treshold & Accuracy & Precision \\ \hline
 
 The accuracies obtained changing the two tresholds are comparable but the $precision$ is considerably higher(20\%) when the treshold is set to 0.9.
 
+
+
 \subsection{Datasets}
 \subsubsection{Own Dataset}
 We gathered our own data through a web page \cite{gdpdataret} that we set up. Through it, people had the possibility to upload their own photos. As a result, we obtained a set of more than eighty folders of photos, each one belonging to a different person. On avarage, we managed to get ten photos per person. Those photos are characterized by really regular poses of the person depicted in it, because the contributors were explicitly asked in the website to shot the photos keeping the camera in from of them, while they were watching it.
 \paragraph{Data Augmentation}
 The quantity of data that we obtained is not even close to the usual amount used in large scale Deep Learning projects. So we proceeded with augmentation procedures of our training set. In particular we resorted to the Augumentor Python library \cite{augmentor}. This library allows to generate, starting from a set of images, other images, obtained from various transformations of the former set. Those transformations can be customized and can be applied randomly to each image. It follows that each augmented image is the combination of the application of a random number of transformation specified by the developer, resulting in a great variety in the augmented set.
+
+\begin{figure}[t]
+\includegraphics[width=1\linewidth]{images/augmented.png}
+   \caption{Example of nine augmented photos obtained from a starting one, which is depicted at the bottom-right. We can see the good variety of images obtained from our augmentation procedure.}
+\label{fig:long}
+\label{fig:onecol}
+\end{figure}
+
 The transformation applied, with probabilities, are:
 \begin{itemize}
 \item Flip left-right with probability 0.5;
@@ -88,12 +105,7 @@ The transformation applied, with probabilities, are:
 In particular the last two methods were employed in order to obtain more variety of lightning conditions, which turned out to be characteristic that was lacking the most in our own dataset.
 Using this augmentation procedure, we crafted five brand new images from just one, obtaining fifty images per person on our dataset.
 
-\begin{figure}[t]
-\includegraphics[width=1\linewidth]{images/augmented.png}
-   \caption{Example of nine augmented photos obtained from a starting one, which is depicted at the bottom-right. We can see the good variety of images obtained from our augmentation procedure.}
-\label{fig:long}
-\label{fig:onecol}
-\end{figure}
+
 
 \paragraph{Data preprocessing}
 The data that we managed to harvest and the results of the augmentation procedure were affected by noise and really low regularity. To hope to get good results, we needed to have all the images in a standardized form factor. To accomplish this idea, we set up a pipeline useful to apply to all the images those following steps:
@@ -121,18 +133,3 @@ Using this trick, at the really end we managed to have a dataset with more than 
 
 \subsubsection{Academic Datasets}
 \paragraph{Labelled Faces in the Wild} We have validated the performance of our network in this well known dataset. We have built the couples and assigned the labels as we did in our own dataset, and then evaluated the accuracy.
-
-\subsubsection{Performance}
-
-\begin{figure}[t]
-\includegraphics[width=1\linewidth]{images/falsepositive.jpg}
-   \caption{Examples of false positive training samples, obtained with a threshold equals to $0.9$. On top of each couple we have the prediction of the network \ie the second number, but all those images were labelled as 0, infact they depict the same person}
-\label{fig:long}
-\label{fig:onecol}
-\end{figure}
-
-\paragraph{Experiments setup.}
-Here you describe all the architectural choices of your model, the hyper-parameters of your model, \eg optimizer, learning rate, momentum, batch size and if you cross-validate on them. 
-
-\paragraph{Results and discussion.}
-Discuss your results and compare with other methods. You can also perform an \emph{ablation study} on your model switching on and off some components to understand their contributions.

@@ -86,6 +86,7 @@ def model_array_builder(filepath_array):
         model.compile(loss='categorical_crossentropy',  # using the cross-entropy loss function
                       optimizer=keras.optimizers.Adadelta(lr=1.0, rho=0.95, epsilon=None, decay=0.0),
                       metrics=['accuracy'])
+
         models_array.append(model)
         models_name_array.append(i.split('/')[-1])
         del modelObject

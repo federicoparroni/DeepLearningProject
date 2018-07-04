@@ -26,12 +26,14 @@ TRAINING_DATASET_FOLDER_NAME = '1_dataset train_p_120'#'3_preprocessed_1_dataset
 TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 
 epochs_with_same_data = 10
-folders_at_the_same_time = 10
-validation_folders = 10
+
+folders_at_the_same_time = 25
+validation_folders = 15
+
 validate_every = 2
 
 batch_size = 128            # in each iteration, we consider 128 training examples at once
-num_epochs = 200            # we iterate 200 times over the entire training set
+num_epochs = 300            # we iterate 200 times over the entire training set
 
 height = 80
 width = 80
@@ -82,7 +84,7 @@ models_array, models_array_name = model_array_builder(
 )
 
 CrossValidate(
-    1, models_array, models_array_name, TRAINING_DATASET_FOLDER_NAME, batch_size=batch_size, num_epochs=num_epochs,
+    1, [models_array[9]], [models_array_name[9]], TRAINING_DATASET_FOLDER_NAME, batch_size=batch_size, num_epochs=num_epochs,
     folders_at_the_same_time=folders_at_the_same_time, validate_every=validate_every, chat_id=chat_id,
     max_num_of_validation_folders=validation_folders
 )
