@@ -107,7 +107,7 @@ model = modelObject.model
 model.load_weights('trained_model/2018-05-16 12:49:03/model01.txt_2018-05-16 15:12:17.h5')
 #plot_model(model, to_file='model_graph.png', show_shapes=True, show_layer_names=True)
 
-(X_test, y_test, _) = GetData(TEST_DATASET_FOLDER_NAME)
+(X_test, y_test, _) = GetData('fff')
 Y_test = np_utils.to_categorical(y_test, num_classes)
 X_test = X_test.astype('float32')
 X_test /= np.max(X_test)    # Normalise data to [0, 1] range

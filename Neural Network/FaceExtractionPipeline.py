@@ -22,7 +22,7 @@ class SingletonPipeline(object):
 
             instance.face_detector = dlib.get_frontal_face_detector()
             instance.predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
-            instance.fa = FaceAligner(instance.predictor, desiredFaceWidth=80)
+            instance.fa = FaceAligner(instance.predictor, desiredFaceWidth=120)
 
         return _instances[cls]
 

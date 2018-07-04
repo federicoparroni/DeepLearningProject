@@ -22,12 +22,12 @@ enable_telegram_bot = True if connection_available() else False
 chat_id = -1001223624517            # this is for the private channel
 
 # defining the folders path train and test
-TRAINING_DATASET_FOLDER_NAME = '3_preprocessed_1_dataset train'
+TRAINING_DATASET_FOLDER_NAME = '1_dataset train_p_120'#'3_preprocessed_1_dataset train'
 TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 
 epochs_with_same_data = 10
-folders_at_the_same_time = 25
-validation_folders = 25
+folders_at_the_same_time = 10
+validation_folders = 10
 validate_every = 2
 
 batch_size = 128            # in each iteration, we consider 128 training examples at once
