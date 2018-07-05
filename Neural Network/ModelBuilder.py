@@ -80,7 +80,7 @@ def model_array_builder(filepath_array):
 
     for i in filepath_array:
         a = read_model(i)
-        modelObject = ModelBuilder(a, (120, 120, 2))
+        modelObject = ModelBuilder(a, (80, 80, 2))
         model = modelObject.model
 
         model.compile(loss='categorical_crossentropy',  # using the cross-entropy loss function
