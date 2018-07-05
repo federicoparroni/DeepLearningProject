@@ -9,7 +9,7 @@ pool,2,2
 dropout,0.1
 
 conv,8,8,8
-pool,3,3
+pool,2,2
 dropout,0.1
 
 conv,8,8,8
