@@ -22,13 +22,13 @@ enable_telegram_bot = True if connection_available() else False
 chat_id = -1001223624517            # this is for the private channel
 
 # defining the folders path train and test
-TRAINING_DATASET_FOLDER_NAME = '1_dataset train_p_120'#'3_preprocessed_1_dataset train'
+TRAINING_DATASET_FOLDER_NAME = '3_preprocessed_1_dataset train'
 TEST_DATASET_FOLDER_NAME = '3_preprocessed_2_dataset test'
 
 epochs_with_same_data = 10
 
-folders_at_the_same_time = 25
-validation_folders = 15
+folders_at_the_same_time = 28
+validation_folders = 14
 
 validate_every = 2
 
@@ -84,7 +84,7 @@ models_array, models_array_name = model_array_builder(
 )
 
 CrossValidate(
-    1, [models_array[9]], [models_array_name[9]], TRAINING_DATASET_FOLDER_NAME, batch_size=batch_size, num_epochs=num_epochs,
+    1, models_array[6:], models_array_name[6:], TRAINING_DATASET_FOLDER_NAME, batch_size=batch_size, num_epochs=num_epochs,
     folders_at_the_same_time=folders_at_the_same_time, validate_every=validate_every, chat_id=chat_id,
     max_num_of_validation_folders=validation_folders
 )
