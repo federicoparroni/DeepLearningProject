@@ -128,25 +128,25 @@ class SingletonTrain(object):
                         print("~~~~~~~~~~~~~")
                         return validation_history
 
-                # change tha training dataset when the validation accuracy decrease
-                # validation_history_len = len(validation_history)
-                # if validation_history_len > 1 and epochs_performed > 1:
-                #     if validation_history[validation_history_len - 2][1] - \
-                #             validation_history[validation_history_len - 1][1] > validation_treshold:
+            # change tha training dataset when the validation accuracy decrease
+            # validation_history_len = len(validation_history)
+            # if validation_history_len > 1 and epochs_performed > 1:
+            #     if validation_history[validation_history_len - 2][1] - \
+            #             validation_history[validation_history_len - 1][1] > validation_treshold:
 
-                #CHANGE DATA EVERY EPOCHS_WITH_SAME_DATA epochs
-                if epochs_performed % EPOCHS_WITH_SAME_DATA == 0:
+            #CHANGE DATA EVERY EPOCHS_WITH_SAME_DATA epochs
+            if epochs_performed % EPOCHS_WITH_SAME_DATA == 0:
 
-                    t.join()
-                    load_new_data = True
-                    # send a message when the data are changing
-                    if enable_telegram_bot:
-                        telegram_send_msg("Changing data")
+                t.join()
+                load_new_data = True
+                # send a message when the data are changing
+                if enable_telegram_bot:
+                    telegram_send_msg("Changing data")
 
-                    epochs_performed = 0
+                epochs_performed = 0
 
-                    x = self.x_next_epoch
-                    y = self.y_next_epoch
+                x = self.x_next_epoch
+                y = self.y_next_epoch
 
             # ============= end validation
 
