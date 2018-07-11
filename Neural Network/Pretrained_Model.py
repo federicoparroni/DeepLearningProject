@@ -48,17 +48,14 @@ predicted_label = model.predict(X_test)
 
 # creates titles to plot the predicted classes
 titles = []
+X_test_concatenated = []
 for i in range(len(X_test)):
     result = predicted_label[i]
     real_value = Y_test[i]
     # plt.imshow(np.squeeze(X_test[i], axis=2), 'gray')
-    titles.append(ResultPrediction(result, real_value))
-
-
-X_test_concatenated = []
-for i in range(NUM_PRINTED_PAGES*MAX_IMAGES_TO_PLOT):
-    X_test_concatenated.append(np.concatenate((np.array(X_test[i, :, :, 0]), np.array(X_test[i, :, :, 1]))))
-    #print(np.array(X_test_concatenated).shape)
+    if result[1] > 0.9 and real_value[1] == 0:
+        titles.append(ResultPrediction(result, real_value))
+        X_test_concatenated.append(np.concatenate((np.array(X_test[i, :, :, 0]), np.array(X_test[i, :, :, 1]))))
 
 # show the images in plots
 for k in range(NUM_PRINTED_PAGES):

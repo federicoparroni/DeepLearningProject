@@ -10,11 +10,11 @@ conv,16,6,6
 dropout,0.1
 conv,16,6,6
 dropout,0.1
-pool,3,3
+pool,2,2
 
 conv,16,4,4
 dropout,0.1
-pool,2,2
+pool,3,3
 
 
 flatten

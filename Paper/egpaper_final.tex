@@ -61,9 +61,9 @@ Politecnico di Milano\\
 
 %%%%%%%%% ABSTRACT
 \begin{abstract}
-In this paper we present a method to compare two images and get a similarity measure of these. Common usages of such a technique are really several, first of all, authentication and face matching.
+In this paper we present a method to compare two images and get a similarity measure of these. Common usages of such a technique are several, first of all, authentication and face matching.
 \\
-This system, called Face2Face, uses a deep convolutional neural network to map a couple of images into a vector of similarity features. Then, this vector is processed by the last fully-connected layers of the network which outputs a measure in the range [0,1]. Training has been done by stacking couples of images one on top of the other, exploiting large convolution filters in order to capture face similarities. This method boosts also the size of the training set: in fact, each image of the N in the training set can be coupled with all the others, so $N^2$ training samples can be obtained.
+This system, called Face2Face, uses a deep convolutional neural network to map a couple of images into a vector of features which capture the similarity between the two images. Then, this vector is processed by the last fully-connected layers of the network which output a measure in the range [0,1]. Training has been done by stacking couples of images one on top of the other, exploiting convolution filters in order to capture face similarities. This method boosts also the size of the training set: in fact, each image of the N in the training set can be coupled with all the others, so the training samples that can be obtained $\in O(N^2)$.
 \\
 The main benefit of this mechanism are essentially the almost absence of hardware needed (only a camera) and the ease of use for the actual implementation. 
 \end{abstract}

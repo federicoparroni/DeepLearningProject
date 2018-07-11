@@ -67,6 +67,8 @@ class SingletonTrain(object):
         load_new_data = True
         t = None
         validation_history = []
+        epochs_performed = 0
+        EPOCHS_WITH_SAME_DATA = 3
 
         # load training data
         x, y, _ = self.load_data(folders=training_dataset_folder_name, folders_to_load=training_folders_count,
@@ -95,7 +97,7 @@ class SingletonTrain(object):
             last_epoch_result = model.fit(x, y, batch_size=batch_size, epochs=1, verbose=1,
                                           class_weight=class_weight, callbacks=None, shuffle=True)
 
-
+            epochs_performed += 1
             last_pos = len(last_epoch_result.history['acc'])
             last_epoch_acc = last_epoch_result.history['acc'][last_pos-1]
 
@@ -126,21 +128,25 @@ class SingletonTrain(object):
                         print("~~~~~~~~~~~~~")
                         return validation_history
 
-                # change tha training dataset when the validation accuracy decrease
-                validation_history_len = len(validation_history)
-                if validation_history_len > 1:
-                    if validation_history[validation_history_len - 2][1] - \
-                            validation_history[validation_history_len - 1][1] > validation_treshold:
+            # change tha training dataset when the validation accuracy decrease
+            # validation_history_len = len(validation_history)
+            # if validation_history_len > 1 and epochs_performed > 1:
+            #     if validation_history[validation_history_len - 2][1] - \
+            #             validation_history[validation_history_len - 1][1] > validation_treshold:
 
-                        t.join()
-                        load_new_data = True
-                        # send a message when the data are changing
-                        if enable_telegram_bot:
-                            telegram_send_msg("Changing data")
+            #CHANGE DATA EVERY EPOCHS_WITH_SAME_DATA epochs
+            if epochs_performed % EPOCHS_WITH_SAME_DATA == 0:
 
+                t.join()
+                load_new_data = True
+                # send a message when the data are changing
+                if enable_telegram_bot:
+                    telegram_send_msg("Changing data")
 
-                        x = self.x_next_epoch
-                        y = self.y_next_epoch
+                epochs_performed = 0
+
+                x = self.x_next_epoch
+                y = self.y_next_epoch
 
             # ============= end validation
 
