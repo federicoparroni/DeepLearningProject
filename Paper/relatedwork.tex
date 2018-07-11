@@ -7,15 +7,15 @@ Similar work has been carried out some using directly deep convolutional neural 
 The most relevant are reported below.
 \\
 \par
-Schroff \textit{et al.} [] use a deep convolutional neural network to generate an embedding $f(x)$, from an image $x$ into a feature space $R^d$, such that the squared distance between all faces of the same identity is small, whereas the squared distance between a pair of face images from different identities is large. To achieve that has been used the so called 'triplet loss' that allows the faces for one identity to live on a manifold, while still enforcing the distance of two different faces to be maximum.
+ \cit{Schroff}{google} use a deep convolutional neural network to generate an embedding $f(x)$, from an image $x$ into a feature space $\mathbb{R}^d$, such that the squared distance between all faces of the same identity is small, whereas the squared distance between a pair of face images from different identities is large. To achieve that has been used the so called 'triplet loss' that allows the faces for one identity to live on a manifold, while still enforcing the distance of two different faces to be maximum.
 The work presented does not directly solve the problem of the face recognition but create a proper enviroment in which a simple K-NN classifier can solve the task.
 \\
 \par
-Aleju \cite{aleju} The network presented uses two branches, one per image. Each branch applies a few convolutions and ends in a fully connected layer. The outputs of both branches are then merged and further processed by another fully connected layer, before making the final yes-no-decision (whether both images show the same person).
+Aleju \cite{aleju} proposes a network presenting two branches, one per image. Each branch applies a few convolutions and ends in a fully connected layer. The outputs of both branches are then merged and further processed by another fully connected layer, before making the final yes-no-decision (whether both images show the same person).
 \\
 \par
 \cit{Taigman}{taigman} propose a multi-stage approach that aligns faces to a general 3D shape model. A multi-class net-work is trained to perform the face recognition task on over four thousand identities. The authors also experimented with a so called Siamese network where they directly opti-
-mize the $L1$-distance between two face features. Their best performance on LFW (97.35\%) obtained from an ensemble of three networks using different alignments and color channels. The predicted distances (non-linear SVM predictions) of those networks are combined using a non-linear SVM.
+mize the $L1$-distance between two face features. Their best performance on LFW (97.35\%) has been obtained from an ensemble of three networks using different alignments and color channels. The predicted distances (non-linear SVM predictions) of those networks are combined using a non-linear SVM.
 \\
 \par
 \cit{Zhenyao}{zhenyao} employ a deep network  to “warp” faces into a canonical frontal view and then learn CNN that classifies each face as belonging to a known identity. For face verification, PCA on the network output in conjunction with an ensemble of SVMs is used.
