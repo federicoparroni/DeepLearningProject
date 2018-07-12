@@ -48,20 +48,20 @@ Using this trick, at the really end we managed to have a dataset with more than 
 %Describe the data you are working with for your project. Usually you need to explain what type of data is it, how much data are you working with and if you applied any pre-processing, filtering, or other special treatment to use it. Remember that you have to cite each dataset you used in your project if it has been published from someone else. Instead, if you collected it by yourself you have to describe accurately how you gathered (and labeled) your data.
 
 \subsubsection{Academic Datasets}
-\paragraph{Labelled Faces in the Wild} We have validated the performance of our network in this well known dataset. We have built the couples and assigned the labels as we did in our own dataset, and then evaluated the accuracy.
+\paragraph{Labelled Faces in the Wild(LFW)} We have validated the performance of our network in this well known dataset. We have built the couples and assigned the labels as we did in our own dataset, and then evaluated the accuracy.
 
 
 \subsection{Evaluation}
 We have evaluated our method on a test set that accounts for approximately the 20\% of the intial dataset that we gathered up, so the test data has the same distribution of our training set, but disjoint identities.
-The model has been evaluated also on two different test sets, the YLF and YTBF for comparing it to the state of the art level of face recognition. 
+
 \paragraph{}
-A substantial between the training and test set images is that the test set has not been augmented so that the evaluation of the performance can unbiased with respect to the training set as much as possible, augmentation has been performed only on the training set (see next subsection).
+A substantial difference between the training and test set images is that the test set has not been augmented so that the evaluation of the performance can unbiased with respect to the training set as much as possible, augmentation has been performed only on the training set (see next subsection).
 \paragraph{}
 we have evaluated the method on the face verification task (say wheter two face images are representing the same person) using as prediction the output of the net $Y(i,j)$ representing the $probability$ of having the same person on the two images. All faces pairs $(i,j)$ of the same identity are denoted with $N_{same}$, whereas all pairs of different identities are denoted with $N_{diff}$.\\
  
 \begin{figure}[t]
 \includegraphics[width=1\linewidth]{images/falsepositive.jpg}
-   \caption{Examples of false positive training samples, obtained with a threshold equals to $0.9$. On top of each couple we have the prediction of the network \ie the second number, but all those images were labelled as 0, infact they depict the same person}
+   \caption{Examples of false positive training samples, obtained with a threshold equals to $0.975$. On top of each couple we have the prediction of the network \ie the second number, but all those images were labelled as 0, infact they depict the same person}
 \label{fig:long}
 \label{fig:onecol}
 \end{figure} 
@@ -77,23 +77,23 @@ FA(thld)=\{(i,j) \in N_{diff}, with Y(i,j) > thld\}
 \end{equation}
 is the set of all pairs that was missclassified as \textit{same}, this figure of merit has a main role on the evaluation of our work since the method as been created with the aim of being used as a security check so the false accepts can not be tolerated.
 \paragraph{Obtained performance}
-after 5/6 hours of training (200 epochs) we have reached a
+after 300 training epochs we have reached a
 \begin{equation}
-validationaccuracy = 0.81 with thld = 0.5
+validationaccuracy = 0.91 with thld = 0.5
 \end{equation}
 For evaluate the generalization performance the ROC curve and the AUC parameter has been considered.
 
 \begin{figure}[t]
 \begin{center}
-\includegraphics[width=0.8\linewidth]{images/FINAL ROC.png}
+\includegraphics[width=0.8\linewidth]{images/FINAL_ROC.png}
    \caption{ROC curve of the model.}
 \label{fig:long}
 \label{fig:onecol}
 \end{center}
 \end{figure}
 
-the $AUC$ obtained is 0.92 and from the ROC curve we can extract important information on which value the treshold of the model has to be set depending on the utilization purpose of the net.
-Since the model has been developed for security reasons a possible idea is to tolerate at most a 10\% of false positive to achieve that the treshold has to be set to 0.9 as suggested by the ROC curve, so that the network will recognize a couple of faces $(i,j)$ as the same person only when $Y(i,j)>0.9$. The performance between two different tresholds can be compared using the confusion matrices taking into account also the
+the $AUC$ obtained is 0.97 and from the ROC curve we can extract important information on which value the treshold of the model has to be set depending on the utilization purpose of the net.
+Since the model has been developed for security reasons a possible idea is to tolerate at most a 0.025\% of false positive to achieve that the treshold has to be set to 0.975 as suggested by the ROC curve, so that the network will recognize a couple of faces $(i,j)$ as the same person only when $Y(i,j)>0.975$ still mantaining a considerable percentage of true positive ($\approx 0.7$). The performance between two different tresholds can be compared using the confusion matrices taking into account also the
 \begin{equation}
 Precision(thld) = \frac{TA(thld)}{TA(thld)+FA(thld)}. 
 \end{equation}
@@ -110,12 +110,11 @@ Precision(thld) = \frac{TA(thld)}{TA(thld)+FA(thld)}.
 
 \begin{figure*}
 \begin{center}
-\includegraphics[width=1\linewidth]{images/FINAL MERGED.jpg}
+\includegraphics[width=1\linewidth]{images/FINAL_MERGED.jpg}
 \end{center}
    \caption{comparison between the confusion matrix with two different tresholds 0.5(on the left) and 0.975}
 \label{fig:conf_matrices}
 \end{figure*}
-
 
 \begin{table}[]
 \centering
