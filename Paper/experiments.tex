@@ -50,14 +50,14 @@ Using this trick, at the really end we managed to have a dataset with more than 
 \subsubsection{Academic Datasets}
 \paragraph{Labelled Faces in the Wild(LFW)} We have validated the performance of our network in this well known dataset. We have built the couples and assigned the labels as we did in our own dataset, and then evaluated the accuracy.
 
-
 \subsection{Evaluation}
 We have evaluated our method on a test set that accounts for approximately the 20\% of the intial dataset that we gathered up, so the test data has the same distribution of our training set, but disjoint identities.
 
 \paragraph{}
 A substantial difference between the training and test set images is that the test set has not been augmented so that the evaluation of the performance can unbiased with respect to the training set as much as possible, augmentation has been performed only on the training set (see next subsection).
+
 \paragraph{}
-we have evaluated the method on the face verification task (say wheter two face images are representing the same person) using as prediction the output of the net $Y(i,j)$ representing the $probability$ of having the same person on the two images. All faces pairs $(i,j)$ of the same identity are denoted with $N_{same}$, whereas all pairs of different identities are denoted with $N_{diff}$.\\
+We have evaluated the method on the face verification task (say wheter two face images are representing the same person) using as prediction the output of the net $Y(i,j)$ representing the $probability$ of having the same person on the two images. All faces pairs $(i,j)$ of the same identity are denoted with $N_{same}$, whereas all pairs of different identities are denoted with $N_{diff}$.\\
  
 \begin{figure}[t]
 \includegraphics[width=1\linewidth]{images/falsepositive.jpg}
@@ -75,13 +75,14 @@ Similarly we can define the \textit{False accepts} as
 \begin{equation}
 FA(thld)=\{(i,j) \in N_{diff}, with Y(i,j) > thld\} 
 \end{equation}
-is the set of all pairs that was missclassified as \textit{same}, this figure of merit has a main role on the evaluation of our work since the method as been created with the aim of being used as a security check so the false accepts can not be tolerated.
+is the set of all pairs that was misclassified as \textit{same}, this figure of merit has a main role on the evaluation of our work since the method has been created with the aim of being used as a security check, and so false accepts cannot be tolerated.
 \paragraph{Obtained performance}
-after 300 training epochs we have reached a
-\begin{equation}
-validationaccuracy = 0.91 with thld = 0.5
-\end{equation}
-For evaluate the generalization performance the ROC curve and the AUC parameter has been considered.
+After 300 training epochs we have reached a\\
+
+\textit{validation accuracy }= 0.915 with \textit{threshold}=0.5
+\\
+
+For evaluate the generalization performance the ROC curve and the $AUC$ parameter has been considered.
 
 \begin{figure}[t]
 \begin{center}
@@ -92,8 +93,9 @@ For evaluate the generalization performance the ROC curve and the AUC parameter 
 \end{center}
 \end{figure}
 
-the $AUC$ obtained is 0.97 and from the ROC curve we can extract important information on which value the treshold of the model has to be set depending on the utilization purpose of the net.
-Since the model has been developed for security reasons a possible idea is to tolerate at most a 0.025\% of false positive to achieve that the treshold has to be set to 0.975 as suggested by the ROC curve, so that the network will recognize a couple of faces $(i,j)$ as the same person only when $Y(i,j)>0.975$ still mantaining a considerable percentage of true positive ($\approx 0.7$). The performance between two different tresholds can be compared using the confusion matrices taking into account also the
+The $AUC$ obtained is 0.97 and from the ROC curve we can extract important information on which value the treshold of the model has to be set depending on the utilization purpose of the net.
+Since the model has been developed for security reasons a possible idea is to tolerate at most a 0.001\% of false positive to achieve that the treshold has to be set to 0.975 as suggested by the ROC curve, so that the network will recognize a couple of faces $(i,j)$ as the same person only when $Y(i,j)>0.975$. The performance between two different tresholds can be compared using the confusion matrices taking into account also the
+
 \begin{equation}
 Precision(thld) = \frac{TA(thld)}{TA(thld)+FA(thld)}. 
 \end{equation}
@@ -110,7 +112,9 @@ Precision(thld) = \frac{TA(thld)}{TA(thld)+FA(thld)}.
 
 \begin{figure*}
 \begin{center}
-\includegraphics[width=1\linewidth]{images/FINAL_MERGED.jpg}
+
+\includegraphics[width=1\linewidth]{images/merged.png}
+
 \end{center}
    \caption{comparison between the confusion matrix with two different tresholds 0.5(on the left) and 0.975}
 \label{fig:conf_matrices}
@@ -121,13 +125,13 @@ Precision(thld) = \frac{TA(thld)}{TA(thld)+FA(thld)}.
 \begin{tabular}{|c|ll|}
 \hline
 Treshold & Accuracy & Precision \\ \hline
-0.5                          & 0.835    & 0.791     \\ \hline
-0.9                          & 0.795    & 0.953     \\ \hline
+0.5                          & 0.915    & 0.9278     \\ \hline
+0.975                          & 0.845    & 0.9985     \\ \hline
 \end{tabular}
 \end{table}
 
 
-The accuracies obtained changing the two tresholds are comparable but the $precision$ is considerably higher(20\%) when the treshold is set to 0.9.
+The accuracies obtained changing the two tresholds are comparable but the $precision$ is considerably higher when the treshold is set to 0.975.
 
 
 
