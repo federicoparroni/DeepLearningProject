@@ -43,7 +43,7 @@ Finding a face in an image and pick the bounding box which includes it is a real
 
 \paragraph{Couple creation}
 At this point, we have a considerable number of folders, one for each identity, each one containing a set of, on average, fifty augmented photos. Still, we are missing our actual dataset, which is composed of couples of images and a labels: if the two photos come from the same folder, then the label will be 0, otherwise 1. Since we are considering couples, the number of training samples grows not linearly with the number of photos, but quadratically: for any photo in a folder, we can pair it with all the other photos on the folder and with an equal number of photos picked from other random folders. In formulas, a folder with $N$ photos will give $2(N-1)^2$ training samples.
-Using this trick, at the really end we managed to have a dataset with more than one million samples.
+Using this trick, at the really end we managed to have a balanced dataset with more than one million samples.
 
 %Describe the data you are working with for your project. Usually you need to explain what type of data is it, how much data are you working with and if you applied any pre-processing, filtering, or other special treatment to use it. Remember that you have to cite each dataset you used in your project if it has been published from someone else. Instead, if you collected it by yourself you have to describe accurately how you gathered (and labeled) your data.
 
@@ -129,7 +129,7 @@ On the Labelled face in the wild dataset we have reached a
 \textit{test accuracy }= 0.78 with \textit{threshold}=0.5
 \\
 
-This performance can be justified by the fact that the faces in the dataset are not gathered up to be used as training data for authentication purpose in fact most of the images are depicting a face in an appropriate pose (\i.e the person is not looking at the camera). A better accuracy and precision can be reached by raising the treshold to 0.975 as shown on table 3.
+This performance can be justified by the fact that the faces in the dataset are not gathered up to be used as training data for authentication purpose in fact most of the images are depicting a face in an appropriate pose (\i.e the person is not looking at the camera). A better accuracy and precision can be reached by raising the treshold to 0.975 as shown on Table 3.
 
 \begin{table}[]
 \centering
