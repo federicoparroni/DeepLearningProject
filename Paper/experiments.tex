@@ -119,7 +119,7 @@ Treshold & Accuracy & Precision \\ \hline
 0.5                          & 0.915    & 0.9278     \\ \hline
 0.975                          & 0.845    & 0.9985     \\ \hline
 \end{tabular}
-\caption{Perfomance comparison between the case of threshold 0.5 and 0.975}
+\caption{Perfomance comparison between the case of threshold 0.5 and 0.975 on the Test set.}
 \end{table}
 
 \paragraph{LFW evaluation}
@@ -129,7 +129,18 @@ On the Labelled face in the wild dataset we have reached a
 \textit{test accuracy }= 0.78 with \textit{threshold}=0.5
 \\
 
-This performance can be justified by the fact that the faces in the dataset are not gathered up to be used as training data for authentication purpose in fact most of the images are depicting a face in an appropriate pose (\i.e the person is not looking at the camera).
+This performance can be justified by the fact that the faces in the dataset are not gathered up to be used as training data for authentication purpose in fact most of the images are depicting a face in an appropriate pose (\i.e the person is not looking at the camera). A better accuracy and precision can be reached by raising the treshold to 0.975 as shown on table 3.
+
+\begin{table}[]
+\centering
+\begin{tabular}{|c|ll|}
+\hline
+Treshold & Accuracy & Precision \\ \hline
+0.5                          & 0.745    & 0.7474     \\ \hline
+0.975                          & 0.775    & 0.9824     \\ \hline
+\end{tabular}
+\caption{Perfomance comparison between the case of threshold 0.5 and 0.975 on the LFW dataset.}
+\end{table}
 
 \subsection{Usage example}
 We used our trained model to verify the live test performance in a simple application. First, the app acquires a sample image of the user, then it starts a live session. During that, it captures frames from the camera. For each of them, a frame-sample image couple is created and is given as input to the model, that outputs the prediction in a real-time manner. From our tests using general purpose laptops, the maximum number of predictions that can me made is around 8 predictions/sec.
