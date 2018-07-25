@@ -94,21 +94,13 @@ To further evaluate the performance, also the ROC curve and the $AUC$ parameter 
 \end{figure}
 
 The $AUC$ obtained is 0.97 and from the ROC curve we can extract important information on which value the treshold of the model has to be set depending on the utilization purpose of the net.
-Since the model has been developed for security reasons, a possible idea is to tolerate at most a 0.1\% of false positive. To achieve that the treshold has to be set to 0.975 as suggested by the ROC curve, so that the network will recognize a couple of faces $(i,j)$ as the same person only when $Y(i,j)>0.975$. The performance between two different tresholds can be compared using the confusion matrices (figure 6) taking into account also the
+Since the model has been developed for security reasons, a possible idea is to tolerate at most a 0.1\% of false positive. To achieve that the treshold has to be set to 0.975 as suggested by the ROC curve, so that the network will recognize a couple of faces $(i,j)$ as the same person only when $Y(i,j)>0.975$. The performance between two different tresholds can be compared using the confusion matrices (Figure 6) taking into account also the
 
 \begin{equation}
 Precision(thld) = \frac{TA(thld)}{TA(thld)+FA(thld)}. 
 \end{equation}
  
- 
-%\begin{figure}[t]
-%\begin{center}
-%\includegraphics[width=0.8\linewidth]{images/conf_matrix.jpg}
-%   \caption{comparison between the confusion matrix with two different tresholds 0.5(on the left) and 0.9}
-%\label{fig:long}
-%\label{fig:onecol}
-%\end{center}
-%\end{figure}
+The accuracies obtained changing the two tresholds are comparable but the $Precision$ is considerably higher when the treshold is set to 0.975 as can be seen from Table 2.
 
 \begin{figure*}
 \begin{center}
@@ -127,15 +119,17 @@ Treshold & Accuracy & Precision \\ \hline
 0.5                          & 0.915    & 0.9278     \\ \hline
 0.975                          & 0.845    & 0.9985     \\ \hline
 \end{tabular}
+\caption{Perfomance comparison between the case of threshold 0.5 and 0.975}
 \end{table}
 
 \paragraph{LFW evaluation}
-On the Labelled face in the wild dataset we have reached a \\
-\textit{test accuracy } =  0.78\% 
+On the Labelled face in the wild dataset we have reached a
 \\
-this performance can be justified by the fact that the faces in the dataset are not gathered up to be used as training data for authentication purpose in fact most of the images are depicting a face in an appropriate pose (\i.e the person is not looking at the camera).
 
-The accuracies obtained changing the two tresholds are comparable but the $precision$ is considerably higher when the treshold is set to 0.975 as can be seen from the table above.
+\textit{test accuracy }= 0.78 with \textit{threshold}=0.5
+\\
+
+This performance can be justified by the fact that the faces in the dataset are not gathered up to be used as training data for authentication purpose in fact most of the images are depicting a face in an appropriate pose (\i.e the person is not looking at the camera).
 
 \subsection{Usage example}
 We used our trained model to verify the live test performance in a simple application. First, the app acquires a sample image of the user, then it starts a live session. During that, it captures frames from the camera. For each of them, a frame-sample image couple is created and is given as input to the model, that outputs the prediction in a real-time manner. From our tests using general purpose laptops, the maximum number of predictions that can me made is around 8 predictions/sec.
