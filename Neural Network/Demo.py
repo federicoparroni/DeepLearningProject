@@ -98,16 +98,9 @@ class Demo:
         # self.OneFrameComputation()
 
     def Window(self, imageName):
-        captureWidth = 300
-        captureHeight = 200
+        self.captureWidth = 300
+        self.captureHeight = 200
 
-<<<<<<< HEAD
-=======
-    def Window(self, imageName):
-        captureWidth = 300
-        captureHeight = 200
-
->>>>>>> master
         # Set up GUI
         window = tk.Tk()  # Makes main window
         window.wm_title("Face2Face")
@@ -115,21 +108,21 @@ class Demo:
         #window.geometry("400x200")
 
         # Graphics window
-        imageFrame1 = tk.Frame(window, width=captureWidth, height=captureHeight)
+        imageFrame1 = tk.Frame(window, width=self.captureWidth, height=self.captureHeight)
         imageFrame1.grid(row=0, column=0, padx=10, pady=2)
 
-        imageFrame2 = tk.Frame(window, width=captureWidth, height=captureHeight)
+        imageFrame2 = tk.Frame(window, width=self.captureWidth, height=self.captureHeight)
         imageFrame2.grid(row=0, column=1, padx=10, pady=2)
 
         # Capture video frames
-        image1 = tk.Label(imageFrame1, width=captureWidth, height=captureHeight)
+        image1 = tk.Label(imageFrame1, width=self.captureWidth, height=self.captureHeight)
         image1.grid(row=0, column=0)
 
         img = PIL.Image.open(imageName)
-        img = img.resize((captureWidth, captureHeight), PIL.Image.ANTIALIAS)
+        img = img.resize((self.captureWidth, self.captureHeight), PIL.Image.ANTIALIAS)
         staticPhoto = PIL.ImageTk.PhotoImage(img)
 
-        image2 = tk.Label(imageFrame2, width=captureWidth, height=captureHeight, image=staticPhoto)
+        image2 = tk.Label(imageFrame2, width=self.captureWidth, height=self.captureHeight, image=staticPhoto)
         image2.grid(row=0, column=0)
         image2.image = staticPhoto
 
@@ -137,8 +130,8 @@ class Demo:
         lblProbability.configure(text="0")
 
         cap = cv2.VideoCapture(0)
-        cap.set(3, captureWidth)
-        cap.set(4, captureHeight)
+        cap.set(3, self.captureWidth)
+        cap.set(4, self.captureHeight)
 
         def show_frame():
             _, frame = self.cap.read()
