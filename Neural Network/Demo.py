@@ -130,7 +130,8 @@ class Demo:
         probFrame = tk.Frame(window, width=self.captureWidth, height=self.captureHeight)
         probFrame.grid(row=1, column=0)
 
-        lblProbability = tk.Label(probFrame, text='AAAAA', anchor='center')
+        lblProbability = tk.Label(window, text='AAAAA')
+        lblProbability.grid(row=1)
         #lblProbability.pack()
         #lblProbability.configure(text="0")
 
