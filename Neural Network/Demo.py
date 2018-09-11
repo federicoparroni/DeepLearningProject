@@ -21,6 +21,8 @@ class Demo:
     graph = None
     model = None
     ref_img = None
+    captureWidth = 0
+    captureHeight = 0
 
     def ElaborateImagesAndMakePredition(self, inp_img):
         # crop a good percentage of the image in order to gain performances. found a good tradeoff with those values
@@ -70,9 +72,11 @@ class Demo:
 
 
     def StartDemo(self, ref, model_path):
+        self.captureWidth = 640
+        self.captureHeight = 480
         self.cap = cv2.VideoCapture(0)
-        self.cap.set(3, 640)
-        self.cap.set(4, 480)
+        self.cap.set(3, self.captureWidth)
+        self.cap.set(4, self.captureHeight)
 
         # self.graph = tf.get_default_graph()
 
@@ -86,15 +90,24 @@ class Demo:
         #self.model = load_model(bp+model_path)
         self.ref_img = FaceExtractionPipeline.SingletonPipeline().FaceExtractionPipelineImage(skimage.io.imread(ref))
 
+        demo.Window(ref)
+
         # plt.imshow(self.ref_img, 'gray')
         # plt.show()
 
-        self.OneFrameComputation()
+        # self.OneFrameComputation()
 
     def Window(self, imageName):
         captureWidth = 300
         captureHeight = 200
 
+<<<<<<< HEAD
+=======
+    def Window(self, imageName):
+        captureWidth = 300
+        captureHeight = 200
+
+>>>>>>> master
         # Set up GUI
         window = tk.Tk()  # Makes main window
         window.wm_title("Face2Face")
@@ -128,8 +141,10 @@ class Demo:
         cap.set(4, captureHeight)
 
         def show_frame():
-            _, frame = cap.read()
+            _, frame = self.cap.read()
             frame = cv2.flip(frame, 1)
+            self.ElaborateImagesAndMakePredition(frame)
+
             cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
             img = PIL.Image.fromarray(cv2image)
             imgtk = PIL.ImageTk.PhotoImage(image=img)
@@ -150,8 +165,6 @@ class Demo:
 
 
 demo=Demo()
-#demo.StartDemo('/home/giovanni/Immagini/Webcam/io.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
+demo.StartDemo('/home/giovanni/Immagini/Webcam/io.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
 
 #demo.StartDemo('/Users/federico/Desktop/cristiano.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
-
-demo.Window('/home/edoardo/Pictures/Webcam/2018-03-04-181614.jpg')
