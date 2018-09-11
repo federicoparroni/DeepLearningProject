@@ -120,6 +120,9 @@ class Demo:
         image2.grid(row=0, column=0)
         image2.image = staticPhoto
 
+        lblProbability = tk.Label(frame)
+        lblProbability.configure(text="0")
+
         cap = cv2.VideoCapture(0)
         cap.set(3, captureWidth)
         cap.set(4, captureHeight)
@@ -133,8 +136,7 @@ class Demo:
             image1.imgtk = imgtk
             image1.configure(image=imgtk)
 
-            #image2.imgtk = imgtk
-            #image2.configure(image=imgtk)
+            lblProbability.config(text='0')
 
             image1.after(10, show_frame)
 
