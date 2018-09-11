@@ -1,13 +1,10 @@
-from keras.models import load_model
 import FaceExtractionPipeline
 import skimage.io
 import skimage.transform
 import cv2
 import LoadData
-import threading
 import numpy as np
 import math
-import matplotlib.pyplot as plt
 
 import ModelBuilder
 from ModelBuilder import read_model
