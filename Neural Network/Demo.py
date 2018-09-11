@@ -21,6 +21,8 @@ class Demo:
     graph = None
     model = None
     ref_img = None
+    captureWidth = 0
+    captureHeight = 0
 
     def ElaborateImagesAndMakePredition(self, inp_img):
         # crop a good percentage of the image in order to gain performances. found a good tradeoff with those values
@@ -70,9 +72,11 @@ class Demo:
 
 
     def StartDemo(self, ref, model_path):
+        self.captureWidth = 640
+        self.captureHeight = 480
         self.cap = cv2.VideoCapture(0)
-        self.cap.set(3, 640)
-        self.cap.set(4, 480)
+        self.cap.set(3, self.captureWidth)
+        self.cap.set(4, self.captureHeight)
 
         # self.graph = tf.get_default_graph()
 
@@ -86,51 +90,74 @@ class Demo:
         #self.model = load_model(bp+model_path)
         self.ref_img = FaceExtractionPipeline.SingletonPipeline().FaceExtractionPipelineImage(skimage.io.imread(ref))
 
+        demo.Window(ref)
+
         # plt.imshow(self.ref_img, 'gray')
         # plt.show()
 
-        self.OneFrameComputation()
+        # self.OneFrameComputation()
 
-    def Window(self):
+    def Window(self, imageName):
+        captureWidth = 300
+        captureHeight = 200
+
         # Set up GUI
         window = tk.Tk()  # Makes main window
         window.wm_title("Face2Face")
         window.config(background="#FFFFFF")
+        #window.geometry("400x200")
 
         # Graphics window
-        imageFrame = tk.Frame(window, width=300, height=500)
-        imageFrame.grid(row=0, column=0, padx=10, pady=2)
+        imageFrame1 = tk.Frame(window, width=captureWidth, height=captureHeight)
+        imageFrame1.grid(row=0, column=0, padx=10, pady=2)
+
+        imageFrame2 = tk.Frame(window, width=captureWidth, height=captureHeight)
+        imageFrame2.grid(row=0, column=1, padx=10, pady=2)
 
         # Capture video frames
-        lmain = tk.Label(imageFrame)
-        lmain.grid(row=0, column=0)
-        cap = cv2.VideoCapture(0)
+        image1 = tk.Label(imageFrame1, width=captureWidth, height=captureHeight)
+        image1.grid(row=0, column=0)
 
-        #l2 = tk.Label(imageFrame)
-        #l2.grid(row=0, column=0)
+        img = PIL.Image.open(imageName)
+        img = img.resize((captureWidth, captureHeight), PIL.Image.ANTIALIAS)
+        staticPhoto = PIL.ImageTk.PhotoImage(img)
+
+        image2 = tk.Label(imageFrame2, width=captureWidth, height=captureHeight, image=staticPhoto)
+        image2.grid(row=0, column=0)
+        image2.image = staticPhoto
+
+        cap = cv2.VideoCapture(0)
+        cap.set(3, captureWidth)
+        cap.set(4, captureHeight)
 
         def show_frame():
-            _, frame = cap.read()
+            _, frame = self.cap.read()
             frame = cv2.flip(frame, 1)
+            self.ElaborateImagesAndMakePredition(frame)
+
             cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
             img = PIL.Image.fromarray(cv2image)
             imgtk = PIL.ImageTk.PhotoImage(image=img)
-            lmain.imgtk = imgtk
-            lmain.configure(image=imgtk)
-            lmain.after(10, show_frame)
+            image1.imgtk = imgtk
+            image1.configure(image=imgtk)
 
-            # Slider window (slider controls stage position)
+            #image2.imgtk = imgtk
+            #image2.configure(image=imgtk)
 
-        sliderFrame = tk.Frame(window, width=600, height=100)
-        sliderFrame.grid(row=600, column=0, padx=10, pady=2)
+            image1.after(10, show_frame)
+
+
+        # Slider window (slider controls stage position)
+        #sliderFrame = tk.Frame(window, width=600, height=100)
+        #sliderFrame.grid(row=600, column=0, padx=10, pady=2)
 
         show_frame()  # Display 2
         window.mainloop()  # Starts GUI
 
 
 demo=Demo()
-#demo.StartDemo('/home/giovanni/Immagini/Webcam/io.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
+demo.StartDemo('/home/giovanni/Immagini/Webcam/io.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
 
 #demo.StartDemo('/Users/federico/Desktop/cristiano.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
 
-demo.Window()
+#demo.Window('/home/edoardo/Pictures/Webcam/2018-03-04-181614.jpg')
