@@ -11,6 +11,7 @@ import math
 import matplotlib.pyplot as plt
 import ModelBuilder
 from ModelBuilder import read_model
+import time
 
 
 class Demo:
@@ -22,13 +23,16 @@ class Demo:
 
     def ElaborateImagesAndMakePredition(self, inp_img):
         # crop a good percentage of the image in order to gain performances. found a good tradeoff with those values
+
+        start_time = time.time()
+
         img_data_pipelined = FaceExtractionPipeline.SingletonPipeline().FaceExtractionPipelineImage(inp_img,
                                                                                                     math.ceil(np.shape(inp_img)[0]*15/100),
                                                                                                     math.ceil(np.shape(inp_img)[0]*30/100))
 
         if img_data_pipelined is not None:
-            plt.imshow(img_data_pipelined, 'gray')
-            plt.show()
+            # plt.imshow(img_data_pipelined, 'gray')
+            # plt.show()
 
             inp = LoadData.MergeImages(self.ref_img, img_data_pipelined)
             inp = np.expand_dims(inp, axis=0)
@@ -36,18 +40,27 @@ class Demo:
             #with self.graph.as_default():
             predicted_label = self.model.predict(inp)
 
-            print(('same' if predicted_label[0, 1] > 0.85 else 'wrong') + str(predicted_label))
+            print(('same' if predicted_label[0, 1] > 0.975 else 'wrong') + str(predicted_label))
 
-        self.OneFrameComputation()
+        print("--- %s seconds for a frame---" % (time.time() - start_time))
+
+        # self.OneFrameComputation()
 
 
     def OneFrameComputation(self):
         # threading.Timer(0.5, self.OneFrameComputation).start()
 
         # read frame
-        ret, frame = self.cap.read()
 
-        self.ElaborateImagesAndMakePredition(frame)
+        # cv2.imshow('my webcam', frame)
+
+        while True:
+            ret, frame = self.cap.read()
+            cv2.imshow('my webcam', frame)
+            if cv2.waitKey(1) == 27:
+                break  # esc to quit
+            self.ElaborateImagesAndMakePredition(frame)
+        cv2.destroyAllWindows()
 
         # do the prediction in a different thread
         #t = threading.Thread(target=self.ElaborateImagesAndMakePredition, args=(frame,))
@@ -64,7 +77,7 @@ class Demo:
 
         bp = 'trained_model/'
 
-        a = read_model("models/model01.txt")
+        a = read_model("models/model99.txt")
         modelObject = ModelBuilder.ModelBuilder(a, (80, 80, 2))
         self.model = modelObject.model
         self.model.load_weights(bp+model_path)
@@ -72,10 +85,10 @@ class Demo:
         #self.model = load_model(bp+model_path)
         self.ref_img = FaceExtractionPipeline.SingletonPipeline().FaceExtractionPipelineImage(skimage.io.imread(ref))
 
-        plt.imshow(self.ref_img, 'gray')
-        plt.show()
+        # plt.imshow(self.ref_img, 'gray')
+        # plt.show()
 
         self.OneFrameComputation()
 
 demo=Demo()
-demo.StartDemo('/home/edoardo/Pictures/Webcam/2018-03-04-181614.jpg', '2018-05-16 12:49:03/model01.txt_2018-05-16 15:12:17.h5')
+demo.StartDemo('/home/giovanni/Immagini/Webcam/io.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
