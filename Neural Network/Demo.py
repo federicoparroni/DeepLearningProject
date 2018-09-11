@@ -43,7 +43,12 @@ class Demo:
             #with self.graph.as_default():
             predicted_label = self.model.predict(inp)
 
+            return True, predicted_label[0, 1]
+
             print(('same' if predicted_label[0, 1] > 0.975 else 'wrong') + str(predicted_label))
+
+        else:
+            return False, 0
 
         print("--- %s seconds for a frame---" % (time.time() - start_time))
 
@@ -136,7 +141,7 @@ class Demo:
         def show_frame():
             _, frame = self.cap.read()
             frame = cv2.flip(frame, 1)
-            self.ElaborateImagesAndMakePredition(frame)
+            foundPerson, pSame = self.ElaborateImagesAndMakePredition(frame)
 
             cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
             img = PIL.Image.fromarray(cv2image)

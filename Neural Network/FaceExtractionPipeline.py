@@ -26,10 +26,10 @@ class SingletonPipeline(object):
 
         return _instances[cls]
 
-    # appies the face extraction pipeline to a single image
+    # applies the face extraction pipeline to a single image
     #
-    # REQUIRES: a general image, whatever RGB or GrayScale, in any resultion and acquired from any library. other than this.
-    # also two cutmargins that can be applied to crop the image in width and height can be provided
+    # REQUIRES: a general image, whatever RGB or GrayScale, in any resolution and acquired from any library. other than
+    # this. also two cutmargins that can be applied to crop the image in width and height can be provided
     #
     # RETURNS: the extracted face from the image, cropped and with the eyes aligned, if any
     def FaceExtractionPipelineImage(self, image, cut_margin_width=0, cut_margin_heigth=0):
@@ -89,7 +89,7 @@ def TryThePipeline(dataset_root_path):
 # ==========PREPROCESSING load data ================
 
 def PreprocessImages(folder):
-    #preproc_folder = PREPROCESSED_IMAGES_FOLDER_PATH + folder
+    # preproc_folder = PREPROCESSED_IMAGES_FOLDER_PATH + folder
     preproc_folder = folder
     if not os.path.isdir(preproc_folder + '_p'):
         os.mkdir(preproc_folder + '_p')
