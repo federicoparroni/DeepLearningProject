@@ -30,8 +30,8 @@ class Demo:
         start_time = time.time()
 
         img_data_pipelined = FaceExtractionPipeline.SingletonPipeline().FaceExtractionPipelineImage(inp_img,
-                                                                                                    math.ceil(np.shape(inp_img)[0]*15/100),
-                                                                                                    math.ceil(np.shape(inp_img)[0]*30/100))
+                                                                                                    math.ceil(np.shape(inp_img)[0]*20/100),
+                                                                                                    math.ceil(np.shape(inp_img)[0]*40/100))
 
         if img_data_pipelined is not None:
             # plt.imshow(img_data_pipelined, 'gray')
@@ -100,6 +100,7 @@ class Demo:
     def Window(self, imageName):
         self.captureWidth = 300
         self.captureHeight = 200
+        self.counter = 0
 
         # Set up GUI
         window = tk.Tk()  # Makes main window
@@ -126,8 +127,12 @@ class Demo:
         image2.grid(row=0, column=0)
         image2.image = staticPhoto
 
-        lblProbability = tk.Label(frame)
-        lblProbability.configure(text="0")
+        probFrame = tk.Frame(window, width=self.captureWidth, height=self.captureHeight)
+        probFrame.grid(row=1, column=0)
+
+        lblProbability = tk.Label(probFrame, text='AAAAA', anchor='center')
+        #lblProbability.pack()
+        #lblProbability.configure(text="0")
 
         cap = cv2.VideoCapture(0)
         cap.set(3, self.captureWidth)
@@ -136,16 +141,18 @@ class Demo:
         def show_frame():
             _, frame = self.cap.read()
             frame = cv2.flip(frame, 1)
-            self.ElaborateImagesAndMakePredition(frame)
-
+            if self.counter > 10:
+                self.ElaborateImagesAndMakePredition(frame)
+                self.counter = 0
             cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
             img = PIL.Image.fromarray(cv2image)
             imgtk = PIL.ImageTk.PhotoImage(image=img)
             image1.imgtk = imgtk
             image1.configure(image=imgtk)
 
-            lblProbability.config(text='0')
+            #lblProbability.config(text='aaaaaaaaaaaaaaaaaa')
 
+            self.counter += 1
             image1.after(10, show_frame)
 
 
@@ -158,6 +165,6 @@ class Demo:
 
 
 demo=Demo()
-demo.StartDemo('/home/giovanni/Immagini/Webcam/io.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
+demo.StartDemo('/home/edoardo/Pictures/Webcam/2018-03-04-181614.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
 
 #demo.StartDemo('/Users/federico/Desktop/cristiano.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
