@@ -98,8 +98,6 @@ class Demo:
         # self.OneFrameComputation()
 
     def Window(self, imageName):
-        self.captureWidth = 300
-        self.captureHeight = 200
         self.counter = 0
 
         # Set up GUI
@@ -127,11 +125,8 @@ class Demo:
         image2.grid(row=0, column=0)
         image2.image = staticPhoto
 
-        probFrame = tk.Frame(window, width=self.captureWidth, height=self.captureHeight)
-        probFrame.grid(row=1, column=0)
-
         lblProbability = tk.Label(window, text='AAAAA')
-        lblProbability.grid(row=1)
+        lblProbability.grid(row=1, pady=40)
         #lblProbability.pack()
         #lblProbability.configure(text="0")
 
