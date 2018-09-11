@@ -43,9 +43,8 @@ class Demo:
             #with self.graph.as_default():
             predicted_label = self.model.predict(inp)
 
-            return True, predicted_label[0, 1]
-
             print(('same' if predicted_label[0, 1] > 0.975 else 'wrong') + str(predicted_label))
+            return True, predicted_label[0, 1]
 
         else:
             return False, 0
@@ -168,6 +167,6 @@ class Demo:
 
 
 demo=Demo()
-demo.StartDemo('/home/edoardo/Pictures/Webcam/2018-03-04-181614.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
+#demo.StartDemo('/home/edoardo/Pictures/Webcam/2018-03-04-181614.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
 
-#demo.StartDemo('/Users/federico/Desktop/cristiano.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
+demo.StartDemo('/Users/federico/Desktop/cristiano.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
