@@ -112,7 +112,9 @@ class Demo:
         image1 = tk.Label(imageFrame1, width=captureWidth, height=captureHeight)
         image1.grid(row=0, column=0)
 
-        staticPhoto = PIL.ImageTk.PhotoImage(PIL.Image.open(imageName))
+        img = PIL.Image.open(imageName)
+        img = img.resize((captureWidth, captureHeight), PIL.Image.ANTIALIAS)
+        staticPhoto = PIL.ImageTk.PhotoImage(img)
 
         image2 = tk.Label(imageFrame2, width=captureWidth, height=captureHeight, image=staticPhoto)
         image2.grid(row=0, column=0)
@@ -150,4 +152,4 @@ demo=Demo()
 
 #demo.StartDemo('/Users/federico/Desktop/cristiano.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
 
-demo.Window('/Users/federico/Desktop/cristiano.jpg')
+demo.Window('/home/edoardo/Pictures/Webcam/2018-03-04-181614.jpg')
