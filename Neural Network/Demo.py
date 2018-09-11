@@ -101,6 +101,13 @@ class Demo:
         captureWidth = 300
         captureHeight = 200
 
+<<<<<<< HEAD
+=======
+    def Window(self, imageName):
+        captureWidth = 300
+        captureHeight = 200
+
+>>>>>>> master
         # Set up GUI
         window = tk.Tk()  # Makes main window
         window.wm_title("Face2Face")
@@ -159,5 +166,3 @@ demo=Demo()
 demo.StartDemo('/home/giovanni/Immagini/Webcam/io.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
 
 #demo.StartDemo('/Users/federico/Desktop/cristiano.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
-
-#demo.Window('/home/edoardo/Pictures/Webcam/2018-03-04-181614.jpg')
