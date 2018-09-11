@@ -129,8 +129,8 @@ class Demo:
         image2.grid(row=0, column=0)
         image2.image = staticPhoto
 
-        lblProbability = tk.Label(window, text='AAAAA')
-        lblProbability.grid(row=1, pady=40)
+        lblProbability = tk.Label(window, text='INITIALIZING', bg='white', font=('arial',30))
+        lblProbability.grid(row=1, pady=40, columnspan=2)
         #lblProbability.pack()
         #lblProbability.configure(text="0")
 
@@ -145,6 +145,13 @@ class Demo:
             if self.counter > 10:
                 foundPerson, pSame = self.ElaborateImagesAndMakePredition(frame)
                 self.counter = 0
+                if foundPerson:
+                    if pSame > 0.85:
+                        lblProbability.config(text='MATCHING PROBABILITY: {} ;)'.format(pSame))
+                    else:
+                        lblProbability.config(text='MATCHING PROBABILITY: {} :\'('.format(pSame))
+                else:
+                    lblProbability.config(text='FACE NOT FOUND')
 
             cv2image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGBA)
             img = PIL.Image.fromarray(cv2image)
@@ -152,7 +159,7 @@ class Demo:
             image1.imgtk = imgtk
             image1.configure(image=imgtk)
 
-            #lblProbability.config(text='aaaaaaaaaaaaaaaaaa')
+
 
             self.counter += 1
             image1.after(10, show_frame)
@@ -167,6 +174,6 @@ class Demo:
 
 
 demo=Demo()
-#demo.StartDemo('/home/edoardo/Pictures/Webcam/2018-03-04-181614.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
+demo.StartDemo('/home/edoardo/Pictures/Webcam/2018-09-11-165147.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
 
-demo.StartDemo('/Users/federico/Desktop/cristiano.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
+#demo.StartDemo('/Users/federico/Desktop/cristiano.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
