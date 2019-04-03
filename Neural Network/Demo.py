@@ -107,6 +107,7 @@ class Demo:
         # Set up GUI
         window = tk.Tk()  # Makes main window
         window.wm_title("Face2Face")
+
         window.config(background="#FFFFFF")
         #window.geometry("400x200")
 
@@ -129,14 +130,10 @@ class Demo:
         image2.grid(row=0, column=0)
         image2.image = staticPhoto
 
-        lblProbability = tk.Label(window, text='INITIALIZING', bg='white', font=('arial',30))
+        lblProbability = tk.Label(window, text='INITIALIZING', bg='white', font=('arial', 30))
         lblProbability.grid(row=1, pady=40, columnspan=2)
         #lblProbability.pack()
         #lblProbability.configure(text="0")
-
-        cap = cv2.VideoCapture(0)
-        cap.set(3, self.captureWidth)
-        cap.set(4, self.captureHeight)
 
         def show_frame():
             _, frame = self.cap.read()
@@ -174,6 +171,4 @@ class Demo:
 
 
 demo=Demo()
-demo.StartDemo('/home/edoardo/Pictures/Webcam/2018-09-11-165147.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
-
-#demo.StartDemo('/Users/federico/Desktop/cristiano.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
+demo.StartDemo('/Users/federico/Desktop/io.jpg', '2018-07-10 11:27:21/model99.txt_2018-07-10 17:41:54.h5')
